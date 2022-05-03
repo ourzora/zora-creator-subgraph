@@ -16,30 +16,38 @@ dataSources:
       entities:
         - CreatedEdition
       abis:
-        - name: SingleEditionMintableCreator
-          file: ./abis/SingleEditionMintableCreator.json
+        - name: ZoraNFTCreatorV1
+          file: ./abis/ZoraNFTCreatorV1.json
       eventHandlers:
         - event: CreatedEdition(indexed uint256,indexed address,uint256,address)
           handler: handleCreatedEdition
       file: ./src/mapping.ts
 templates:
-  - name: NFTEdition
+  - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
     source:
-      abi: NFTEdition
+      abi: ERC721Drop
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       entities:
-        - PriceChanged
+        - Sale
+        - Transfer
+        - SalesConfig
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       abis:
-        - name: NFTEdition
-          file: ./abis/NFTEdition.json
+        - name: ERC721Drop
+          file: ./abis/ERC721Drop.json
       eventHandlers:
-        - event: PriceChanged(uint256)
-          handler: handleEditionPriceChanged
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleInitEdition
+        - event: SalesConfigChanged(indexed address,uint256)
+          handler: handleSalesConfigChanged
+        - event: OpenMintFinalized(indexed address,uint256)
+          handler: handleOpenMintFinalized
+        - event: FundsRecipientChanged(indexed address,indexed address)
+          handler: handleFundsRecipientChanged
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleNFTTransfer
+        - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
+          handler: handleSale
