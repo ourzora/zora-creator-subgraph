@@ -15,7 +15,7 @@ type SalesConfig @entity(immutable: true) {
   presaleEnd: BigInt!
   presaleMerkleRoot: Bytes!
 
-  dropAddress: ERC721Drop!
+  drop: ERC721Drop!
 }
 
 type ContractConfig @entity {
@@ -26,7 +26,7 @@ type ContractConfig @entity {
   royaltyBPS: Int!
   fundsRecipient: Bytes!
 
-  dropAddress: ERC721Drop!
+  drop: ERC721Drop!
 }
 
 type ERC721Drop @entity {
@@ -43,7 +43,11 @@ type ERC721Drop @entity {
   salesConfigId: BigInt!
 
   salesConfig: SalesConfig!
-  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "dropAddress")
+  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
+
+  sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
+
+  transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
 
   totalMinted: BigInt!
   maxSupply: BigInt!
@@ -59,7 +63,7 @@ type NFTEditionSale @entity {
   purchaser: Bytes!
   firstPurchasedTokenId: Int!
   txn: TransactionInfo!
-  dropAddress: Bytes!
+  drop: ERC721Drop!
 }
 
 type NFTEditionTransfer @entity {
@@ -70,5 +74,5 @@ type NFTEditionTransfer @entity {
   from: Bytes! # to address for transfer
   txn: TransactionInfo!
 
-  dropAddress: Bytes!
+  drop: ERC721Drop!
 }
