@@ -4,23 +4,42 @@ type TransactionInfo @entity {
   timestamp: BigInt!
 }
 
+type SalesConfig @entity {
+  id: ID!
+
+  publicSalePrice: BigInt!
+  maxSalePurchasePerAddress: BigInt!
+  publicSaleStart: BigInt!
+  publicSaleEnd: BigInt!
+  presaleStart: BigInt!
+  presaleEnd: BigInt!
+  presaleMerkleRoot: Bytes!
+}
+
+type ContractConfig @entity {
+  id: ID!
+
+  metadataRenderer: Bytes!
+  editionSize: BigInt!
+  royaltyBPS: BigInt!
+  fundsRecipient: Bytes!
+}
+
 type NFTEdition @entity {
   id: ID!
-  editionSize: BigInt!
-  editionId: BigInt! # uint256
+
   creator: Bytes! # address
   address: Bytes! # address
   name: String!
   symbol: String!
 
+  contractConfig: ContractConfig!
+  salesConfigId: BigInt!
+  salesConfig: SalesConfig
+
   numberCanMint: BigInt!
   salePrice: BigInt!
   totalSupply: BigInt!
-
-  imageURI: String!
-  imageHash: Bytes!
-  animationURI: String!
-  animationHash: Bytes!
 
   txn: TransactionInfo!
 }
@@ -28,6 +47,7 @@ type NFTEdition @entity {
 type NFTEditionPurchase @entity {
   id: ID!
   price: BigInt!
+  count: BigInt!
   to: Bytes!
   txn: TransactionInfo!
 }

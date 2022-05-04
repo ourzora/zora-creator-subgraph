@@ -3,11 +3,11 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: SingleEditionMintableCreator
+    name: ZoraNFTCreatorV1
     network: {{network}}
     source:
       address: "{{address}}"
-      abi: SingleEditionMintableCreator
+      abi: ZoraNFTCreatorV1
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -41,7 +41,7 @@ templates:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
       eventHandlers:
-        - event: SalesConfigChanged(indexed address,uint256)
+        - event: SalesConfigChanged(indexed address,(uint104,uint32,uint64,uint64,uint64,uint64,bytes32))
           handler: handleSalesConfigChanged
         - event: OpenMintFinalized(indexed address,uint256)
           handler: handleOpenMintFinalized

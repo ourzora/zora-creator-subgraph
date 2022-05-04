@@ -18,7 +18,7 @@ graph codegen && graph build
 
 echo "wooohooo regen & built!"
 
-if [ $result == "mainnet" ] || [ $result == "rinkeby" ]; 
+if [ $result == "mainnet" ]# || [ $result == "rinkeby" ]; 
 then
    # subgraph studio
    graph deploy --studio nft-editions-$result
