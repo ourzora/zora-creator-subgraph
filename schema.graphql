@@ -4,7 +4,7 @@ type TransactionInfo @entity {
   timestamp: BigInt!
 }
 
-type SalesConfig @entity {
+type SalesConfig @entity(immutable: true) {
   id: ID!
 
   publicSalePrice: BigInt!
@@ -14,6 +14,8 @@ type SalesConfig @entity {
   presaleStart: BigInt!
   presaleEnd: BigInt!
   presaleMerkleRoot: Bytes!
+
+  dropAddress: ERC721Drop!
 }
 
 type ContractConfig @entity {
@@ -21,40 +23,52 @@ type ContractConfig @entity {
 
   metadataRenderer: Bytes!
   editionSize: BigInt!
-  royaltyBPS: BigInt!
+  royaltyBPS: Int!
   fundsRecipient: Bytes!
+
+  dropAddress: ERC721Drop!
 }
 
-type NFTEdition @entity {
+type ERC721Drop @entity {
   id: ID!
 
-  creator: Bytes! # address
-  address: Bytes! # address
+  created: TransactionInfo!
+
+  creator: Bytes!
+  address: Bytes!
   name: String!
   symbol: String!
 
   contractConfig: ContractConfig!
   salesConfigId: BigInt!
-  salesConfig: SalesConfig
 
-  numberCanMint: BigInt!
-  salePrice: BigInt!
-  totalSupply: BigInt!
+  salesConfig: SalesConfig!
+  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "dropAddress")
+
+  totalMinted: BigInt!
+  maxSupply: BigInt!
 
   txn: TransactionInfo!
 }
 
-type NFTEditionPurchase @entity {
+type NFTEditionSale @entity {
   id: ID!
-  price: BigInt!
+  pricePerToken: BigInt!
+  priceTotal: BigInt!
   count: BigInt!
-  to: Bytes!
+  purchaser: Bytes!
+  firstPurchasedTokenId: Int!
   txn: TransactionInfo!
+  dropAddress: Bytes!
 }
 
 type NFTEditionTransfer @entity {
   id: ID!
+
+  tokenId: BigInt!
   to: Bytes! # from address for transfer
   from: Bytes! # to address for transfer
   txn: TransactionInfo!
+
+  dropAddress: Bytes!
 }
