@@ -1,4 +1,10 @@
-import { CreatedEdition } from "../generated/ZoraNFTCreatorV1/ZoraNFTCreatorV1";
+import { Address, ethereum } from "@graphprotocol/graph-ts";
+
+import {
+  CreatedEdition,
+  Upgraded,
+  ZoraNFTCreatorV1,
+} from "../generated/ZoraNFTCreatorV1/ZoraNFTCreatorV1";
 import {
   ContractConfig,
   ERC721Drop,
@@ -7,7 +13,11 @@ import {
   SalesConfig,
   TransactionInfo,
 } from "../generated/schema";
-import { ERC721Drop as ERC721DropFactory } from "../generated/templates";
+import {
+  ERC721Drop as ERC721DropFactory,
+  EditionMetadataRenderer as EditionMetadataRendererFactory,
+  DropMetadataRenderer as DropMetadataRendererFactory,
+} from "../generated/templates";
 import {
   ERC721Drop as ERC721DropContract,
   FundsRecipientChanged,
@@ -16,7 +26,6 @@ import {
   SalesConfigChanged,
   Transfer,
 } from "../generated/templates/ERC721Drop/ERC721Drop";
-import { Address, ethereum } from "@graphprotocol/graph-ts";
 
 function makeTransaction(txn: ethereum.Event): string {
   const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
@@ -28,9 +37,7 @@ function makeTransaction(txn: ethereum.Event): string {
 }
 
 function updateDropSupply(dropAddress: string): void {
-  const dropContract = ERC721DropContract.bind(
-    Address.fromString(dropAddress)
-  );
+  const dropContract = ERC721DropContract.bind(Address.fromString(dropAddress));
   if (dropContract) {
     const saleDetails = dropContract.saleDetails();
     const drop = ERC721Drop.load(dropAddress);
@@ -40,6 +47,19 @@ function updateDropSupply(dropAddress: string): void {
       drop.maxSupply = saleDetails.maxSupply;
       drop.save();
     }
+  }
+}
+
+export function handleNewCreatorUpgrade(event: Upgraded): void {
+  const creatorContract = ZoraNFTCreatorV1.bind(event.address);
+  if (creatorContract) {
+    console.log(
+      "Creating registered metadata renderers from deployer contract"
+    );
+    const editionMetadataAddress = creatorContract.editionMetadataRenderer();
+    EditionMetadataRendererFactory.create(editionMetadataAddress);
+    const dropMetadataAddress = creatorContract.dropMetadataRenderer();
+    DropMetadataRendererFactory.create(dropMetadataAddress);
   }
 }
 

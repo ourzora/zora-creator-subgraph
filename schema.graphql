@@ -52,7 +52,35 @@ type ERC721Drop @entity {
   totalMinted: BigInt!
   maxSupply: BigInt!
 
+  metadata: MetadataConnection!
+
   txn: TransactionInfo!
+}
+
+type MetadataConnection @entity {
+  id: ID!
+  renderer: Bytes!
+
+  metadataDrop: MetadataDrop!
+  # TODO(iain): Metadata history
+  metadataEdition: MetadataEdition!
+}
+
+type MetadataDrop @entity {
+  id: ID!
+
+  baseURI: String!
+  baseURIExtension: String!
+  contractURI: String!
+  provenanceHash: String!
+}
+
+type MetadataEdition @entity {
+  id: ID!
+
+  description: String!
+  imageURI: String!
+  animationURI: String!
 }
 
 type NFTEditionSale @entity {
