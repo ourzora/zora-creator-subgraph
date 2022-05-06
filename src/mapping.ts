@@ -28,17 +28,18 @@ function makeTransaction(txn: ethereum.Event): string {
 }
 
 function updateDropSupply(dropAddress: Address): void {
-  const dropContract = ERC721DropContract.bind(dropAddress);
-  const saleDetails = dropContract.saleDetails();
-  const drop = ERC721Drop.load(dropAddress.toHex());
+  console.log("updating drop supply");
+  // const dropContract = ERC721DropContract.bind(dropAddress);
+  // const saleDetails = dropContract.saleDetails();
+  // const drop = ERC721Drop.load(dropAddress.toHex());
 
-  if (drop) {
-    // Update the total minted counter
-    drop.totalMinted = saleDetails.totalMinted;
-    drop.maxSupply = saleDetails.maxSupply;
-    console.log("saving drop");
-    drop.save();
-  }
+  // if (drop) {
+  //   // Update the total minted counter
+  //   drop.totalMinted = saleDetails.totalMinted;
+  //   drop.maxSupply = saleDetails.maxSupply;
+  //   console.log("saving drop");
+  //   drop.save();
+  // }
 }
 
 export function handleCreatedEdition(event: CreatedEdition): void {
@@ -139,7 +140,23 @@ export function handleNFTTransfer(event: Transfer): void {
 
   transfer.save();
 
-  updateDropSupply(event.address);
+  const dropAddress = event.address;
+  // const drop = ERC721Drop.load(dropAddress.toHex());
+
+  // if (drop) {
+    // const dropContract = ERC721DropContract.bind(dropAddress);
+    // const saleDetails = dropContract.saleDetails();
+  //   // Update the total minted counter
+  //   drop.totalMinted = saleDetails.totalMinted;
+  //   drop.maxSupply = saleDetails.maxSupply;
+  //   console.log("saving drop");
+  //   drop.save();
+
+    // console.log("saving drop");
+  // console.log(saleDetails.totalMinted.toString());
+  // console.log(saleDetails.maxSupply.toString());
+    // drop.save();
+  // }
 }
 
 export function handleSale(event: Sale): void {
@@ -154,5 +171,19 @@ export function handleSale(event: Sale): void {
 
   sale.save();
 
-  updateDropSupply(event.address);
+  const dropAddress = event.address;
+  // const drop = ERC721Drop.load(dropAddress.toHex());
+
+  // if (drop) {
+    // const dropContract = ERC721DropContract.bind(dropAddress);
+    // const saleDetails = dropContract.saleDetails();
+  //   // Update the total minted counter
+  //   drop.totalMinted = saleDetails.totalMinted;
+  //   drop.maxSupply = saleDetails.maxSupply;
+
+    // console.log("saving drop");
+  // console.log(saleDetails.totalMinted.toString());
+  // console.log(saleDetails.maxSupply.toString());
+    // drop.save();
+  // }
 }
