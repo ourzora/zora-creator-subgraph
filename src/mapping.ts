@@ -27,6 +27,20 @@ function makeTransaction(txn: ethereum.Event): string {
   return txnInfo.id;
 }
 
+function updateDropSupply(dropAddress: Address): void {
+  const dropContract = ERC721DropContract.bind(dropAddress);
+  const saleDetails = dropContract.saleDetails();
+  const drop = ERC721Drop.load(dropAddress.toHex());
+
+  if (drop) {
+    // Update the total minted counter
+    drop.totalMinted = saleDetails.totalMinted;
+    drop.maxSupply = saleDetails.maxSupply;
+    console.log("saving drop");
+    drop.save();
+  }
+}
+
 export function handleCreatedEdition(event: CreatedEdition): void {
   const drop = new ERC721Drop(event.params.editionContractAddress.toHex());
   drop.address = event.params.editionContractAddress;
@@ -38,26 +52,36 @@ export function handleCreatedEdition(event: CreatedEdition): void {
   const dropContract = ERC721DropContract.bind(
     Address.fromString(drop.address.toHex())
   );
+
+  const rendererAddress = dropContract.metadataRenderer();
+  drop.rendererAddress = rendererAddress;
+
+  drop.name = dropContract.name();
+  drop.symbol = dropContract.symbol();
+
+  drop.created = makeTransaction(event);
+  drop.creator = event.transaction.from;
+  const salesDetails = dropContract.saleDetails();
+  drop.totalMinted = salesDetails.totalMinted;
+  drop.maxSupply = salesDetails.maxSupply;
+
+  drop.created = makeTransaction(event);
+  drop.creator = event.transaction.from;
+
   const dropConfig = dropContract.config();
   contractConfig.metadataRenderer = dropConfig.value0;
   contractConfig.editionSize = dropConfig.value1;
   contractConfig.royaltyBPS = dropConfig.value2;
   contractConfig.fundsRecipient = dropConfig.value3;
   contractConfig.save();
-
   drop.contractConfig = configId;
-  const salesDetails = dropContract.saleDetails();
-  drop.totalMinted = salesDetails.totalMinted;
-  drop.maxSupply = salesDetails.maxSupply;
 
-  const salesConfigId = `sale-${drop.address.toHex()}-0`;
+  const salesConfigId = event.transaction.hash.toHex();
   const salesConfig = new SalesConfig(salesConfigId);
   drop.salesConfig = salesConfigId;
   salesConfig.dropAddress = drop.address.toHex();
   salesConfig.save();
 
-  drop.created = makeTransaction(event);
-  drop.creator = event.transaction.from;
   drop.save();
 
   ERC721DropFactory.create(event.params.editionContractAddress);
@@ -65,10 +89,7 @@ export function handleCreatedEdition(event: CreatedEdition): void {
 
 export function handleSalesConfigChanged(event: SalesConfigChanged): void {
   const drop = ERC721Drop.load(event.address.toHex());
-  const salesConfigHistorySize = drop ? drop.salesConfigHistory.length : 0;
-
-  const newSalesConfigId = `${event.address.toHex()}-${salesConfigHistorySize +
-    1}`;
+  const newSalesConfigId = event.transaction.hash.toHex();
   const newSalesConfig = new SalesConfig(newSalesConfigId);
   newSalesConfig.dropAddress = event.address.toHex();
   newSalesConfig.presaleEnd = event.params.salesConfig.presaleEnd;
@@ -83,7 +104,6 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
   newSalesConfig.save();
 
   if (drop) {
-    // drop.salesConfigHistory.push(newSalesConfigId);
     drop.salesConfig = newSalesConfigId;
     drop.save();
   }
@@ -118,6 +138,8 @@ export function handleNFTTransfer(event: Transfer): void {
   transfer.dropAddress = event.address;
 
   transfer.save();
+
+  updateDropSupply(event.address);
 }
 
 export function handleSale(event: Sale): void {
@@ -131,4 +153,6 @@ export function handleSale(event: Sale): void {
   sale.dropAddress = event.address;
 
   sale.save();
+
+  updateDropSupply(event.address);
 }

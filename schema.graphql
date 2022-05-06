@@ -48,6 +48,8 @@ type ERC721Drop @entity {
   totalMinted: BigInt!
   maxSupply: BigInt!
 
+  rendererAddress: Bytes!
+
   txn: TransactionInfo!
 }
 

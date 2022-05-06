@@ -1,8 +1,8 @@
-specVersion: 0.0.4
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: ZoraNFTCreatorV1
     network: rinkeby
     source:
@@ -14,12 +14,12 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - CreatedEdition
+        - ERC721Drop
       abis:
         - name: ZoraNFTCreatorV1
           file: ./abis/ZoraNFTCreatorV1.json
         - name: ERC721Drop
-          file: ./abis/ERC721Drop.json 
+          file: ./abis/ERC721Drop.json
       eventHandlers:
         - event: CreatedEdition(indexed uint256,indexed address,uint256,address)
           handler: handleCreatedEdition
@@ -37,6 +37,7 @@ templates:
         - Sale
         - Transfer
         - SalesConfig
+        - ERC721Drop
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       abis:
