@@ -6,9 +6,9 @@ dataSources:
     name: ZoraNFTCreatorV1
     network: rinkeby
     source:
-      address: "0x6f7c9d33d5f2425fdf915c64e22aa1013625f3dd"
+      address: "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30"
       abi: ZoraNFTCreatorV1
-      startBlock: 10597234
+      startBlock: 10655635
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -22,10 +22,50 @@ dataSources:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
       eventHandlers:
-        - event: CreatedEdition(indexed uint256,indexed address,uint256,address)
-          handler: handleCreatedEdition
+        - event: CreatedDrop(indexed address,indexed address,uint256)
+          handler: handleCreatedDrop
+        - event: Upgraded(indexed address)
+          handler: handleFactoryUpgraded
       file: ./src/mapping.ts
 templates:
+  - kind: ethereum/contract
+    name: EditionMetadataRenderer
+    network: rinkeby
+    source:
+      abi: EditionMetadataRenderer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - EditionMetadata
+      abis:
+        - name: EditionMetadataRenderer
+          file: ./abis/EditionMetadataRenderer.json
+      eventHandlers:
+        - event: EditionInitialized(indexed address,string,string,string)
+          handler: handleCreatedEdition
+        - event: MediaURIsUpdated(indexed address,address,string,string)
+          handler: handleUpdateMediaURIs
+      file: ./src/edition.ts
+  - kind: ethereum/contract
+    name: DropMetadataRenderer
+    network: rinkeby
+    source:
+      abi: DropMetadataRenderer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - DropMetadata
+      abis:
+        - name: DropMetadataRenderer
+          file: ./abis/DropMetadataRenderer.json
+      eventHandlers:
+        - event: MetadataUpdated(indexed address,string,string,string,uint256)
+          handler: handleMetadataUpdated
+      file: ./src/metadata.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: rinkeby
