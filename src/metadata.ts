@@ -1,26 +1,15 @@
-import {
-  MetadataUpdated,
-  ProvenanceHashUpdated,
-} from "../generated/templates/DropMetadataRenderer/DropMetadataRenderer";
-import {
-  UpdateMediaURIsCall,
-  InitializeWithDataCall,
-} from "../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
+import { MetadataUpdated } from "../generated/DropMetadataRenderer/DropMetadataRenderer";
+import { DropMetadata } from "../generated/schema";
 
-export function handleMetadataUpdated(event: MetadataUpdated): void {}
+export function handleMetadataUpdated(event: MetadataUpdated): void {
+  let metadata = DropMetadata.load(event.params.target.toHex());
+  if (!metadata) {
+    metadata = new DropMetadata(event.params.target.toHex());
+  }
+  metadata.contractURI = event.params.contractURI;
+  metadata.extension = event.params.metadataExtension;
+  metadata.base = event.params.metadataBase;
+  metadata.freezeAt = event.params.freezeAt;
 
-export function handleProvenanceHashUpdated(
-  event: ProvenanceHashUpdated
-): void {
-  console.log("provenence hash for drop updated");
-}
-
-export function handleUpdateMediaURIs(call: UpdateMediaURIsCall): void {
-  console.log("media uri update call");
-}
-
-export function handleInitializeEditionMetadata(
-  call: InitializeWithDataCall
-): void {
-  console.log("initailize metadata call");
+  metadata.save();
 }

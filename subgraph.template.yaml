@@ -2,7 +2,7 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: ZoraNFTCreatorV1
     network: {{network}}
     source:
@@ -14,17 +14,58 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - CreatedEdition
+        - ERC721Drop
+        - SalesConfig
       abis:
         - name: ZoraNFTCreatorV1
           file: ./abis/ZoraNFTCreatorV1.json
+        - name: ERC721Drop
+          file: ./abis/ERC721Drop.json
       eventHandlers:
-        - event: CreatedEdition(indexed uint256,indexed address,uint256,address)
-          handler: handleCreatedEdition
+        - event: CreatedDrop(indexed address,indexed address,uint256)
+          handler: handleCreatedDrop
         - event: Upgraded(indexed address)
-          handler: handleNewCreatorUpgrade
+          handler: handleFactoryUpgraded
       file: ./src/mapping.ts
 templates:
+  - kind: ethereum/contract
+    name: EditionMetadataRenderer
+    network: {{network}}
+    source:
+      abi: EditionMetadataRenderer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - EditionMetadata
+      abis:
+        - name: EditionMetadataRenderer
+          file: ./abis/EditionMetadataRenderer.json
+      eventHandlers:
+        - event: EditionInitialized(indexed address,string,string,string)
+          handler: handleCreatedEdition
+        - event: MediaURIsUpdated(indexed address,address,string,string)
+          handler: handleUpdateMediaURIs
+      file: ./src/edition.ts
+  - kind: ethereum/contract
+    name: DropMetadataRenderer
+    network: {{network}}
+    source:
+      abi: DropMetadataRenderer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - DropMetadata
+      abis:
+        - name: DropMetadataRenderer
+          file: ./abis/DropMetadataRenderer.json
+      eventHandlers:
+        - event: MetadataUpdated(indexed address,string,string,string,uint256)
+          handler: handleMetadataUpdated
+      file: ./src/metadata.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
@@ -37,6 +78,7 @@ templates:
         - Sale
         - Transfer
         - SalesConfig
+        - ERC721Drop
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       abis:
@@ -53,44 +95,3 @@ templates:
           handler: handleNFTTransfer
         - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
           handler: handleSale
-  - name: DropMetadataRenderer
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: DropMetadataRenderer
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      entities:
-        - DropMetadata
-      language: wasm/assemblyscript
-      file: ./src/metadata.ts
-      abis:
-        - name: DropMetadataRenderer
-          file: ./abis/DropMetadataRenderer.json
-      eventHandlers:
-        - event: MetadataUpdated(indexed address,string,string,string,uint256)
-          handler: handleMetadataUpdated
-        - event: ProvenanceHashUpdated(indexed address,bytes32)
-          handler: handleProvenanceHashUpdated
-  - name: EditionMetadataRenderer
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: EditionMetadataRenderer
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      entities:
-        - EditionMetadataRenderer
-      language: wasm/assemblyscript
-      file: ./src/metadata.ts
-      abis:
-        - name: EditionMetadataRenderer
-          file: ./abis/EditionMetadataRenderer.json
-      callHandlers:
-        - function: updateMediaURIs(address,string,string)
-          handler: handleUpdateMediaURIs
-        - function: initializeWithData(bytes) 
-          handler: handleInitializeEditionMetadata
-

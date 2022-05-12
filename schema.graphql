@@ -40,47 +40,23 @@ type ERC721Drop @entity {
   symbol: String!
 
   contractConfig: ContractConfig!
-  salesConfigId: BigInt!
 
   salesConfig: SalesConfig!
+
   salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
 
   sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
-
   transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
+
+  editionMetadata: EditionMetadata @derivedFrom(field: "drop")
+  dropMetadata: DropMetadata @derivedFrom(field: "drop")
 
   totalMinted: BigInt!
   maxSupply: BigInt!
 
-  metadata: MetadataConnection!
+  rendererAddress: Bytes!
 
   txn: TransactionInfo!
-}
-
-type MetadataConnection @entity {
-  id: ID!
-  renderer: Bytes!
-
-  metadataDrop: MetadataDrop!
-  # TODO(iain): Metadata history
-  metadataEdition: MetadataEdition!
-}
-
-type MetadataDrop @entity {
-  id: ID!
-
-  baseURI: String!
-  baseURIExtension: String!
-  contractURI: String!
-  provenanceHash: String!
-}
-
-type MetadataEdition @entity {
-  id: ID!
-
-  description: String!
-  imageURI: String!
-  animationURI: String!
 }
 
 type NFTEditionSale @entity {
@@ -91,6 +67,7 @@ type NFTEditionSale @entity {
   purchaser: Bytes!
   firstPurchasedTokenId: Int!
   txn: TransactionInfo!
+
   drop: ERC721Drop!
 }
 
@@ -98,9 +75,33 @@ type NFTEditionTransfer @entity {
   id: ID!
 
   tokenId: BigInt!
-  to: Bytes! # from address for transfer
-  from: Bytes! # to address for transfer
+  to: Bytes!
+  from: Bytes!
   txn: TransactionInfo!
 
   drop: ERC721Drop!
+}
+
+type Upgrade @entity {
+  id: ID!
+}
+
+type EditionMetadata @entity {
+  id: ID!
+
+  drop: ERC721Drop!
+  description: String!
+  contractURI: String!
+  imageURI: String!
+  animationURI: String!
+}
+
+type DropMetadata @entity {
+  id: ID!
+
+  drop: ERC721Drop!
+  base: String!
+  extension: String!
+  freezeAt: BigInt!
+  contractURI: String!
 }

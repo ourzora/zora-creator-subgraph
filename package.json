@@ -2,12 +2,13 @@
   "name": "nft-editions-subgraph-polygon",
   "license": "UNLICENSED",
   "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ iainnash/nft-editions-subgraph-polygon",
-    "create-local": "graph create --node http://localhost:8020/ iainnash/nft-editions-subgraph-polygon",
-    "remove-local": "graph remove --node http://localhost:8020/ iainnash/nft-editions-subgraph-polygon",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 iainnash/nft-editions-subgraph-polygon",
+    "codegen": "yarn gen-yaml-conifg && graph codegen",
+    "build": "yarn gen-yaml-config && graph build",
+    "gen-yaml-config": "mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml > subgraph.yaml",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
+    "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
+    "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
     "network-deploy": "chmod u+x deploy.sh; ./deploy.sh"
   },
   "dependencies": {
