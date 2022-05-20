@@ -47,6 +47,8 @@ templates:
           handler: handleCreatedEdition
         - event: MediaURIsUpdated(indexed address,address,string,string)
           handler: handleUpdateMediaURIs
+        - event: DescriptionUpdated(indexed address,address,string)
+          handler: handleUpdateDescription
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
