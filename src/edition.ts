@@ -8,6 +8,7 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   const targetContract = event.params.target;
   const metadata = new EditionMetadata(targetContract.toHex());
   
+  metadata.description = event.params.description;
   metadata.animationURI = event.params.animationURI;
   metadata.drop = event.params.target.toHex();
   metadata.imageURI = event.params.imageURI;
