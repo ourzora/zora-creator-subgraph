@@ -1,4 +1,4 @@
-import { MetadataUpdated } from "../generated/DropMetadataRenderer/DropMetadataRenderer";
+import { MetadataUpdated } from "../generated/templates/DropMetadataRenderer/DropMetadataRenderer";
 import { DropMetadata } from "../generated/schema";
 
 export function handleMetadataUpdated(event: MetadataUpdated): void {
@@ -6,7 +6,7 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   if (!metadata) {
     metadata = new DropMetadata(event.params.target.toHex());
   }
-  metadata.contractURI = event.params.contractURI;
+  metadata.contractURI = event.params.target.toHex();
   metadata.extension = event.params.metadataExtension;
   metadata.base = event.params.metadataBase;
   metadata.freezeAt = event.params.freezeAt;
