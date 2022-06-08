@@ -25,7 +25,7 @@ import {
   SalesConfigChanged,
   Transfer,
 } from "../generated/templates/ERC721Drop/ERC721Drop";
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts";
 
 function makeTransaction(txn: ethereum.Event): string {
   const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
@@ -64,6 +64,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const dropId = event.params.editionContractAddress.toHex();
   const drop = new ERC721Drop(dropId);
   drop.address = event.params.editionContractAddress;
+  drop.createdAt = event.block.timestamp;
 
   const dropContract = ERC721DropContract.bind(
     Address.fromString(drop.address.toHex())
@@ -74,6 +75,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 
   drop.name = dropContract.name();
   drop.symbol = dropContract.symbol();
+  drop.network = dataSource.network();
 
   drop.save();
 
@@ -180,6 +182,7 @@ export function handleNFTTransfer(event: Transfer): void {
   transfer.txn = makeTransaction(event);
   transfer.tokenId = event.params.tokenId;
   transfer.drop = event.address.toHex();
+  transfer.mintedAt = event.block.timestamp;
 
   transfer.save();
 }

@@ -33,9 +33,11 @@ type ERC721Drop @entity {
   id: ID!
 
   created: TransactionInfo!
+  createdAt: BigInt!
 
   creator: Bytes!
   address: Bytes!
+  network: String!
   name: String!
   symbol: String!
 
@@ -78,6 +80,7 @@ type NFTEditionTransfer @entity {
   to: Bytes!
   from: Bytes!
   txn: TransactionInfo!
+  mintedAt: BigInt!
 
   drop: ERC721Drop!
 }
