@@ -25,7 +25,13 @@ import {
   SalesConfigChanged,
   Transfer,
 } from "../generated/templates/ERC721Drop/ERC721Drop";
-import { Address, BigInt, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  BigInt,
+  Bytes,
+  dataSource,
+  ethereum,
+} from "@graphprotocol/graph-ts";
 
 function makeTransaction(txn: ethereum.Event): string {
   const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
@@ -133,18 +139,26 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 export function handleSalesConfigChanged(event: SalesConfigChanged): void {
   const dropId = event.address.toHex();
   const drop = ERC721Drop.load(dropId);
+  const dropContract = ERC721DropContract.bind(
+    Address.fromString(event.address.toHex())
+  );
+
   const newSalesConfigId = event.transaction.hash.toHex();
   const newSalesConfig = new SalesConfig(newSalesConfigId);
-  newSalesConfig.drop = dropId;
-  newSalesConfig.presaleEnd = event.params.salesConfig.presaleEnd;
-  newSalesConfig.presaleStart = event.params.salesConfig.presaleStart;
-  newSalesConfig.publicSaleEnd = event.params.salesConfig.publicSaleEnd;
-  newSalesConfig.publicSaleStart = event.params.salesConfig.publicSaleStart;
-  newSalesConfig.publicSalePrice = event.params.salesConfig.publicSalePrice;
-  newSalesConfig.maxSalePurchasePerAddress =
-    event.params.salesConfig.maxSalePurchasePerAddress;
-  newSalesConfig.presaleMerkleRoot = event.params.salesConfig.presaleMerkleRoot;
+  const salesConfigObject = dropContract.salesConfig();
 
+  // type mapping:
+  // uint104:publicSalePrice,uint32:maxSalePurchasePerAddress
+  // uint64:publicSaleStart,uint64:publicSaleEnd,uint64:presaleStart,uint64:presaleEnd
+  // bytes32:presaleMerkleRoot
+  newSalesConfig.drop = dropId;
+  newSalesConfig.publicSalePrice = salesConfigObject.value0;
+  newSalesConfig.maxSalePurchasePerAddress = salesConfigObject.value1;
+  newSalesConfig.publicSaleStart = salesConfigObject.value2;
+  newSalesConfig.publicSaleEnd = salesConfigObject.value3;
+  newSalesConfig.presaleStart = salesConfigObject.value4;
+  newSalesConfig.presaleEnd = salesConfigObject.value5;
+  newSalesConfig.presaleMerkleRoot = salesConfigObject.value6;
   newSalesConfig.save();
 
   if (drop) {

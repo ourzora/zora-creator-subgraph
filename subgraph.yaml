@@ -89,6 +89,8 @@ templates:
       eventHandlers:
         - event: SalesConfigChanged(indexed address,(uint104,uint32,uint64,uint64,uint64,uint64,bytes32))
           handler: handleSalesConfigChanged
+        - event: SalesConfigChanged(indexed address)
+          handler: handleSalesConfigChanged
         - event: OpenMintFinalized(indexed address,uint256)
           handler: handleOpenMintFinalized
         - event: FundsRecipientChanged(indexed address,indexed address)
