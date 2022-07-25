@@ -3,6 +3,7 @@ import {
   Upgraded,
   ZoraNFTCreatorV1,
 } from "../generated/ZoraNFTCreatorV1/ZoraNFTCreatorV1";
+import { crypto } from "@graphprotocol/graph-ts";
 import {
   ContractConfig,
   ERC721Drop,
@@ -11,6 +12,7 @@ import {
   SalesConfig,
   Upgrade,
   TransactionInfo,
+  DropRole,
 } from "../generated/schema";
 import {
   ERC721Drop as ERC721DropFactory,
@@ -21,17 +23,14 @@ import {
   ERC721Drop as ERC721DropContract,
   FundsRecipientChanged,
   OpenMintFinalized,
+  OwnershipTransferred,
+  RoleGranted,
+  RoleRevoked,
   Sale,
   SalesConfigChanged,
   Transfer,
 } from "../generated/templates/ERC721Drop/ERC721Drop";
-import {
-  Address,
-  BigInt,
-  Bytes,
-  dataSource,
-  ethereum,
-} from "@graphprotocol/graph-ts";
+import { Address, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts";
 
 function makeTransaction(txn: ethereum.Event): string {
   const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
@@ -40,6 +39,69 @@ function makeTransaction(txn: ethereum.Event): string {
   txnInfo.save();
 
   return txnInfo.id;
+}
+
+export function handleOwnershipTransferred(evt: OwnershipTransferred): void {
+  const drop = ERC721Drop.load(evt.address.toHex());
+  if (drop) {
+    drop.owner = evt.params.newOwner;
+    drop.save();
+  }
+}
+
+const KNOWN_TYPE_DEFAULT_ADMIN: string =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
+const KNOWN_TYPE_MINTER_ROLE: string =
+  "0xf0887ba65ee2024ea881d91b74c2450ef19e1557f03bed3ea9f16b037cbe2dc9";
+
+const KNOWN_TYPE_SALES_MANAGER_ROLE: string =
+  "0x5ebbf78043a2215b522b1366a193ec74dd1f54e441e841a87b9653246a9c49a6";
+
+function lookupRole(role: string): string {
+  if (role.startsWith(KNOWN_TYPE_DEFAULT_ADMIN)) {
+    return "DEFAULT_ADMIN";
+  }
+  if (role.startsWith(KNOWN_TYPE_MINTER_ROLE)) {
+    return "MINTER";
+  }
+  if (role.startsWith(KNOWN_TYPE_SALES_MANAGER_ROLE)) {
+    return "SALES_MANAGER";
+  }
+
+  return '';
+}
+
+export function handleRoleGranted(evt: RoleGranted): void {
+  const roleHexString: string = evt.params.role.toHexString();
+
+  const savedRole = new DropRole(
+    `${evt.address.toHexString()}-${evt.params.account.toHexString()}-${roleHexString}`
+  );
+  savedRole.roleHash = evt.params.role;
+  savedRole.role = lookupRole(roleHexString);
+  savedRole.account = evt.params.account;
+  savedRole.sender = evt.params.sender;
+  savedRole.updated = evt.block.timestamp;
+  savedRole.granted = true;
+  savedRole.drop = evt.address.toHexString();
+  savedRole.save();
+}
+
+export function handleRoleRevoked(evt: RoleRevoked): void {
+  const roleHexString: string = evt.params.role.toHexString();
+
+  const savedRole = DropRole.load(
+    `${evt.address.toHexString()}-${evt.params.account.toHexString()}-${roleHexString}`
+  );
+  if (savedRole) {
+    savedRole.roleHash = evt.params.role;
+    savedRole.role = lookupRole(roleHexString);
+    savedRole.account = evt.params.account;
+    savedRole.sender = evt.params.sender;
+    savedRole.updated = evt.block.timestamp;
+    savedRole.granted = false;
+    savedRole.save();
+  }
 }
 
 export function handleFactoryUpgraded(evt: Upgraded): void {
@@ -94,6 +156,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 
   drop.created = makeTransaction(event);
   drop.creator = event.transaction.from;
+  drop.owner = dropContract.owner();
 
   const configId = `config-${drop.address.toHex()}`;
   const contractConfig = new ContractConfig(configId);

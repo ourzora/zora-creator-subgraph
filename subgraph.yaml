@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ZoraNFTCreatorV1
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0xF74B146ce44CC162b601deC3BE331784DB111DC1"
+      address: "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30"
       abi: ZoraNFTCreatorV1
-      startBlock: 14758780
+      startBlock: 10655635
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -26,11 +26,13 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: EditionMetadataRenderer
-    network: mainnet
+    network: rinkeby
     source:
       abi: EditionMetadataRenderer
     mapping:
@@ -52,7 +54,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: mainnet
+    network: rinkeby
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -70,7 +72,7 @@ templates:
       file: ./src/metadata.ts
   - name: ERC721Drop
     kind: ethereum/contract
-    network: mainnet
+    network: rinkeby
     source:
       abi: ERC721Drop
     mapping:
@@ -99,3 +101,7 @@ templates:
           handler: handleNFTTransfer
         - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
           handler: handleSale
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
