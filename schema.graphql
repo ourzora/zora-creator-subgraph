@@ -36,6 +36,7 @@ type ERC721Drop @entity {
   createdAt: BigInt!
 
   creator: Bytes!
+  owner: Bytes!
   address: Bytes!
   network: String!
   name: String!
@@ -53,12 +54,32 @@ type ERC721Drop @entity {
   editionMetadata: EditionMetadata @derivedFrom(field: "drop")
   dropMetadata: DropMetadata @derivedFrom(field: "drop")
 
+  roles: [DropRole!]! @derivedFrom(field: "drop")
+
   totalMinted: BigInt!
   maxSupply: BigInt!
 
   rendererAddress: Bytes!
 
   txn: TransactionInfo!
+}
+
+type DropRole @entity {
+  # user-role
+  id: ID!
+  account: Bytes!
+  sender: Bytes!
+  roleHash: Bytes!
+  role: String!
+  updated: BigInt!
+  granted: Boolean!
+
+  drop: ERC721Drop!
+}
+
+type DropRoleHistory @entity {
+  # txn hash for granted role
+  id: ID!
 }
 
 type NFTEditionSale @entity {
