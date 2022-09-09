@@ -33,7 +33,11 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
     const dropContract = ERC721DropContract.bind(
       Address.fromString(event.address.toHex())
     );
-    drop.contractURI = dropContract.contractURI();
+    const tryResult = dropContract.try_contractURI();
+    if (!tryResult.reverted) {
+      drop.contractURI = tryResult.value;
+      drop.save();
+    }
     drop.save();
   }
 }
@@ -50,7 +54,10 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
     const dropContract = ERC721DropContract.bind(
       Address.fromString(event.address.toHex())
     );
-    drop.contractURI = dropContract.contractURI();
-    drop.save();
+    const tryResult = dropContract.try_contractURI();
+    if (!tryResult.reverted) {
+      drop.contractURI = tryResult.value;
+      drop.save();
+    }
   }
 }

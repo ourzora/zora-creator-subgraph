@@ -156,7 +156,10 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   drop.created = makeTransaction(event);
   drop.creator = event.transaction.from;
   drop.owner = dropContract.owner();
-  drop.contractURI = dropContract.contractURI();
+  const uriResult = dropContract.try_contractURI();
+  if (!uriResult.reverted) {
+    drop.contractURI = uriResult.value;
+  }
 
   const configId = `config-${drop.address.toHex()}`;
   const contractConfig = new ContractConfig(configId);
