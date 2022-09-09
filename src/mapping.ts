@@ -3,7 +3,6 @@ import {
   Upgraded,
   ZoraNFTCreatorV1,
 } from "../generated/ZoraNFTCreatorV1/ZoraNFTCreatorV1";
-import { crypto } from "@graphprotocol/graph-ts";
 import {
   ContractConfig,
   ERC721Drop,
@@ -157,6 +156,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   drop.created = makeTransaction(event);
   drop.creator = event.transaction.from;
   drop.owner = dropContract.owner();
+  drop.contractURI = dropContract.contractURI();
 
   const configId = `config-${drop.address.toHex()}`;
   const contractConfig = new ContractConfig(configId);
