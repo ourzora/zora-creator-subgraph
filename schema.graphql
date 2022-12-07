@@ -92,6 +92,7 @@ type NFTEditionSale @entity {
   purchaser: Bytes!
   firstPurchasedTokenId: Int!
   txn: TransactionInfo!
+  mintedAt: BigInt!
 
   drop: ERC721Drop!
 }
