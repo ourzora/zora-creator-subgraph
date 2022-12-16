@@ -26,8 +26,6 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
@@ -109,3 +107,5 @@ templates:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
           handler: handleRoleRevoked
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
