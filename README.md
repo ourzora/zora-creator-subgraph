@@ -1,29 +1,31 @@
-# NFT Editions Subgraph
+# Create subgraphs
 
 ## Installation
 
-```sh
-yarn global add @graphprotocol/graph-cli
+The graph docs: https://thegraph.academy/developers/subgraph-development-guide/
+
+
+Steps to deploy:
+
+```
+NETWORK=goerli yarn run codegen
+NETWORK=goerli yarn run build
+NETWORK=goerli DEPLOYMENT_PATH=kolber/zora-editions-goerli yarn run deploy
 ```
 
-```sh
-yarn
-```
-
-```sh
-yarn codegen && yarn build
-```
-
-Deploy
+Will need to update the deployment path from your project path given in the subgraph
 
 
 ## Contracts & Deployed Apps
 
-- name: ZoraEditionsCreatorV1
-- [github](https://github.com/ourzora/zora-drops-contracts)
+Backup main:
+https://thegraph.com/hosted-service/subgraph/iainnash/zora-drops-mainnet
 
-## The Graph
+Main subgraph:
+https://thegraph.com/hosted-service/subgraph/iainnash/zora-editions-mainnet
 
-- [studio](https://thegraph.com/studio/) | [docs](https://thegraph.com/docs/en/studio/subgraph-studio)
-- [hosted service](https://thegraph.com/hosted-service/dashboard) | [docs](https://thegraph.com/docs/en/hosted-service/what-is-hosted-service)
-- [graph-cli github](https://github.com/graphprotocol/graph-cli)
+Rinkeby:
+https://thegraph.com/hosted-service/subgraph/iainnash/erc721droprinkeby
+
+Görli:
+https://thegraph.com/hosted-service/subgraph/iainnash/erc721drop-goerli
