@@ -9,7 +9,7 @@
     "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
-    "network-deploy": "chmod u+x deploy.sh; ./deploy.sh",
+    "network-deploy": "./deploy.sh",
     "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
