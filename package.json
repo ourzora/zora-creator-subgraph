@@ -1,6 +1,6 @@
 {
   "name": "nft-drop-subgraph",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "codegen": "yarn gen-yaml-config && graph codegen",
     "build": "echo 'need to run codegen first' && yarn run codegen && graph build",
@@ -9,11 +9,15 @@
     "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
-    "network-deploy": "chmod u+x deploy.sh; ./deploy.sh"
+    "network-deploy": "chmod u+x deploy.sh; ./deploy.sh",
+    "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.25.1",
-    "@graphprotocol/graph-ts": "0.24.1",
+    "@graphprotocol/graph-cli": "^0.41.1",
+    "@graphprotocol/graph-ts": "^0.29.3",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.5.1"
   }
 }
