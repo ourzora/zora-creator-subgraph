@@ -8,6 +8,7 @@ type SalesConfig @entity(immutable: true) {
   id: ID!
 
   publicSalePrice: BigInt!
+  publicSalePriceWithFee: BigInt!
   maxSalePurchasePerAddress: BigInt!
   publicSaleStart: BigInt!
   publicSaleEnd: BigInt!
@@ -34,6 +35,11 @@ type ERC721Drop @entity {
 
   created: TransactionInfo!
   createdAt: BigInt!
+
+  contractVersion: BigInt!
+  mintFee: BigInt!
+  mintFeeRecipient: Bytes!
+  implAddress: Bytes!
 
   contractURI: String!
 

@@ -29,7 +29,7 @@ import {
   SalesConfigChanged,
   Transfer,
 } from "../generated/templates/ERC721Drop/ERC721Drop";
-import { Address, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts";
 
 function makeTransaction(txn: ethereum.Event): string {
   const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
@@ -38,6 +38,10 @@ function makeTransaction(txn: ethereum.Event): string {
   txnInfo.save();
 
   return txnInfo.id;
+}
+
+function getRoleKey(address: String, account: String, role: String): string {
+  return `${address}-${account}-${role}`;
 }
 
 export function handleOwnershipTransferred(evt: OwnershipTransferred): void {
@@ -67,14 +71,18 @@ function lookupRole(role: string): string {
     return "SALES_MANAGER";
   }
 
-  return '';
+  return "";
 }
 
 export function handleRoleGranted(evt: RoleGranted): void {
   const roleHexString: string = evt.params.role.toHexString();
 
   const savedRole = new DropRole(
-    `${evt.address.toHexString()}-${evt.params.account.toHexString()}-${roleHexString}`
+    getRoleKey(
+      evt.address.toHexString(),
+      evt.params.account.toHexString(),
+      roleHexString
+    )
   );
   savedRole.roleHash = evt.params.role;
   savedRole.role = lookupRole(roleHexString);
@@ -90,7 +98,11 @@ export function handleRoleRevoked(evt: RoleRevoked): void {
   const roleHexString: string = evt.params.role.toHexString();
 
   const savedRole = DropRole.load(
-    `${evt.address.toHexString()}-${evt.params.account.toHexString()}-${roleHexString}`
+    getRoleKey(
+      evt.address.toHexString(),
+      evt.params.account.toHexString(),
+      roleHexString
+    )
   );
   if (savedRole) {
     savedRole.roleHash = evt.params.role;
@@ -114,6 +126,28 @@ export function handleFactoryUpgraded(evt: Upgraded): void {
   upgrade.save();
 }
 
+export function handleDropUpgraded(evt: Upgraded): void {
+  let drop = ERC721Drop.load(evt.address.toHexString());
+  if (drop) {
+    drop = updateDropUpgraded(drop, evt.address);
+    drop.save();
+  }
+}
+
+function updateDropUpgraded(drop: ERC721Drop, dropAddress: Address): ERC721Drop {
+  const dropContract = ERC721DropContract.bind(dropAddress);
+  
+  drop.contractVersion = dropContract.contractVersion();
+  const mintFeeDetails = dropContract.try_zoraFeeForAmount(BigInt.fromString('1'));
+  if (!mintFeeDetails.reverted) {
+    // recipient
+    drop.mintFeeRecipient = mintFeeDetails.value.value0;
+    // fee
+    drop.mintFee = mintFeeDetails.value.value1;
+  }
+  return drop;
+}
+
 function updateDropSupply(dropAddress: Address): void {
   const dropContract = ERC721DropContract.bind(dropAddress);
   const saleDetails = dropContract.saleDetails();
@@ -129,13 +163,12 @@ function updateDropSupply(dropAddress: Address): void {
 
 export function handleCreatedDrop(event: CreatedDrop): void {
   const dropId = event.params.editionContractAddress.toHex();
-  const drop = new ERC721Drop(dropId);
+  let drop = new ERC721Drop(dropId);
   drop.address = event.params.editionContractAddress;
   drop.createdAt = event.block.timestamp;
 
-  const dropContract = ERC721DropContract.bind(
-    Address.fromString(drop.address.toHex())
-  );
+  const dropAddress = Address.fromString(drop.address.toHex());
+  const dropContract = ERC721DropContract.bind(dropAddress);
 
   const rendererAddress = dropContract.metadataRenderer();
   drop.rendererAddress = rendererAddress;
@@ -143,6 +176,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   drop.name = dropContract.name();
   drop.symbol = dropContract.symbol();
   drop.network = dataSource.network();
+  drop = updateDropUpgraded(drop, dropAddress);
 
   drop.save();
 
@@ -174,7 +208,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const salesConfigId = event.transaction.hash.toHex();
   const salesConfig = new SalesConfig(salesConfigId);
   salesConfig.drop = dropId;
-  const salesConfigDrop = dropContract.salesConfig();
+  const salesConfigDrop = dropContract.try_salesConfig();
 
   /**
    * uint104 publicSalePrice;
@@ -185,14 +219,17 @@ export function handleCreatedDrop(event: CreatedDrop): void {
      uint64 presaleEnd;
      bytes32 presaleMerkleRoot;
    */
-  salesConfig.publicSalePrice = salesConfigDrop.value0;
-  salesConfig.maxSalePurchasePerAddress = salesConfigDrop.value1;
-  salesConfig.publicSaleStart = salesConfigDrop.value2;
-  salesConfig.publicSaleEnd = salesConfigDrop.value3;
-  salesConfig.presaleStart = salesConfigDrop.value4;
-  salesConfig.presaleEnd = salesConfigDrop.value5;
-  salesConfig.presaleMerkleRoot = salesConfigDrop.value6;
-  salesConfig.save();
+  if (!salesConfigDrop.reverted) {
+    salesConfig.publicSalePrice = salesConfigDrop.value.value0;
+    salesConfig.publicSalePriceWithFee = salesConfigDrop.value.value0 + drop.mintFee;
+    salesConfig.maxSalePurchasePerAddress = salesConfigDrop.value.value1;
+    salesConfig.publicSaleStart = salesConfigDrop.value.value2;
+    salesConfig.publicSaleEnd = salesConfigDrop.value.value3;
+    salesConfig.presaleStart = salesConfigDrop.value.value4;
+    salesConfig.presaleEnd = salesConfigDrop.value.value5;
+    salesConfig.presaleMerkleRoot = salesConfigDrop.value.value6;
+    salesConfig.save();
+  }
 
   drop.salesConfig = salesConfigId;
   drop.contractConfig = configId;
@@ -217,6 +254,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
   // uint104:publicSalePrice,uint32:maxSalePurchasePerAddress
   // uint64:publicSaleStart,uint64:publicSaleEnd,uint64:presaleStart,uint64:presaleEnd
   // bytes32:presaleMerkleRoot
+
   newSalesConfig.drop = dropId;
   newSalesConfig.publicSalePrice = salesConfigObject.value0;
   newSalesConfig.maxSalePurchasePerAddress = salesConfigObject.value1;
