@@ -29,11 +29,11 @@ dataSources:
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
-    network: { { network } }
+    network: {{ network }}
     source:
       address: "{{address}}"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: { { startBlock } }
+      startBlock: {{ startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -44,7 +44,7 @@ dataSources:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
       eventHandlers:
-        - event: SetupNewContract(address,address,address,string)
+        - event: SetupNewContract(address,address,address,string,(uint32,address))
           handler: handleNewContractCreated
       file: ./src/mapping.ts
 templates:
@@ -74,7 +74,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: { { network } }
+    network: {{ network }}
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -129,7 +129,7 @@ templates:
           handler: handleOwnershipTransferred
   - name: ZoraCreator1155Impl
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreator1155Impl
     mapping:
@@ -151,20 +151,21 @@ templates:
           handler: handleContractRendererUpdated
         - event: RendererUpdated(uint256,address,address)
           handler: handleRendererUpdated
-        - event: URI(string,uint256)
+        - event: URI(string,indexed uint256)
           handler: handleURI
         - event: UpdatedPermissions(uint256,address,uint256)
           handler: handleUpdatedPermissions
-        - event: UpdatedRoyalties(uint256,address,address,(uint32,address))
+        - event: UpdatedRoyalties(uint256,address,(uint32,address))
           handler: handleUpdatedRoyalties
         - event: UpdatedToken(address,uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
-        - event: TransferBatch(indexed address, indexed address, indexed address,uint256[],uint256[])
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
+    network: {{ network }}
     source:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
@@ -182,7 +183,7 @@ templates:
           handler: handleSaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
-    network: { { network } }
+    network: {{ network }}
     source:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
@@ -196,5 +197,5 @@ templates:
         - name: ZoraCreatorMerkleMinterStrategy
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json
       eventHandlers:
-        - event: SaleSet(address,uint256,(uint64,address,bytes32))
+        - event: SaleSet(address,uint256,(uint64,uint64,address,bytes32))
           handler: handleSaleSet
