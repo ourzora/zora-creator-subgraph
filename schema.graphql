@@ -67,6 +67,69 @@ type ERC721Drop @entity {
 }
 
 
+type ERC1155Drop @entity {
+  id: ID!
+
+  created: TransactionInfo!
+  createdAt: BigInt!
+
+  contractURI: String!
+
+  creator: Bytes!
+  owner: Bytes!
+  address: Bytes!
+  network: String!
+  name: String!
+  symbol: String!
+
+  contractConfig: ContractConfig!
+
+  salesConfig: SalesConfig!
+
+  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
+
+  sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
+  transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
+
+  editionMetadata: EditionMetadata @derivedFrom(field: "drop")
+  dropMetadata: DropMetadata @derivedFrom(field: "drop")
+
+  roles: [DropRole!]! @derivedFrom(field: "drop")
+
+  rendererAddress: Bytes!
+
+  txn: TransactionInfo!
+}
+
+type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
+  id: ID!
+
+  saleStart: BigInt!
+  saleEnd: BigInt!
+  maxTokensPerTransaction: BigInt!
+  maxTokensPerAddress: BigInt!
+  pricePerToken: BigInt!
+  fundsRecipient: String!
+}
+
+type ERC1155SalesConfigMerkleMinterStrategy @entity {
+  id: ID!
+
+  presaleStart: BigInt!
+  presaleEnd: BigInt!
+  fundsRecipient: String!
+  merkleRoot: Bytes!
+}
+
+
+type ERC1155Sale @entity {
+  id: ID!
+
+  mediaContract: String!
+  tokenId: BigInt!
+  salesConfig: ERC1155SalesConfigFixedPriceSaleStrategy! | ERC1155SalesConfigMerkleMinterStrategy!
+}
+
 type ERC1155Creator @entity {
   id: ID!
 

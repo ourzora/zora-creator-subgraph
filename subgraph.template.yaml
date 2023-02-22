@@ -27,6 +27,26 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
       file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: ZoraNFTCreatorFactory1155
+    network: { { network } }
+    source:
+      address: "{{address}}"
+      abi: ZoraCreator1155FactoryImpl
+      startBlock: { { startBlock } }
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ERC1155Drop
+      abis:
+        - name: ZoraCreator1155FactoryImpl
+          file: ./abis/ZoraCreator1155FactoryImpl.json
+      eventHandlers:
+        - event: SetupNewContract(address,address,address,string)
+          handler: handleNewContractCreated
+      file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: EditionMetadataRenderer
@@ -54,7 +74,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: {{network}}
+    network: { { network } }
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -107,3 +127,74 @@ templates:
           handler: handleRoleRevoked
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
+  - name: ZoraCreator1155Impl
+    kind: ethereum/contract
+    network: { { network } }
+    source:
+      abi: ZoraCreator1155Impl
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      entities:
+        - ERC1155Drop
+        - TransferSingle
+        - TransferBatch
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      abis:
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
+      eventHandlers:
+        - event: AdminChanged(address,address)
+          handler: handleAdminChanged
+        - event: ContractRendererUpdated(address)
+          handler: handleContractRendererUpdated
+        - event: RendererUpdated(uint256,address,address)
+          handler: handleRendererUpdated
+        - event: URI(string,uint256)
+          handler: handleURI
+        - event: UpdatedPermissions(uint256,address,uint256)
+          handler: handleUpdatedPermissions
+        - event: UpdatedRoyalties(uint256,address,address,(uint32,address))
+          handler: handleUpdatedRoyalties
+        - event: UpdatedToken(address,uint256,(string,uint256,uint256))
+          handler: handleUpdatedToken
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address, indexed address, indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+  - name: ZoraCreatorFixedPriceSaleStrategy
+    kind: ethereum/contract
+    source:
+      abi: ZoraCreatorFixedPriceSaleStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      entities:
+        - ERC1155Sale
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      abis:
+        - name: ZoraCreatorFixedPriceSaleStrategy
+          file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
+      eventHandlers:
+        - event: SaleSet(address,uint256,(uint64,uint64,uint64,uint96,address))
+          handler: handleSaleSet
+  - name: ZoraCreatorMerkleMinterStrategy
+    kind: ethereum/contract
+    network: { { network } }
+    source:
+      abi: ZoraCreatorMerkleMinterStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      entities:
+        - ERC1155Sale
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      abis:
+        - name: ZoraCreatorMerkleMinterStrategy
+          file: ./abis/ZoraCreatorMerkleMinterStrategy.json
+      eventHandlers:
+        - event: SaleSet(address,uint256,(uint64,address,bytes32))
+          handler: handleSaleSet
