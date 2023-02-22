@@ -29,11 +29,11 @@ dataSources:
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
-    network: {{ network }}
+    network: {{network}}
     source:
       address: "{{address}}"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: {{ startBlock }}
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -74,7 +74,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: {{ network }}
+    network: {{network}}
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -165,7 +165,7 @@ templates:
           handler: handleTransferBatch
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
-    network: {{ network }}
+    network: {{network}}
     source:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
@@ -183,7 +183,7 @@ templates:
           handler: handleSaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
-    network: {{ network }}
+    network: {{network}}
     source:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
