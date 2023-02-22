@@ -10,7 +10,7 @@
 #
 #
 # Okayyyy...
-specVersion: 0.0.2
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
@@ -23,7 +23,7 @@ dataSources:
       startBlock: 10655635
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - ERC721Drop
@@ -38,8 +38,6 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
@@ -49,7 +47,7 @@ templates:
       abi: EditionMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
@@ -73,7 +71,7 @@ templates:
       abi: DropMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - DropMetadata
@@ -93,7 +91,7 @@ templates:
       abi: ERC721Drop
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       entities:
         - Sale
         - Transfer
@@ -121,3 +119,5 @@ templates:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
           handler: handleRoleRevoked
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred

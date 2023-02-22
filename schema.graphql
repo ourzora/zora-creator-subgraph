@@ -66,6 +66,14 @@ type ERC721Drop @entity {
   txn: TransactionInfo!
 }
 
+
+type ERC1155Creator @entity {
+  id: ID!
+
+  created: TransactionInfo!
+  createdAt: BigInt!
+}
+
 type DropRole @entity {
   # user-role
   id: ID!
