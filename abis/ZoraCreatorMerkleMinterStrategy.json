@@ -1,28 +1,56 @@
 [
   {
     "inputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "quantity", "type": "uint256" },
-      { "internalType": "uint256", "name": "ethValueSent", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ethValueSent",
+        "type": "uint256"
+      }
     ],
     "name": "IncorrectValueSent",
     "type": "error"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "mintTo", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "mintTo",
+        "type": "address"
+      },
       {
         "internalType": "bytes32[]",
         "name": "merkleProof",
         "type": "bytes32[]"
       },
-      { "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "merkleRoot",
+        "type": "bytes32"
+      }
     ],
     "name": "InvalidMerkleProof",
     "type": "error"
   },
-  { "inputs": [], "name": "MerkleClaimsExceeded", "type": "error" },
-  { "inputs": [], "name": "MintedTooManyForAddress", "type": "error" },
+  {
+    "inputs": [],
+    "name": "MerkleClaimsExceeded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MintedTooManyForAddress",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -45,13 +73,21 @@
             "name": "presaleStart",
             "type": "uint64"
           },
-          { "internalType": "uint64", "name": "presaleEnd", "type": "uint64" },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
           {
             "internalType": "address",
             "name": "fundsRecipient",
             "type": "address"
           },
-          { "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32" }
+          {
+            "internalType": "bytes32",
+            "name": "merkleRoot",
+            "type": "bytes32"
+          }
         ],
         "indexed": false,
         "internalType": "struct ZoraCreatorMerkleMinterStrategy.MerkleSaleSettings",
@@ -63,17 +99,35 @@
     "type": "event"
   },
   {
-    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "name": "allowedMerkles",
     "outputs": [
-      { "internalType": "uint64", "name": "presaleStart", "type": "uint64" },
-      { "internalType": "uint64", "name": "presaleEnd", "type": "uint64" },
+      {
+        "internalType": "uint64",
+        "name": "presaleStart",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "presaleEnd",
+        "type": "uint64"
+      },
       {
         "internalType": "address",
         "name": "fundsRecipient",
         "type": "address"
       },
-      { "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32" }
+      {
+        "internalType": "bytes32",
+        "name": "merkleRoot",
+        "type": "bytes32"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -81,38 +135,88 @@
   {
     "inputs": [],
     "name": "contractName",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "contractURI",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "contractVersion",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "name": "mintedPerAddress",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "quantity", "type": "uint256" },
-      { "internalType": "uint256", "name": "ethValueSent", "type": "uint256" },
-      { "internalType": "bytes", "name": "minterArguments", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ethValueSent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "minterArguments",
+        "type": "bytes"
+      }
     ],
     "name": "requestMint",
     "outputs": [
@@ -125,13 +229,21 @@
                 "name": "method",
                 "type": "uint8"
               },
-              { "internalType": "bytes", "name": "args", "type": "bytes" }
+              {
+                "internalType": "bytes",
+                "name": "args",
+                "type": "bytes"
+              }
             ],
             "internalType": "struct ICreatorCommands.Command[]",
             "name": "commands",
             "type": "tuple[]"
           },
-          { "internalType": "uint256", "name": "at", "type": "uint256" }
+          {
+            "internalType": "uint256",
+            "name": "at",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct ICreatorCommands.CommandSet",
         "name": "commands",
@@ -143,7 +255,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
     ],
     "name": "resetSale",
     "outputs": [],
@@ -152,8 +268,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "tokenContract", "type": "address" },
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "tokenContract",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
     ],
     "name": "sale",
     "outputs": [
@@ -164,13 +288,21 @@
             "name": "presaleStart",
             "type": "uint64"
           },
-          { "internalType": "uint64", "name": "presaleEnd", "type": "uint64" },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
           {
             "internalType": "address",
             "name": "fundsRecipient",
             "type": "address"
           },
-          { "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32" }
+          {
+            "internalType": "bytes32",
+            "name": "merkleRoot",
+            "type": "bytes32"
+          }
         ],
         "internalType": "struct ZoraCreatorMerkleMinterStrategy.MerkleSaleSettings",
         "name": "",
@@ -182,7 +314,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
       {
         "components": [
           {
@@ -190,13 +326,21 @@
             "name": "presaleStart",
             "type": "uint64"
           },
-          { "internalType": "uint64", "name": "presaleEnd", "type": "uint64" },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
           {
             "internalType": "address",
             "name": "fundsRecipient",
             "type": "address"
           },
-          { "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32" }
+          {
+            "internalType": "bytes32",
+            "name": "merkleRoot",
+            "type": "bytes32"
+          }
         ],
         "internalType": "struct ZoraCreatorMerkleMinterStrategy.MerkleSaleSettings",
         "name": "merkleSaleSettings",
