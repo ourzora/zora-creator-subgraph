@@ -2,6 +2,7 @@
   "name": "nft-drop-subgraph",
   "license": "MIT",
   "scripts": {
+    "copy-abis": "bash abis/copy-abis.sh",
     "codegen": "yarn gen-yaml-config && graph codegen",
     "build": "echo 'need to run codegen first' && yarn run codegen && graph build",
     "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml",

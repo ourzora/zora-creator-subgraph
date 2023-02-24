@@ -20,10 +20,26 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
-  { "inputs": [], "name": "Constructor_ImplCannotBeZero", "type": "error" },
-  { "inputs": [], "name": "ONLY_OWNER", "type": "error" },
-  { "inputs": [], "name": "ONLY_PENDING_OWNER", "type": "error" },
-  { "inputs": [], "name": "OWNER_CANNOT_BE_ZERO_ADDRESS", "type": "error" },
+  {
+    "inputs": [],
+    "name": "Constructor_ImplCannotBeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_PENDING_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OWNER_CANNOT_BE_ZERO_ADDRESS",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -56,7 +72,12 @@
     "name": "BeaconUpgraded",
     "type": "event"
   },
-  { "anonymous": false, "inputs": [], "name": "FactorySetup", "type": "event" },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "FactorySetup",
+    "type": "event"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -156,7 +177,11 @@
       },
       {
         "components": [
-          { "internalType": "uint32", "name": "royaltyBPS", "type": "uint32" },
+          {
+            "internalType": "uint32",
+            "name": "royaltyBPS",
+            "type": "uint32"
+          },
           {
             "internalType": "address",
             "name": "royaltyRecipient",
@@ -240,16 +265,30 @@
   {
     "inputs": [],
     "name": "contractVersion",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "contractURI", "type": "string" },
+      {
+        "internalType": "string",
+        "name": "contractURI",
+        "type": "string"
+      },
       {
         "components": [
-          { "internalType": "uint32", "name": "royaltyBPS", "type": "uint32" },
+          {
+            "internalType": "uint32",
+            "name": "royaltyBPS",
+            "type": "uint32"
+          },
           {
             "internalType": "address",
             "name": "royaltyRecipient",
@@ -260,11 +299,25 @@
         "name": "defaultRoyaltyConfiguration",
         "type": "tuple"
       },
-      { "internalType": "address", "name": "defaultAdmin", "type": "address" },
-      { "internalType": "bytes[]", "name": "setupActions", "type": "bytes[]" }
+      {
+        "internalType": "address",
+        "name": "defaultAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "setupActions",
+        "type": "bytes[]"
+      }
     ],
     "name": "createContract",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -296,7 +349,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_initialOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_initialOwner",
+        "type": "address"
+      }
     ],
     "name": "initialize",
     "outputs": [],
@@ -305,49 +362,103 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
     "name": "isAllowedUpgrade",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "baseImpl", "type": "address" },
-      { "internalType": "address", "name": "upgradeImpl", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "baseImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "upgradeImpl",
+        "type": "address"
+      }
     ],
     "name": "isRegisteredUpgradePath",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "pendingOwner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address[]", "name": "baseImpls", "type": "address[]" },
-      { "internalType": "address", "name": "upgradeImpl", "type": "address" }
+      {
+        "internalType": "address[]",
+        "name": "baseImpls",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address",
+        "name": "upgradeImpl",
+        "type": "address"
+      }
     ],
     "name": "registerUpgradePath",
     "outputs": [],
@@ -356,8 +467,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "baseImpl", "type": "address" },
-      { "internalType": "address", "name": "upgradeImpl", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "baseImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "upgradeImpl",
+        "type": "address"
+      }
     ],
     "name": "removeUpgradePath",
     "outputs": [],
@@ -373,7 +492,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "safeTransferOwnership",
     "outputs": [],
@@ -382,7 +505,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -409,7 +536,11 @@
         "name": "newImplementation",
         "type": "address"
       },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
     ],
     "name": "upgradeToAndCall",
     "outputs": [],
