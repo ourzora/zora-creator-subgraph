@@ -67,6 +67,90 @@ type ERC721Drop @entity {
 }
 
 
+type ZoraCreate721Factory @entity {
+  id: ID!
+  implementation: Bytes!
+  version: BigInt!
+
+  updatedAt: BigInt!
+}
+
+type ZoraCreate1155Factory @entity {
+  id: ID!
+  fixedPriceSaleStrategyAddress: Bytes!
+  implementation: Bytes!
+  merkleSaleStrategyAddress: Bytes!
+  version: String!
+
+  updatedAt: BigInt!
+}
+
+type ZoraCreateContract @entity {
+  id: ID!
+  name: String!
+  symbol: String
+  contractURI: String!
+  profileImage: String!
+  contractStandard: String!
+  metadata: MetadataInfo
+
+  updatedAt: BigInt!
+}
+
+type ZoraCreateToken @entity {
+  id: ID!
+  uri: String!
+  rendererContract: String!
+  contract: String!
+  tokenId: Int
+  metadata: MetadataInfo
+
+  salesStrategies: [ERC1155SalesStrategyConfig!]
+
+  updatedAt: BigInt!
+}
+
+type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
+  id: ID!
+
+  saleStart: BigInt!
+  saleEnd: BigInt!
+  maxTokensPerTransaction: BigInt!
+  maxTokensPerAddress: BigInt!
+  pricePerToken: BigInt!
+  fundsRecipient: Bytes!
+
+  updatedAt: BigInt!
+}
+
+type ERC1155SalesConfigMerkleMinterStrategy @entity {
+  id: ID!
+
+  presaleStart: BigInt!
+  presaleEnd: BigInt!
+  fundsRecipient: Bytes!
+  merkleRoot: Bytes!
+  updatedAt: BigInt!
+}
+
+type ERC1155SalesStrategyConfig @entity {
+  id: ID!
+  presale: ERC1155SalesConfigMerkleMinterStrategy
+  fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
+  type: String!
+  updatedAt: BigInt!
+}
+
+type MetadataInfo @entity {
+    id: ID!
+    name: String!
+    title: String!
+    image: String!
+    properties: String!
+    rawJson: String!
+		updatedAt: BigInt!
+}
+
 type ERC1155Creator @entity {
   id: ID!
 
