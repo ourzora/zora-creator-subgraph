@@ -72,7 +72,7 @@ type ZoraCreate721Factory @entity {
   implementation: Bytes!
   version: BigInt!
 
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ZoraCreate1155Factory @entity {
@@ -82,19 +82,18 @@ type ZoraCreate1155Factory @entity {
   merkleSaleStrategyAddress: Bytes!
   version: String!
 
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ZoraCreateContract @entity {
   id: ID!
-  name: String!
+  name: String
   symbol: String
   contractURI: String!
-  profileImage: String!
   contractStandard: String!
   metadata: MetadataInfo
 
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ZoraCreateToken @entity {
@@ -107,7 +106,7 @@ type ZoraCreateToken @entity {
 
   salesStrategies: [ERC1155SalesStrategyConfig!]
 
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
@@ -120,7 +119,7 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   pricePerToken: BigInt!
   fundsRecipient: Bytes!
 
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
@@ -130,7 +129,7 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
   presaleEnd: BigInt!
   fundsRecipient: Bytes!
   merkleRoot: Bytes!
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type ERC1155SalesStrategyConfig @entity {
@@ -138,7 +137,7 @@ type ERC1155SalesStrategyConfig @entity {
   presale: ERC1155SalesConfigMerkleMinterStrategy
   fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
   type: String!
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type MetadataInfo @entity {
@@ -148,7 +147,7 @@ type MetadataInfo @entity {
     image: String!
     properties: String!
     rawJson: String!
-		updatedAt: BigInt!
+		updatedAt: Int!
 }
 
 type ERC1155Creator @entity {

@@ -31,9 +31,9 @@ dataSources:
     name: ZoraNFTCreatorFactory1155
     network: {{network}}
     source:
-      address: "{{address}}"
+      address: "{{1155Address}}"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: {{startBlock}}
+      startBlock: {{1155StartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
