@@ -9,7 +9,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   sale.presaleEnd = event.params.merkleSaleSettings.presaleEnd;
   sale.fundsRecipient = event.params.merkleSaleSettings.fundsRecipient;
   sale.merkleRoot = event.params.merkleSaleSettings.merkleRoot;
-  sale.updatedAt = Date.now();
+  sale.updatedAt = event.block.timestamp;
 
   sale.save();
 }

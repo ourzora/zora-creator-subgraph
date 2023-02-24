@@ -48,7 +48,7 @@ dataSources:
           handler: handleNewContractCreated
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/factoryMappings.ts
 templates:
   - kind: ethereum/contract
     name: EditionMetadataRenderer
@@ -142,7 +142,7 @@ templates:
         - TransferSingle
         - TransferBatch
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
@@ -176,7 +176,7 @@ templates:
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraCreatorFixedPriceSaleStrategyMappings.ts
       abis:
         - name: ZoraCreatorFixedPriceSaleStrategy
           file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
@@ -194,7 +194,7 @@ templates:
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraMerkleMinterStrategyMappings.ts
       abis:
         - name: ZoraCreatorMerkleMinterStrategy
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json

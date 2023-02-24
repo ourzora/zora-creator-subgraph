@@ -67,7 +67,7 @@ function lookupRole(role: string): string {
     return "SALES_MANAGER";
   }
 
-  return '';
+  return "";
 }
 
 export function handleRoleGranted(evt: RoleGranted): void {
@@ -143,9 +143,6 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   drop.name = dropContract.name();
   drop.symbol = dropContract.symbol();
   drop.network = dataSource.network();
-
-  drop.save();
-
   drop.created = makeTransaction(event);
   drop.creator = event.transaction.from;
   drop.txn = makeTransaction(event);
@@ -278,6 +275,7 @@ export function handleSale(event: Sale): void {
   sale.firstPurchasedTokenId = event.params.firstPurchasedTokenId.toI32();
   sale.count = event.params.quantity;
   sale.drop = event.address.toHex();
+  sale.mintedAt = event.block.timestamp;
 
   sale.save();
 }

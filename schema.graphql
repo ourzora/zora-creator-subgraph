@@ -35,7 +35,7 @@ type ERC721Drop @entity {
   created: TransactionInfo!
   createdAt: BigInt!
 
-  contractURI: String!
+  contractURI: String
 
   creator: Bytes!
   owner: Bytes!
@@ -89,11 +89,13 @@ type ZoraCreateContract @entity {
   id: ID!
   name: String
   symbol: String
-  contractURI: String!
-  contractStandard: String!
+  contractURI: String #fix 
+  contractStandard: String #fix
   metadata: MetadataInfo
+  creator: String
+  defaultAdmin: String
 
-  updatedAt: Int!
+  updatedAt: Int # fix
 }
 
 type ZoraCreateToken @entity {
@@ -129,7 +131,7 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
   presaleEnd: BigInt!
   fundsRecipient: Bytes!
   merkleRoot: Bytes!
-  updatedAt: Int!
+  updatedAt: BigInt!
 }
 
 type ERC1155SalesStrategyConfig @entity {
@@ -209,7 +211,7 @@ type EditionMetadata @entity {
 
   drop: ERC721Drop!
   description: String!
-  contractURI: String!
+  contractURI: String
   imageURI: String!
   animationURI: String!
 }
