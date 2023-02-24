@@ -67,38 +67,47 @@ type ERC721Drop @entity {
 }
 
 
-type ERC1155Drop @entity {
+type ZoraCreate721Factory @entity {
   id: ID!
+  implementation: Bytes!
+  version: BigInt!
 
-  created: TransactionInfo!
-  createdAt: BigInt!
+  updatedAt: BigInt!
+}
 
-  contractURI: String!
+type ZoraCreate1155Factory @entity {
+  id: ID!
+  fixedPriceSaleStrategyAddress: Bytes!
+  implementation: Bytes!
+  merkleSaleStrategyAddress: Bytes!
+  version: String!
 
-  creator: Bytes!
-  owner: Bytes!
-  address: Bytes!
-  network: String!
+  updatedAt: BigInt!
+}
+
+type ZoraCreateContract @entity {
+  id: ID!
   name: String!
-  symbol: String!
+  symbol: String
+  contractURI: String!
+  profileImage: String!
+  contractStandard: String!
+  metadata: MetadataInfo
 
-  contractConfig: ContractConfig!
+  updatedAt: BigInt!
+}
 
-  salesConfig: SalesConfig!
+type ZoraCreateToken @entity {
+  id: ID!
+  uri: String!
+  rendererContract: String!
+  contract: String!
+  tokenId: Int
+  metadata: MetadataInfo
 
-  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
+  salesStrategies: [ERC1155SalesStrategyConfig!]
 
-  sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
-  transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
-
-  editionMetadata: EditionMetadata @derivedFrom(field: "drop")
-  dropMetadata: DropMetadata @derivedFrom(field: "drop")
-
-  roles: [DropRole!]! @derivedFrom(field: "drop")
-
-  rendererAddress: Bytes!
-
-  txn: TransactionInfo!
+  updatedAt: BigInt!
 }
 
 type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
@@ -109,7 +118,9 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   maxTokensPerTransaction: BigInt!
   maxTokensPerAddress: BigInt!
   pricePerToken: BigInt!
-  fundsRecipient: String!
+  fundsRecipient: Bytes!
+
+  updatedAt: BigInt!
 }
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
@@ -117,17 +128,27 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
 
   presaleStart: BigInt!
   presaleEnd: BigInt!
-  fundsRecipient: String!
+  fundsRecipient: Bytes!
   merkleRoot: Bytes!
+  updatedAt: BigInt!
 }
 
-
-type ERC1155Sale @entity {
+type ERC1155SalesStrategyConfig @entity {
   id: ID!
+  presale: ERC1155SalesConfigMerkleMinterStrategy
+  fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
+  type: String!
+  updatedAt: BigInt!
+}
 
-  mediaContract: String!
-  tokenId: BigInt!
-  salesConfig: ERC1155SalesConfigFixedPriceSaleStrategy! | ERC1155SalesConfigMerkleMinterStrategy!
+type MetadataInfo @entity {
+    id: ID!
+    name: String!
+    title: String!
+    image: String!
+    properties: String!
+    rawJson: String!
+		updatedAt: BigInt!
 }
 
 type ERC1155Creator @entity {

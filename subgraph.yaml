@@ -10,7 +10,7 @@
 #
 #
 # Okayyyy...
-specVersion: 0.0.2
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
@@ -23,7 +23,7 @@ dataSources:
       startBlock: 10655635
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - ERC721Drop
@@ -48,7 +48,7 @@ dataSources:
       startBlock: 10655635
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - ERC1155Drop
@@ -58,6 +58,8 @@ dataSources:
       eventHandlers:
         - event: SetupNewContract(address,address,address,string,(uint32,address))
           handler: handleNewContractCreated
+        - event: Upgraded(indexed address)
+          handler: handle1155FactoryUpgraded
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
@@ -67,7 +69,7 @@ templates:
       abi: EditionMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
@@ -91,7 +93,7 @@ templates:
       abi: DropMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - DropMetadata
@@ -111,7 +113,7 @@ templates:
       abi: ERC721Drop
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       entities:
         - Sale
         - Transfer
@@ -146,7 +148,7 @@ templates:
       abi: ZoraCreator1155Impl
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       entities:
         - ERC1155Drop
         - TransferSingle
@@ -182,7 +184,7 @@ templates:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
@@ -192,7 +194,7 @@ templates:
           file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
       eventHandlers:
         - event: SaleSet(address,uint256,(uint64,uint64,uint64,uint96,address))
-          handler: handleSaleSet
+          handler: handleFixedPriceStrategySaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: rinkeby
@@ -200,7 +202,7 @@ templates:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
@@ -210,4 +212,4 @@ templates:
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json
       eventHandlers:
         - event: SaleSet(address,uint256,(uint64,uint64,address,bytes32))
-          handler: handleSaleSet
+          handler: handleMerkleMinterStrategySaleSet

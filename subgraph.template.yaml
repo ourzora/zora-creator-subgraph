@@ -46,6 +46,8 @@ dataSources:
       eventHandlers:
         - event: SetupNewContract(address,address,address,string,(uint32,address))
           handler: handleNewContractCreated
+        - event: Upgraded(indexed address)
+          handler: handle1155FactoryUpgraded
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
@@ -180,7 +182,7 @@ templates:
           file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
       eventHandlers:
         - event: SaleSet(address,uint256,(uint64,uint64,uint64,uint96,address))
-          handler: handleSaleSet
+          handler: handleFixedPriceStrategySaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: {{network}}
@@ -198,4 +200,4 @@ templates:
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json
       eventHandlers:
         - event: SaleSet(address,uint256,(uint64,uint64,address,bytes32))
-          handler: handleSaleSet
+          handler: handleMerkleMinterStrategySaleSet
