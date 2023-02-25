@@ -4,3 +4,4 @@ node_modules
 .DS_Store
 subgraph.yaml
 tests/.bin/
+yarn-error.log
