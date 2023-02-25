@@ -16,11 +16,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ZoraNFTCreatorV1
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30"
+      address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 10655635
+      startBlock: 8548964
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -41,11 +41,11 @@ dataSources:
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30"
+      address: "0xd27E0AD0297766354416a1DB8841bA2D42267e30"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: 10655635
+      startBlock: 8548964
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -60,11 +60,11 @@ dataSources:
           handler: handleNewContractCreated
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/factoryMappings.ts
 templates:
   - kind: ethereum/contract
     name: EditionMetadataRenderer
-    network: rinkeby
+    network: goerli
     source:
       abi: EditionMetadataRenderer
     mapping:
@@ -88,7 +88,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: rinkeby
+    network: goerli
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -108,7 +108,7 @@ templates:
       file: ./src/metadata.ts
   - name: ERC721Drop
     kind: ethereum/contract
-    network: rinkeby
+    network: goerli
     source:
       abi: ERC721Drop
     mapping:
@@ -143,7 +143,7 @@ templates:
           handler: handleOwnershipTransferred
   - name: ZoraCreator1155Impl
     kind: ethereum/contract
-    network: rinkeby
+    network: goerli
     source:
       abi: ZoraCreator1155Impl
     mapping:
@@ -154,7 +154,7 @@ templates:
         - TransferSingle
         - TransferBatch
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
@@ -179,7 +179,7 @@ templates:
           handler: handleTransferBatch
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
-    network: rinkeby
+    network: goerli
     source:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
@@ -188,7 +188,7 @@ templates:
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraCreatorFixedPriceSaleStrategyMappings.ts
       abis:
         - name: ZoraCreatorFixedPriceSaleStrategy
           file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
@@ -197,7 +197,7 @@ templates:
           handler: handleFixedPriceStrategySaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
-    network: rinkeby
+    network: goerli
     source:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
@@ -206,7 +206,7 @@ templates:
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC1155Mappings/templates/ZoraMerkleMinterStrategyMappings.ts
       abis:
         - name: ZoraCreatorMerkleMinterStrategy
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json
