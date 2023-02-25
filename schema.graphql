@@ -34,6 +34,8 @@ type ERC721Drop @entity {
 
   created: TransactionInfo!
   createdAt: BigInt!
+  
+  version: BigInt!
 
   contractURI: String
 

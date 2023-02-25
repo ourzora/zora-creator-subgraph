@@ -26,7 +26,7 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-      file: ./src/mapping.ts
+      file: ./src/ERC721LegacyMappings/ERC721FactoryMappings.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
     network: {{network}}
@@ -73,7 +73,7 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/edition.ts
+      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: {{network}}
@@ -93,7 +93,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/metadata.ts
+      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
@@ -108,7 +108,7 @@ templates:
         - SalesConfig
         - ERC721Drop
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC721LegacyMappings/templates/ERC721DropMappings.ts
       abis:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
