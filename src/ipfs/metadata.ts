@@ -16,7 +16,6 @@ export function handleJSONMetadataFetched(content: Bytes): void {
       metadata.image = value.mustGet('image').toString();
     }
   }
-  metadata.updatedAt = BigInt.fromI64(Date.now()).div(BigInt.fromI32(1000));
 
   metadata.save();
 }

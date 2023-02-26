@@ -24,14 +24,16 @@ export function handleContractRendererUpdated(
 export function handleURI(event: URI): void {
   const id = `${event.address.toHex()}-${event.params.id.toString()}`;
   const token = ZoraCreateToken.load(id);
-  if (token) {
-    token.uri = event.params.value;
+  if (!token) {
+    return;
   }
-  if (token && event.params.value.startsWith("ipfs://")) {
+  if (event.params.value.startsWith("ipfs://")) {
     const ipfsPath = event.params.value.replace("ipfs://", "");
     token.metadata = ipfsPath;
     MetadataInfoTemplate.create(ipfsPath);
   }
+  token.uri = event.params.value;
+  token.save();
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {

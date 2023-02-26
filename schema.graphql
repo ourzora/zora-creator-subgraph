@@ -151,8 +151,6 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   maxTokensPerAddress: BigInt!
   pricePerToken: BigInt!
   fundsRecipient: Bytes!
-
-  updatedAt: BigInt!
 }
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
@@ -164,7 +162,6 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
   presaleEnd: BigInt!
   fundsRecipient: Bytes!
   merkleRoot: Bytes!
-  updatedAt: BigInt!
 }
 
 type ERC1155SalesStrategyConfig @entity {
@@ -181,9 +178,10 @@ type MetadataInfo @entity {
     name: String
     description: String
     image: String
-    properties: String
+    animation: String
+    decimals: number
+
     rawJson: String
-		updatedAt: BigInt!
 }
 
 type ERC1155Creator @entity {
