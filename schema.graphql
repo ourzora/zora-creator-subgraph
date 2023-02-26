@@ -130,7 +130,7 @@ type ZoraCreateToken @entity {
   totalSupply: BigInt!
   maxSupply: BigInt!
 
-  rendererContract: Bytes!
+  rendererContract: Bytes
 
   contract: ZoraCreateContract!
   tokenId: BigInt!

@@ -3,7 +3,7 @@ import { SaleSet } from "../../../generated/templates/ZoraCreatorMerkleMinterStr
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
-  const id = `${event.address}-${event.params.sender}-${event.params.tokenId}`;
+  const id = `${event.address.toHex()}-${event.params.sender.toHex()}-${event.params.tokenId.toString()}`;
   let sale = ERC1155SalesConfigMerkleMinterStrategy.load(id);
   if (!sale) {
     sale = new ERC1155SalesConfigMerkleMinterStrategy(id);

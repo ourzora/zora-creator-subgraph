@@ -40,7 +40,7 @@ export function handleURIJSON(value: JSONValue, userData: Value): void {
 }
 
 export function handleURI(event: URI): void {
-  const id = `${event.address}-${event.params.id}`;
+  const id = `${event.address.toHex()}-${event.params.id.toString()}`;
   const token = ZoraCreateToken.load(id);
   if (token) {
     token.uri = event.params.value;
@@ -52,7 +52,7 @@ export function handleURI(event: URI): void {
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {
-  const id = `${event.params.user}-${event.address}-${event.params.tokenId}`;
+  const id = `${event.params.user.toHex()}-${event.address.toHex()}-${event.params.tokenId.toString()}`;
   let permissions = ZoraCreatorPermissions.load(id);
   if (!permissions) {
     permissions = new ZoraCreatorPermissions(id);
@@ -63,6 +63,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.isSalesManager = hasBit(3, event.params.permissions);
   permissions.isMetadataManager = hasBit(4, event.params.permissions);
   permissions.isFundsManager = hasBit(5, event.params.permissions);
+  permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);
 
   permissions.tokenId = event.params.tokenId;
@@ -76,7 +77,7 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
 }
 
 export function handleUpdatedToken(event: UpdatedToken): void {
-  const id = `${event.address}-${event.params.tokenId}`;
+  const id = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
