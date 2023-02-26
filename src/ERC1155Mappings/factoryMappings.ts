@@ -3,8 +3,9 @@ import {
   Upgraded,
 } from "../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 
-import { Upgrade, ZoraCreateContract } from "../../generated/schema";
+import { ZoraCreateContract } from "../../generated/schema";
 import { ZoraCreator1155Impl } from "../../generated/templates";
+import { makeTransaction } from "../common/makeTransaction";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
@@ -12,11 +13,12 @@ export function handleNewContractCreated(event: SetupNewContract): void {
 
   createdContract.contractStandard = "ERC1155";
   createdContract.contractURI = event.params.contractURI;
-  createdContract.creator = event.params.creator.toHex();
-  createdContract.defaultAdmin = event.params.defaultAdmin.toHex();
+  createdContract.creator = event.params.creator;
+  createdContract.initialDefaultAdmin = event.params.defaultAdmin;
   createdContract.name = null;
   createdContract.symbol = null;
   createdContract.metadata = null;
+  createdContract.txn = makeTransaction(event);
 
   createdContract.save();
   ZoraCreator1155Impl.create(event.params.newContract);

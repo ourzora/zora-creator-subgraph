@@ -77,45 +77,74 @@ type ZoraCreate721Factory @entity {
   updatedAt: Int!
 }
 
+# 1155 Records
+
 type ZoraCreate1155Factory @entity {
   id: ID!
+  txn: TransactionInfo!
+
   fixedPriceSaleStrategyAddress: Bytes!
   implementation: Bytes!
   merkleSaleStrategyAddress: Bytes!
   version: String!
-
-  updatedAt: Int!
 }
 
 type ZoraCreateContract @entity {
   id: ID!
+  txn: TransactionInfo!
+
   name: String
   symbol: String
   contractURI: String #fix 
   contractStandard: String #fix
   metadata: MetadataInfo
-  creator: String
-  defaultAdmin: String
 
-  updatedAt: Int # fix
+  creator: Bytes!
+  initialDefaultAdmin: Bytes
+  owner: Bytes!
+
+  tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
+  permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
+}
+
+type ZoraCreatorPermissions @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  user: Bytes!
+  contract: ZoraCreateContract!
+  tokenId: BigInt!
+
+  isAdmin: Boolean!
+  isMinter: Boolean!
+  isSalesManager: Boolean!
+  isMetadataManager: Boolean!
+  isFundsManager: Boolean!
 }
 
 type ZoraCreateToken @entity {
   id: ID!
+  txn: TransactionInfo!
+
   uri: String!
-  rendererContract: String!
-  contract: String!
-  tokenId: Int
+  totalSupply: BigInt!
+  maxSupply: BigInt!
+
+  rendererContract: Bytes!
+
+  contract: ZoraCreateContract!
+  tokenId: BigInt!
+
   metadata: MetadataInfo
 
   salesStrategies: [ERC1155SalesStrategyConfig!]
-
-  updatedAt: Int!
 }
 
 type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!
+  txn: TransactionInfo!
 
+  contract: ZoraCreateContract!
   saleStart: BigInt!
   saleEnd: BigInt!
   maxTokensPerTransaction: BigInt!
@@ -128,7 +157,9 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
   id: ID!
+  txn: TransactionInfo!
 
+  contract: ZoraCreateContract!
   presaleStart: BigInt!
   presaleEnd: BigInt!
   fundsRecipient: Bytes!
@@ -138,19 +169,20 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
 
 type ERC1155SalesStrategyConfig @entity {
   id: ID!
+  txn: TransactionInfo!
+
   presale: ERC1155SalesConfigMerkleMinterStrategy
   fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
   type: String!
-  updatedAt: Int!
 }
 
 type MetadataInfo @entity {
     id: ID!
-    name: String!
-    title: String!
-    image: String!
-    properties: String!
-    rawJson: String!
+    name: String
+    description: String
+    image: String
+    properties: String
+    rawJson: String
 		updatedAt: Int!
 }
 

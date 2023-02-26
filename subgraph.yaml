@@ -159,8 +159,6 @@ templates:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
         - event: ContractRendererUpdated(address)
           handler: handleContractRendererUpdated
         - event: RendererUpdated(uint256,address,address)
