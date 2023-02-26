@@ -3,7 +3,7 @@
   "license": "MIT",
   "scripts": {
     "copy-abis": "bash abis/copy-abis.sh",
-    "codegen": "yarn gen-yaml-config && graph codegen",
+    "codegen": "yarn gen-yaml-config && graph codegen && echo 'import { Address } from \"@graphprotocol/graph-ts\";' >> generated/templates.ts",
     "build": "yarn run codegen && graph build",
     "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
@@ -18,7 +18,7 @@
     "@graphprotocol/graph-cli": "^0.41.1",
     "@graphprotocol/graph-ts": "^0.29.3",
     "@zoralabs/nft-drop-contracts": "^1.11.1",
-    "@zoralabs/zora-creator-contracts": "^0.0.4",
+    "@zoralabs/zora-creator-contracts": "^0.0.2",
     "jq": "^1.7.2",
     "mustache": "^4.2.0"
   },

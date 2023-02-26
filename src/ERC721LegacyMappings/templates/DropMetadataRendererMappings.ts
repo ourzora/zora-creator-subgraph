@@ -1,10 +1,7 @@
-import { MetadataUpdated } from "../generated/templates/DropMetadataRenderer/DropMetadataRenderer";
-import { DropMetadata, ERC721Drop } from "../generated/schema";
-import {
-  ERC721Drop as ERC721DropContract,
-} from "../generated/templates/ERC721Drop/ERC721Drop";
+import { MetadataUpdated } from "../../../generated/templates/DropMetadataRenderer/DropMetadataRenderer";
+import { DropMetadata, ERC721Drop } from "../../../generated/schema";
+import { ERC721Drop as ERC721DropContract } from "../../../generated/templates/ERC721Drop/ERC721Drop";
 import { Address } from "@graphprotocol/graph-ts";
-
 
 export function handleMetadataUpdated(event: MetadataUpdated): void {
   let metadata = DropMetadata.load(event.params.target.toHex());

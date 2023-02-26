@@ -1,13 +1,12 @@
+import { Address } from "@graphprotocol/graph-ts";
+
 import {
   EditionInitialized,
   MediaURIsUpdated,
   DescriptionUpdated,
-} from "../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
-import { EditionMetadata, ERC721Drop } from "../generated/schema";
-import { Address } from "@graphprotocol/graph-ts";
-import {
-  ERC721Drop as ERC721DropContract,
-} from "../generated/templates/ERC721Drop/ERC721Drop";
+} from "../../../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
+import { EditionMetadata, ERC721Drop } from "../../../generated/schema";
+import { ERC721Drop as ERC721DropContract } from "../../../generated/templates/ERC721Drop/ERC721Drop";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
   const targetContract = event.params.target;

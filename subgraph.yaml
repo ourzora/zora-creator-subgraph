@@ -23,7 +23,7 @@ dataSources:
       startBlock: 8548964
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ERC721Drop
@@ -38,17 +38,17 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-      file: ./src/mapping.ts
+      file: ./src/ERC721LegacyMappings/ERC721FactoryMappings.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
     network: goerli
     source:
-      address: "0xd27E0AD0297766354416a1DB8841bA2D42267e30"
+      address: "0xd0dfdd4AbBbf000DAA1979dcAde162bD1Df7c128"
       abi: ZoraCreator1155FactoryImpl
       startBlock: 8548964
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ERC1155Drop
@@ -62,6 +62,18 @@ dataSources:
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
 templates:
+  - name: MetadataInfo
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfs/metadata.ts
+      handler: handleJSONMetadataFetched
+      entities:
+        - MetadataInfo
+      abis:
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: goerli
@@ -69,7 +81,7 @@ templates:
       abi: EditionMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
@@ -85,7 +97,7 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/edition.ts
+      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: goerli
@@ -93,7 +105,7 @@ templates:
       abi: DropMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - DropMetadata
@@ -105,7 +117,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/metadata.ts
+      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: goerli
@@ -113,14 +125,14 @@ templates:
       abi: ERC721Drop
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - Sale
         - Transfer
         - SalesConfig
         - ERC721Drop
       language: wasm/assemblyscript
-      file: ./src/mapping.ts
+      file: ./src/ERC721LegacyMappings/templates/ERC721DropMappings.ts
       abis:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
@@ -148,7 +160,7 @@ templates:
       abi: ZoraCreator1155Impl
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Drop
         - TransferSingle
@@ -159,8 +171,6 @@ templates:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
         - event: ContractRendererUpdated(address)
           handler: handleContractRendererUpdated
         - event: RendererUpdated(uint256,address,address)
@@ -177,6 +187,8 @@ templates:
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: goerli
@@ -184,7 +196,7 @@ templates:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
@@ -202,7 +214,7 @@ templates:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
