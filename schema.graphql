@@ -152,7 +152,7 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   pricePerToken: BigInt!
   fundsRecipient: Bytes!
 
-  updatedAt: Int!
+  updatedAt: BigInt!
 }
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
@@ -183,7 +183,7 @@ type MetadataInfo @entity {
     image: String
     properties: String
     rawJson: String
-		updatedAt: Int!
+		updatedAt: BigInt!
 }
 
 type ERC1155Creator @entity {

@@ -13,8 +13,6 @@
 specVersion: 0.0.4
 schema:
   file: ./schema.graphql
-features:
-  - ipfsOnEthereumContracts
 dataSources:
   - kind: ethereum/contract
     name: ZoraNFTCreatorV1
@@ -25,7 +23,7 @@ dataSources:
       startBlock: 8548964
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ERC721Drop
@@ -50,7 +48,7 @@ dataSources:
       startBlock: 8548964
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ERC1155Drop
@@ -64,6 +62,18 @@ dataSources:
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
 templates:
+  - name: MetadataInfo
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfs/metadata.ts
+      handler: handleJSONMetadataFetched
+      entities:
+        - MetadataInfo
+      abis:
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: goerli
@@ -71,7 +81,7 @@ templates:
       abi: EditionMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
@@ -95,7 +105,7 @@ templates:
       abi: DropMetadataRenderer
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - DropMetadata
@@ -115,7 +125,7 @@ templates:
       abi: ERC721Drop
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - Sale
         - Transfer
@@ -150,7 +160,7 @@ templates:
       abi: ZoraCreator1155Impl
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Drop
         - TransferSingle
@@ -184,7 +194,7 @@ templates:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript
@@ -202,7 +212,7 @@ templates:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       entities:
         - ERC1155Sale
       language: wasm/assemblyscript

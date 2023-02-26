@@ -1,10 +1,12 @@
-import { BigInt, ipfs, JSONValue, Value } from "@graphprotocol/graph-ts";
-import { MetadataInfo, ZoraCreateContract, ZoraCreateToken, ZoraCreatorPermissions } from "../../../generated/schema";
 import {
-  AdminChanged,
+  ZoraCreateContract,
+  ZoraCreateToken,
+  ZoraCreatorPermissions,
+} from "../../../generated/schema";
+import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
+import {
   ContractRendererUpdated,
   OwnershipTransferred,
-  RendererUpdated,
   TransferBatch,
   TransferSingle,
   UpdatedPermissions,
@@ -19,35 +21,16 @@ export function handleContractRendererUpdated(
   event: ContractRendererUpdated
 ): void {}
 
-function _jsonValueToNullableString(value: JSONValue | null): (string | null) {
-  return value !== null ? value.toString() : null;
-}
-
-// handle URI json
-export function handleURIJSON(value: JSONValue, userData: Value): void {
-  const obj = value.toObject();
-  let metadataInfo = MetadataInfo.load(userData.toString());
-  if (!metadataInfo) {
-    metadataInfo = new MetadataInfo(userData.toString());
-  }
-
-  metadataInfo.name = _jsonValueToNullableString(obj.get('name'));
-  metadataInfo.description = _jsonValueToNullableString(obj.get('description'));
-  metadataInfo.image = _jsonValueToNullableString(obj.get('image'));
-  metadataInfo.rawJson = value.toString();
-
-  metadataInfo.save();
-}
-
 export function handleURI(event: URI): void {
   const id = `${event.address.toHex()}-${event.params.id.toString()}`;
   const token = ZoraCreateToken.load(id);
   if (token) {
     token.uri = event.params.value;
   }
-  if (event.params.value.startsWith('ipfs://')) {
-    const ipfsPath = event.params.value.replace('ipfs://', '')
-    ipfs.mapJSON(ipfsPath, 'handleURIJSON', Value.fromString(id));
+  if (token && event.params.value.startsWith("ipfs://")) {
+    const ipfsPath = event.params.value.replace("ipfs://", "");
+    token.metadata = ipfsPath;
+    MetadataInfoTemplate.create(ipfsPath);
   }
 }
 
@@ -72,9 +55,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.save();
 }
 
-export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
-
-}
+export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {}
 
 export function handleUpdatedToken(event: UpdatedToken): void {
   const id = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
