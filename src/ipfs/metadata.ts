@@ -1,4 +1,4 @@
-import { BigInt, Bytes, dataSource, json } from "@graphprotocol/graph-ts";
+import { Bytes, dataSource, json } from "@graphprotocol/graph-ts";
 import { MetadataInfo } from "../../generated/schema";
 
 export function handleJSONMetadataFetched(content: Bytes): void {
@@ -14,6 +14,9 @@ export function handleJSONMetadataFetched(content: Bytes): void {
     }
     if (value.get('image')) {
       metadata.image = value.mustGet('image').toString();
+    }
+    if (value.get('decimals')) {
+      metadata.decimals = value.mustGet('decimals').toString();
     }
   }
 

@@ -187,6 +187,8 @@ templates:
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: goerli

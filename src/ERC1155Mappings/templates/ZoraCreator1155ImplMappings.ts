@@ -13,13 +13,37 @@ import {
   UpdatedRoyalties,
   UpdatedToken,
   URI,
+  ZoraCreator1155Impl,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
+import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 
+export function handleUpgraded(event: Upgraded): void {
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  if (!impl) {
+    return;
+  }
+  const token = ZoraCreateContract.load(event.address.toHex());
+  if (!token) {
+    return;
+  }
+
+  token.contractVersion = impl.contractVersion();
+  token.save();
+}
+
 export function handleContractRendererUpdated(
   event: ContractRendererUpdated
-): void {}
+): void {
+  const token = ZoraCreateContract.load(event.address.toHex());
+  if (!token) {
+    return;
+  }
+
+  token.rendererContract = event.params.renderer;
+  token.save();
+}
 
 export function handleURI(event: URI): void {
   const id = `${event.address.toHex()}-${event.params.id.toString()}`;
