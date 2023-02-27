@@ -258,7 +258,7 @@ type MetadataInfo @entity {
   name: String
   description: String
   image: String
-  animation: String
+  animationUrl: String
   decimals: String
 
   rawJson: String
