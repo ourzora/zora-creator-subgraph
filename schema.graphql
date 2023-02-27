@@ -34,7 +34,7 @@ type ERC721Drop @entity {
 
   created: TransactionInfo!
   createdAt: BigInt!
-  
+
   version: BigInt!
 
   contractURI: String
@@ -53,7 +53,6 @@ type ERC721Drop @entity {
   salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
 
   sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
-  transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
 
   editionMetadata: EditionMetadata @derivedFrom(field: "drop")
   dropMetadata: DropMetadata @derivedFrom(field: "drop")
@@ -68,131 +67,12 @@ type ERC721Drop @entity {
   txn: TransactionInfo!
 }
 
-
 type ZoraCreate721Factory @entity {
   id: ID!
   implementation: Bytes!
   version: BigInt!
 
   updatedAt: Int!
-}
-
-# 1155 Records
-
-type ZoraCreate1155Factory @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  fixedPriceSaleStrategyAddress: Bytes!
-  implementation: Bytes!
-  merkleSaleStrategyAddress: Bytes!
-  version: String!
-}
-
-type ZoraCreateContract @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  name: String
-  symbol: String
-
-  contractURI: String
-  contractStandard: String!
-  contractVersion: String
-  metadata: MetadataInfo
-
-  rendererContract: Bytes
-
-  creator: Bytes!
-  initialDefaultAdmin: Bytes
-  owner: Bytes!
-
-  tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
-  permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
-}
-
-type ZoraCreatorPermissions @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  user: Bytes!
-  contract: ZoraCreateContract!
-  tokenId: BigInt!
-
-  isAdmin: Boolean!
-  isMinter: Boolean!
-  isSalesManager: Boolean!
-  isMetadataManager: Boolean!
-  isFundsManager: Boolean!
-}
-
-type ZoraCreateToken @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  uri: String!
-  totalSupply: BigInt!
-  maxSupply: BigInt!
-
-  rendererContract: Bytes
-
-  contract: ZoraCreateContract!
-  tokenId: BigInt!
-
-  metadata: MetadataInfo
-
-  salesStrategies: [ERC1155SalesStrategyConfig!]
-}
-
-type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  contract: ZoraCreateContract!
-  saleStart: BigInt!
-  saleEnd: BigInt!
-  maxTokensPerTransaction: BigInt!
-  maxTokensPerAddress: BigInt!
-  pricePerToken: BigInt!
-  fundsRecipient: Bytes!
-}
-
-type ERC1155SalesConfigMerkleMinterStrategy @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  contract: ZoraCreateContract!
-  presaleStart: BigInt!
-  presaleEnd: BigInt!
-  fundsRecipient: Bytes!
-  merkleRoot: Bytes!
-}
-
-type ERC1155SalesStrategyConfig @entity {
-  id: ID!
-  txn: TransactionInfo!
-
-  presale: ERC1155SalesConfigMerkleMinterStrategy
-  fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
-  type: String!
-}
-
-type MetadataInfo @entity {
-    id: ID!
-    name: String
-    description: String
-    image: String
-    animation: String
-    decimals: String
-
-    rawJson: String
-}
-
-type ERC1155Creator @entity {
-  id: ID!
-
-  created: TransactionInfo!
-  createdAt: BigInt!
 }
 
 type DropRole @entity {
@@ -226,18 +106,6 @@ type NFTEditionSale @entity {
   drop: ERC721Drop!
 }
 
-type NFTEditionTransfer @entity {
-  id: ID!
-
-  tokenId: BigInt!
-  to: Bytes!
-  from: Bytes!
-  txn: TransactionInfo!
-  mintedAt: BigInt!
-
-  drop: ERC721Drop!
-}
-
 type Upgrade @entity {
   id: ID!
 }
@@ -261,3 +129,138 @@ type DropMetadata @entity {
   freezeAt: BigInt!
   contractURI: String!
 }
+
+### ERC1155
+
+# 1155 Records
+
+type ZoraCreate1155Factory @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  fixedPriceSaleStrategyAddress: Bytes!
+  implementation: Bytes!
+  merkleSaleStrategyAddress: Bytes!
+  version: String!
+}
+
+type ZoraCreateContract @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  name: String
+  symbol: String
+
+  contractURI: String
+  contractStandard: String!
+  contractVersion: String
+  metadata: MetadataInfo
+
+  mintFeePerTxn: BigInt!
+  mintFeePerQuantity: BigInt!
+
+  rendererContract: Bytes
+
+  creator: Bytes!
+  initialDefaultAdmin: Bytes
+  owner: Bytes!
+
+  tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
+  permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
+
+  salesStrategies: [SalesStrategyConfig!]!
+    @derivedFrom(field: "contract")
+
+  createdAtBlock: BigInt!
+}
+
+type ZoraCreatorPermissions @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  user: Bytes!
+  contract: ZoraCreateContract
+  tokenAndContract: ZoraCreateToken
+
+  tokenId: BigInt!
+
+  isAdmin: Boolean!
+  isMinter: Boolean!
+  isSalesManager: Boolean!
+  isMetadataManager: Boolean!
+  isFundsManager: Boolean!
+}
+
+type ZoraCreateToken @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  uri: String!
+  totalSupply: BigInt!
+  maxSupply: BigInt!
+
+  rendererContract: Bytes
+
+  contract: ZoraCreateContract!
+  tokenId: BigInt!
+
+  metadata: MetadataInfo
+
+  permissions: [ZoraCreatorPermissions!]!
+    @derivedFrom(field: "tokenAndContract")
+  salesStrategies: [SalesStrategyConfig!]!
+    @derivedFrom(field: "tokenAndContract")
+  createdAtBlock: BigInt!
+}
+
+type SalesConfigFixedPriceSaleStrategy @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  tokenId: BigInt!
+  contract: ZoraCreateContract!
+  saleStart: BigInt!
+  saleEnd: BigInt!
+  maxTokensPerTransaction: BigInt!
+  maxTokensPerAddress: BigInt!
+  pricePerToken: BigInt!
+
+  fundsRecipient: Bytes
+}
+
+type SalesConfigMerkleMinterStrategy @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  tokenId: BigInt!
+  contract: ZoraCreateContract!
+  presaleStart: BigInt!
+  presaleEnd: BigInt!
+  merkleRoot: Bytes!
+
+  fundsRecipient: Bytes
+}
+
+type SalesStrategyConfig @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  tokenAndContract: ZoraCreateToken
+  contract: ZoraCreateContract
+
+  presale: SalesConfigMerkleMinterStrategy
+  fixedPrice: SalesConfigFixedPriceSaleStrategy
+  type: String!
+}
+
+type MetadataInfo @entity {
+  id: ID!
+  name: String
+  description: String
+  image: String
+  animation: String
+  decimals: String
+
+  rawJson: String
+}
+

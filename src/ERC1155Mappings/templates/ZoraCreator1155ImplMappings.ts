@@ -1,3 +1,4 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
@@ -16,6 +17,7 @@ import {
   ZoraCreator1155Impl,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
+import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 
@@ -24,13 +26,15 @@ export function handleUpgraded(event: Upgraded): void {
   if (!impl) {
     return;
   }
-  const token = ZoraCreateContract.load(event.address.toHex());
-  if (!token) {
+  const contract = ZoraCreateContract.load(event.address.toHex());
+  if (!contract) {
     return;
   }
 
-  token.contractVersion = impl.contractVersion();
-  token.save();
+  contract.mintFeePerTxn = impl.mintFee();
+  contract.mintFeePerQuantity = BigInt.fromString("0");
+  contract.contractVersion = impl.contractVersion();
+  contract.save();
 }
 
 export function handleContractRendererUpdated(
@@ -51,10 +55,10 @@ export function handleURI(event: URI): void {
   if (!token) {
     return;
   }
-  if (event.params.value.startsWith("ipfs://")) {
-    const ipfsPath = event.params.value.replace("ipfs://", "");
-    token.metadata = ipfsPath;
-    MetadataInfoTemplate.create(ipfsPath);
+  const ipfsHostPath = getIPFSHostFromURI(event.params.value);
+  if (ipfsHostPath !== null) {
+    token.metadata = ipfsHostPath;
+    MetadataInfoTemplate.create(ipfsHostPath);
   }
   token.uri = event.params.value;
   token.save();
@@ -72,6 +76,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.isSalesManager = hasBit(3, event.params.permissions);
   permissions.isMetadataManager = hasBit(4, event.params.permissions);
   permissions.isFundsManager = hasBit(5, event.params.permissions);
+
   permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);
 
@@ -88,6 +93,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.createdAtBlock = event.block.number
   }
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
@@ -100,11 +106,32 @@ export function handleUpdatedToken(event: UpdatedToken): void {
 }
 
 // update the minted number and mx number
-export function handleTransferSingle(event: TransferSingle): void {}
+export function handleTransferSingle(event: TransferSingle): void {
+  if (event.params.from === Address.zero()) {
+    const id = `${event.address.toHex()}-${event.params.id.toString()}`;
+    const token = ZoraCreateToken.load(id);
+    if (token) {
+      token.totalSupply = token.totalSupply.plus(event.params.value);
+      token.save();
+    }
+  }
+}
 
 // update the minted number and max number
-export function handleTransferBatch(event: TransferBatch): void {}
+export function handleTransferBatch(event: TransferBatch): void {
+  if (event.params.from === Address.zero()) {
+    for (let i = 0; i < event.params.ids.length; i++) {
+      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
+      const token = ZoraCreateToken.load(id);
+      if (token) {
+        token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        token.save();
+      }
+    }
+  }
+}
 
+// Update ownership field when transferred
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   const createContract = ZoraCreateContract.load(event.address.toHex());
   if (createContract) {

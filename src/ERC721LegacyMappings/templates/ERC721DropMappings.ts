@@ -1,4 +1,4 @@
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -136,25 +136,16 @@ export function handleFundsRecipientChanged(
 /* NFT transfer event */
 
 export function handleNFTTransfer(event: Transfer): void {
-  updateDropSupply(event.address);
-
-  // maybe add back in? but makes queries slower
-  // const transfer = new NFTEditionTransfer(event.transaction.hash.toHex());
-  // transfer.to = event.params.to;
-  // transfer.from = event.params.from;
-  // transfer.txn = makeTransaction(event);
-  // transfer.tokenId = event.params.tokenId;
-  // transfer.drop = event.address.toHex();
-  // transfer.mintedAt = event.block.timestamp;
-
-  // transfer.save();
+  const drop = ERC721Drop.load(event.address.toHex());
+  if (drop) {
+    drop.totalMinted = drop.totalMinted.plus(BigInt.fromI32(1));
+    drop.save();
+  }
 }
 
 /* sale completed event */
 
 export function handleSale(event: Sale): void {
-  updateDropSupply(event.address);
-
   const sale = new NFTEditionSale(event.transaction.hash.toHex());
   sale.pricePerToken = event.params.pricePerToken;
   sale.priceTotal = event.transaction.value;
@@ -166,21 +157,6 @@ export function handleSale(event: Sale): void {
   sale.mintedAt = event.block.timestamp;
 
   sale.save();
-}
-
-/* helper to update drop supply */
-
-function updateDropSupply(dropAddress: Address): void {
-  const dropContract = ERC721DropContract.bind(dropAddress);
-  const saleDetails = dropContract.saleDetails();
-  const drop = ERC721Drop.load(dropAddress.toHex());
-
-  if (drop) {
-    // Update the total minted counter
-    drop.totalMinted = saleDetails.totalMinted;
-    drop.maxSupply = saleDetails.maxSupply;
-    drop.save();
-  }
 }
 
 /* handle ownership transfer */

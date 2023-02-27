@@ -4,8 +4,10 @@ import {
 } from "../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 
 import { ZoraCreateContract } from "../../generated/schema";
-import { ZoraCreator1155Impl } from "../../generated/templates";
+import { ZoraCreator1155Impl as ZoraCreator1155ImplTemplate, MetadataInfo as MetadataInfoTemplate } from "../../generated/templates";
 import { makeTransaction } from "../common/makeTransaction";
+import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
@@ -18,11 +20,19 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.owner = event.params.defaultAdmin;
   createdContract.name = null;
   createdContract.symbol = null;
-  createdContract.metadata = null;
+  // These will get updated when the Upgraded event is captured.
+  createdContract.mintFeePerQuantity = BigInt.zero();
+  createdContract.mintFeePerTxn = BigInt.zero();
+  const ipfsHostPath = getIPFSHostFromURI(event.params.contractURI);
+  if (ipfsHostPath !== null) {
+    createdContract.metadata = ipfsHostPath;
+    MetadataInfoTemplate.create(ipfsHostPath);
+  }
   createdContract.txn = makeTransaction(event);
+  createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
-  ZoraCreator1155Impl.create(event.params.newContract);
+  ZoraCreator1155ImplTemplate.create(event.params.newContract);
 }
 
 export function handle1155FactoryUpgraded(event: Upgraded): void {}
@@ -42,3 +52,4 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {}
 // .create means listen for that new address
 
 // upgrade.save();
+// }
