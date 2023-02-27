@@ -7,6 +7,7 @@ import { ZoraCreateContract } from "../../generated/schema";
 import { ZoraCreator1155Impl as ZoraCreator1155ImplTemplate, MetadataInfo as MetadataInfoTemplate } from "../../generated/templates";
 import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
@@ -19,6 +20,9 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.owner = event.params.defaultAdmin;
   createdContract.name = null;
   createdContract.symbol = null;
+  // These will get updated when the Upgraded event is captured.
+  createdContract.mintFeePerQuantity = BigInt.zero();
+  createdContract.mintFeePerTxn = BigInt.zero();
   const ipfsHostPath = getIPFSHostFromURI(event.params.contractURI);
   if (ipfsHostPath !== null) {
     createdContract.metadata = ipfsHostPath;
