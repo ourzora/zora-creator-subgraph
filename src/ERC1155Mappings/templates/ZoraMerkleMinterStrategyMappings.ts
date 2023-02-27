@@ -1,14 +1,14 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import {
-  ERC1155SalesConfigMerkleMinterStrategy,
-  ERC1155SalesStrategyConfig,
+  SalesConfigMerkleMinterStrategy,
+  SalesStrategyConfig,
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorMerkleMinterStrategy/ZoraCreatorMerkleMinterStrategy";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   const id = `${event.address.toHex()}-${event.params.sender.toHex()}-${event.params.tokenId.toString()}`;
-  let sale = new ERC1155SalesConfigMerkleMinterStrategy(id);
+  let sale = new SalesConfigMerkleMinterStrategy(id);
   sale.presaleStart = event.params.merkleSaleSettings.presaleStart;
   sale.presaleEnd = event.params.merkleSaleSettings.presaleEnd;
   sale.fundsRecipient = event.params.merkleSaleSettings.fundsRecipient;
@@ -19,7 +19,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   sale.save();
 
   // add join
-  const saleJoin = new ERC1155SalesStrategyConfig(id);
+  const saleJoin = new SalesStrategyConfig(id);
   if (event.params.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = event.params.sender.toHex();
   } else {

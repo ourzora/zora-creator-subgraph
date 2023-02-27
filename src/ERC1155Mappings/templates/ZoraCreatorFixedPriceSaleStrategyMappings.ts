@@ -1,14 +1,14 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 import {
-  ERC1155SalesConfigFixedPriceSaleStrategy,
-  ERC1155SalesStrategyConfig,
+  SalesConfigFixedPriceSaleStrategy,
+  SalesStrategyConfig,
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = `${event.address.toHex()}-${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
-  const sale = new ERC1155SalesConfigFixedPriceSaleStrategy(id);
+  const sale = new SalesConfigFixedPriceSaleStrategy(id);
   sale.contract = event.params.mediaContract.toHex();
   sale.fundsRecipient = event.params.salesConfig.fundsRecipient;
   sale.pricePerToken = event.params.salesConfig.pricePerToken;
@@ -22,7 +22,7 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   sale.save();
 
   // add join
-  const saleJoin = new ERC1155SalesStrategyConfig(id);
+  const saleJoin = new SalesStrategyConfig(id);
   if (event.params.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = event.params.mediaContract.toHex();
   } else {

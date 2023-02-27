@@ -29,6 +29,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
     MetadataInfoTemplate.create(ipfsHostPath);
   }
   createdContract.txn = makeTransaction(event);
+  createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
   ZoraCreator1155ImplTemplate.create(event.params.newContract);

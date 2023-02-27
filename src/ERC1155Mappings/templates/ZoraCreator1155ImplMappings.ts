@@ -26,15 +26,15 @@ export function handleUpgraded(event: Upgraded): void {
   if (!impl) {
     return;
   }
-  const token = ZoraCreateContract.load(event.address.toHex());
-  if (!token) {
+  const contract = ZoraCreateContract.load(event.address.toHex());
+  if (!contract) {
     return;
   }
 
-  token.mintFeePerTxn = impl.mintFee();
-  token.mintFeePerQuantity = BigInt.fromString("0");
-  token.contractVersion = impl.contractVersion();
-  token.save();
+  contract.mintFeePerTxn = impl.mintFee();
+  contract.mintFeePerQuantity = BigInt.fromString("0");
+  contract.contractVersion = impl.contractVersion();
+  contract.save();
 }
 
 export function handleContractRendererUpdated(
@@ -93,6 +93,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.createdAtBlock = event.block.number
   }
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
@@ -130,6 +131,7 @@ export function handleTransferBatch(event: TransferBatch): void {
   }
 }
 
+// Update ownership field when transferred
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   const createContract = ZoraCreateContract.load(event.address.toHex());
   if (createContract) {

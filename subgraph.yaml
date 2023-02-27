@@ -43,7 +43,7 @@ dataSources:
     name: ZoraNFTCreatorFactory1155
     network: goerli
     source:
-      address: "0xd0dfdd4AbBbf000DAA1979dcAde162bD1Df7c128"
+      address: "0xA6041715787b973737874e35c881350e72de53c8"
       abi: ZoraCreator1155FactoryImpl
       startBlock: 8548964
     mapping:
