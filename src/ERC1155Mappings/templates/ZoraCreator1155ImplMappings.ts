@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
@@ -106,22 +106,26 @@ export function handleUpdatedToken(event: UpdatedToken): void {
 
 // update the minted number and mx number
 export function handleTransferSingle(event: TransferSingle): void {
-  const id = `${event.address.toHex()}-${event.params.id.toString()}`;
-  const token = ZoraCreateToken.load(id);
-  if (token) {
-    token.totalSupply = token.totalSupply.plus(event.params.value);
-    token.save();
+  if (event.params.from === Address.zero()) {
+    const id = `${event.address.toHex()}-${event.params.id.toString()}`;
+    const token = ZoraCreateToken.load(id);
+    if (token) {
+      token.totalSupply = token.totalSupply.plus(event.params.value);
+      token.save();
+    }
   }
 }
 
 // update the minted number and max number
 export function handleTransferBatch(event: TransferBatch): void {
-  for (let i = 0; i < event.params.ids.length; i++) {
-    const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
-    const token = ZoraCreateToken.load(id);
-    if (token) {
-      token.totalSupply = token.totalSupply.plus(event.params.values[i]);
-      token.save();
+  if (event.params.from === Address.zero()) {
+    for (let i = 0; i < event.params.ids.length; i++) {
+      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
+      const token = ZoraCreateToken.load(id);
+      if (token) {
+        token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        token.save();
+      }
     }
   }
 }

@@ -111,6 +111,8 @@ type ZoraCreateContract @entity {
 
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
   permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
+
+  salesStrategies: [ERC1155SalesStrategyConfig!]! @derivedFrom(field: "contract")
 }
 
 type ZoraCreatorPermissions @entity {
@@ -143,7 +145,7 @@ type ZoraCreateToken @entity {
 
   metadata: MetadataInfo
 
-  salesStrategies: [ERC1155SalesStrategyConfig!]
+  salesStrategies: [ERC1155SalesStrategyConfig!]! @derivedFrom(field: "tokenAndContract")
 }
 
 type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
@@ -177,6 +179,9 @@ type ERC1155SalesConfigMerkleMinterStrategy @entity {
 type ERC1155SalesStrategyConfig @entity {
   id: ID!
   txn: TransactionInfo!
+
+  tokenAndContract: ZoraCreateToken
+  contract: ZoraCreateContract
 
   presale: ERC1155SalesConfigMerkleMinterStrategy
   fixedPrice: ERC1155SalesConfigFixedPriceSaleStrategy
