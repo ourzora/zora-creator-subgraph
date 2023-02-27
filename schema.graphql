@@ -53,7 +53,6 @@ type ERC721Drop @entity {
   salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
 
   sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
-  transfers: [NFTEditionTransfer!]! @derivedFrom(field: "drop")
 
   editionMetadata: EditionMetadata @derivedFrom(field: "drop")
   dropMetadata: DropMetadata @derivedFrom(field: "drop")
@@ -100,6 +99,9 @@ type ZoraCreateContract @entity {
   contractStandard: String!
   contractVersion: String
   metadata: MetadataInfo
+
+  mintFeePerTxn: BigInt!
+  mintFeePerQuantity: BigInt!
 
   rendererContract: Bytes
 
@@ -148,24 +150,28 @@ type ERC1155SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!
   txn: TransactionInfo!
 
+  tokenId: BigInt!
   contract: ZoraCreateContract!
   saleStart: BigInt!
   saleEnd: BigInt!
   maxTokensPerTransaction: BigInt!
   maxTokensPerAddress: BigInt!
   pricePerToken: BigInt!
-  fundsRecipient: Bytes!
+
+  fundsRecipient: Bytes
 }
 
 type ERC1155SalesConfigMerkleMinterStrategy @entity {
   id: ID!
   txn: TransactionInfo!
 
+  tokenId: BigInt!
   contract: ZoraCreateContract!
   presaleStart: BigInt!
   presaleEnd: BigInt!
-  fundsRecipient: Bytes!
   merkleRoot: Bytes!
+
+  fundsRecipient: Bytes
 }
 
 type ERC1155SalesStrategyConfig @entity {
@@ -220,18 +226,6 @@ type NFTEditionSale @entity {
   count: BigInt!
   purchaser: Bytes!
   firstPurchasedTokenId: Int!
-  txn: TransactionInfo!
-  mintedAt: BigInt!
-
-  drop: ERC721Drop!
-}
-
-type NFTEditionTransfer @entity {
-  id: ID!
-
-  tokenId: BigInt!
-  to: Bytes!
-  from: Bytes!
   txn: TransactionInfo!
   mintedAt: BigInt!
 
