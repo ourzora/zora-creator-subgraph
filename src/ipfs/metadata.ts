@@ -18,6 +18,9 @@ export function handleJSONMetadataFetched(content: Bytes): void {
     if (value.get('decimals')) {
       metadata.decimals = value.mustGet('decimals').toString();
     }
+    if (value.get('animation_url')) {
+      metadata.animationUrl = value.mustGet('animation_url').toString();
+    }
   }
 
   metadata.save();
