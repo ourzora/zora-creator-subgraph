@@ -61,6 +61,31 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
+  - kind: ethereum/contract
+    name: NewZoraNFTCreatorV1
+    network: goerli
+    source:
+      address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
+      abi: ZoraNFTCreatorV1
+      startBlock: 8548964
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ZoraCreateContract
+        - ZoraCreateToken
+      abis:
+        - name: ZoraNFTCreatorV1
+          file: ./abis/ZoraNFTCreatorV1.json
+        - name: ERC721Drop
+          file: ./abis/ERC721Drop.json
+      eventHandlers:
+        - event: CreatedDrop(indexed address,indexed address,uint256)
+          handler: handleCreatedDrop
+        - event: Upgraded(indexed address)
+          handler: handleFactoryUpgraded
+      file: ./src/ERC721NewMappings.ts/ERC721FactoryMappings.ts
 templates:
   - name: MetadataInfo
     kind: file/ipfs
