@@ -83,6 +83,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 
   permissions.tokenId = event.params.tokenId;
   permissions.contract = event.address.toHexString();
+  permissions.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
 
   permissions.save();
 }
