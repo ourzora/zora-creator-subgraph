@@ -102,7 +102,7 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
   royalties.contract = event.address.toHexString();
   royalties.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
 
-  royalties.save()
+  royalties.save();
 }
 
 export function handleUpdatedToken(event: UpdatedToken): void {
