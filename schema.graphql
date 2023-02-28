@@ -272,5 +272,6 @@ type RoyaltyConfig @entity {
   royaltyBPS: BigInt!
   royaltyRecipient: Bytes!
   contract: ZoraCreateContract
+  tokenAndContract: ZoraCreateToken
 }
 

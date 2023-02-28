@@ -99,6 +99,7 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
   royalties.royaltyBPS = event.params.configuration.royaltyBPS;
   royalties.royaltyRecipient = event.params.configuration.royaltyRecipient;
   royalties.contract = event.address.toHexString();
+  royalties.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
 
   royalties.save()
 }
