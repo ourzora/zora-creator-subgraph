@@ -167,6 +167,7 @@ type ZoraCreateContract @entity {
 
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
   permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
+  royalties: [RoyaltyConfig!]! @derivedFrom(field: "contract")
 
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "contract")
@@ -262,5 +263,15 @@ type MetadataInfo @entity {
   decimals: String
 
   rawJson: String
+}
+
+type RoyaltyConfig @entity {
+  id: ID!
+  tokenId: BigInt!
+  user: Bytes!
+  royaltyBPS: BigInt!
+  royaltyRecipient: Bytes!
+  contract: ZoraCreateContract
+  tokenAndContract: ZoraCreateToken
 }
 

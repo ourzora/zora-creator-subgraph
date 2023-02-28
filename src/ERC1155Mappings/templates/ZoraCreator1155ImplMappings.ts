@@ -3,6 +3,7 @@ import {
   ZoraCreateContract,
   ZoraCreateToken,
   ZoraCreatorPermissions,
+  RoyaltyConfig,
 } from "../../../generated/schema";
 import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
 import {
@@ -81,19 +82,42 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.txn = makeTransaction(event);
 
   permissions.tokenId = event.params.tokenId;
-  permissions.contract = event.address.toHexString();
+  if (event.params.tokenId.equals(BigInt.zero())) {
+    permissions.contract = event.address.toHexString();
+  } else {
+    permissions.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  }
 
   permissions.save();
 }
 
-export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {}
+export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
+  const id = `${event.params.user.toHex()}-${event.params.tokenId.toString()}-${event.address.toHex()}`;
+  let royalties = new RoyaltyConfig(id);
+  if (!royalties) {
+    royalties = new RoyaltyConfig(id);
+  }
+
+  royalties.tokenId = event.params.tokenId;
+  royalties.user = event.params.user;
+  royalties.royaltyBPS = event.params.configuration.royaltyBPS;
+  royalties.royaltyRecipient = event.params.configuration.royaltyRecipient;
+
+  if (event.params.tokenId.equals(BigInt.zero())) {
+    royalties.contract = event.address.toHexString();
+  } else {
+    royalties.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  }
+
+  royalties.save();
+}
 
 export function handleUpdatedToken(event: UpdatedToken): void {
   const id = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
-    token.createdAtBlock = event.block.number
+    token.createdAtBlock = event.block.number;
   }
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
