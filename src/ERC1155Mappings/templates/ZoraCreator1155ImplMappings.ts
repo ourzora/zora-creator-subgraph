@@ -82,8 +82,11 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.txn = makeTransaction(event);
 
   permissions.tokenId = event.params.tokenId;
-  permissions.contract = event.address.toHexString();
-  permissions.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  if (event.params.tokenId.equals(BigInt.zero())) {
+    permissions.contract = event.address.toHexString();
+  } else {
+    permissions.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  }
 
   permissions.save();
 }
@@ -99,8 +102,12 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
   royalties.user = event.params.user;
   royalties.royaltyBPS = event.params.configuration.royaltyBPS;
   royalties.royaltyRecipient = event.params.configuration.royaltyRecipient;
-  royalties.contract = event.address.toHexString();
-  royalties.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+
+  if (event.params.tokenId.equals(BigInt.zero())) {
+    royalties.contract = event.address.toHexString();
+  } else {
+    royalties.tokenAndContract = `${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  }
 
   royalties.save();
 }
