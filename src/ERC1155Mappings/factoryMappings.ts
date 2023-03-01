@@ -30,6 +30,9 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.owner = event.params.defaultAdmin;
   createdContract.name = null;
   createdContract.symbol = null;
+  createdContract.contractVersion = createdContract.contractVersion;
+  createdContract.rendererContract = createdContract.rendererContract;
+
   // These will get updated when the Upgraded event is captured.
   createdContract.mintFeePerQuantity = BigInt.zero();
   createdContract.mintFeePerTxn = BigInt.zero();
@@ -49,7 +52,7 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
   const factory = new ZoraCreate1155Factory(event.address.toHex());
   const creator = ZoraCreator1155FactoryImpl.bind(event.address);
-  
+
   ZoraCreatorFixedPriceSaleStrategy.create(creator.defaultMinters()[0]);
   ZoraCreatorMerkleMinterStrategy.create(creator.defaultMinters()[1]);
 
