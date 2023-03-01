@@ -23,19 +23,19 @@ import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleUpgraded(event: Upgraded): void {
-  const impl = ZoraCreator1155Impl.bind(event.address);
-  if (!impl) {
-    return;
-  }
-  const contract = ZoraCreateContract.load(event.address.toHex());
-  if (!contract) {
-    return;
-  }
+  // const impl = ZoraCreator1155Impl.bind(event.address);
+  // if (!impl) {
+  //   return;
+  // }
+  // const contract = ZoraCreateContract.load(event.address.toHex());
+  // if (!contract) {
+  //   return;
+  // }
 
-  contract.mintFeePerTxn = impl.mintFee();
-  contract.mintFeePerQuantity = BigInt.fromString("0");
-  contract.contractVersion = impl.contractVersion();
-  contract.save();
+  // contract.mintFeePerTxn = impl.mintFee();
+  // contract.mintFeePerQuantity = BigInt.zero();
+  // contract.contractVersion = impl.contractVersion();
+  // contract.save();
 }
 
 export function handleContractRendererUpdated(
