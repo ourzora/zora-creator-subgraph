@@ -54,7 +54,10 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const createdContract = new ZoraCreateContract(contractId);
 
   createdContract.contractStandard = "ERC721";
-  createdContract.contractURI = dropContract.contractURI();
+  const contractURIResponse = dropContract.try_contractURI();
+  if (!contractURIResponse.reverted) {
+    createdContract.contractURI = contractURIResponse.value;
+  }
   createdContract.creator = event.params.creator;
   createdContract.initialDefaultAdmin = dropContract.DEFAULT_ADMIN_ROLE();
   createdContract.owner = dropContract.owner();
@@ -65,10 +68,12 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 
   createdContract.mintFeePerQuantity = BigInt.zero();
   createdContract.mintFeePerTxn = BigInt.zero();
-  const ipfsHostPath = getIPFSHostFromURI(dropContract.contractURI());
-  if (ipfsHostPath !== null) {
-    createdContract.metadata = ipfsHostPath;
-    MetadataInfoTemplate.create(ipfsHostPath);
+  if (!contractURIResponse.reverted) {
+    const ipfsHostPath = getIPFSHostFromURI(contractURIResponse.value);
+    if (ipfsHostPath !== null) {
+      createdContract.metadata = ipfsHostPath;
+      MetadataInfoTemplate.create(ipfsHostPath);
+    }
   }
   createdContract.txn = makeTransaction(event);
   createdContract.createdAtBlock = event.block.number;
