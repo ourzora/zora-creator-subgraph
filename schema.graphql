@@ -70,9 +70,10 @@ type ERC721Drop @entity {
 type ZoraCreate721Factory @entity {
   id: ID!
   implementation: Bytes!
-  version: BigInt!
-
-  updatedAt: Int!
+  version: String!
+  txn: TransactionInfo!
+  dropMetadataRendererFactory: Bytes!
+  editionMetadataRendererFactory: Bytes!
 }
 
 type DropRole @entity {
@@ -169,8 +170,7 @@ type ZoraCreateContract @entity {
   permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "contract")
 
-  salesStrategies: [SalesStrategyConfig!]!
-    @derivedFrom(field: "contract")
+  salesStrategies: [SalesStrategyConfig!]! @derivedFrom(field: "contract")
 
   createdAtBlock: BigInt!
 }
@@ -274,4 +274,3 @@ type RoyaltyConfig @entity {
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
 }
-

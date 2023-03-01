@@ -12,6 +12,7 @@ import {
   SalesConfig,
   Upgrade,
   ZoraCreateContract,
+  ZoraCreate721Factory,
 } from "../../generated/schema";
 
 import {
@@ -30,13 +31,19 @@ import {
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 
-export function handleFactoryUpgraded(evt: Upgraded): void {
-  const upgrade = new Upgrade(evt.transaction.hash.toHex());
-
-  const creator = ZoraNFTCreatorV1.bind(evt.address);
+export function handleFactoryUpgraded(event: Upgraded): void {
+  const upgrade = new Upgrade(event.transaction.hash.toHex());
+  const factory = new ZoraCreate721Factory(event.address.toHex());
+  const creator = ZoraNFTCreatorV1.bind(event.address);
 
   DropMetadataRendererFactory.create(creator.dropMetadataRenderer());
   EditionMetadataRendererFactory.create(creator.editionMetadataRenderer());
+
+  factory.txn = makeTransaction(event);
+  factory.dropMetadataRendererFactory = creator.dropMetadataRenderer();
+  factory.editionMetadataRendererFactory = creator.editionMetadataRenderer();
+  factory.implementation = event.params.implementation;
+  factory.version = creator.contractVersion().toString();
 
   upgrade.save();
 }
