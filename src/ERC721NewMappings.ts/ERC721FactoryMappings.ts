@@ -42,6 +42,7 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   factory.version = creator.contractVersion().toString();
 
   upgrade.save();
+  factory.save();
 }
 
 export function handleCreatedDrop(event: CreatedDrop): void {
