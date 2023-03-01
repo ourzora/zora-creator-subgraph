@@ -46,8 +46,9 @@ export function handleFactoryUpgraded(event: Upgraded): void {
 }
 
 export function handleCreatedDrop(event: CreatedDrop): void {
+  const dropAddress = event.params.editionContractAddress;
   const dropContract = ERC721DropContract.bind(
-    Address.fromString(event.address.toHex())
+    Address.fromString(dropAddress.toHex())
   );
 
   const contractId = event.params.editionContractAddress.toHex();
