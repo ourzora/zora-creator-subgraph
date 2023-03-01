@@ -1,15 +1,11 @@
-import { Address, dataSource } from "@graphprotocol/graph-ts";
+import { Address } from "@graphprotocol/graph-ts";
 
 import {
-  ERC721Drop as ERC721DropFactory,
   DropMetadataRenderer as DropMetadataRendererFactory,
   EditionMetadataRenderer as EditionMetadataRendererFactory,
 } from "../../generated/templates";
 
 import {
-  ContractConfig,
-  ERC721Drop,
-  SalesConfig,
   Upgrade,
   ZoraCreateContract,
   ZoraCreate721Factory,
