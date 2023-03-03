@@ -2,27 +2,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "ethValueSent",
-        "type": "uint256"
-      }
-    ],
-    "name": "IncorrectValueSent",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "mintTo",
         "type": "address"
@@ -52,12 +31,27 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "SaleEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SaleHasNotStarted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "WrongValueSent",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
         "indexed": false,
         "internalType": "address",
-        "name": "sender",
+        "name": "mediaContract",
         "type": "address"
       },
       {

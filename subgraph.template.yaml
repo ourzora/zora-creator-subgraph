@@ -44,7 +44,7 @@ dataSources:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
       eventHandlers:
-        - event: SetupNewContract(address,address,address,string,(uint32,address))
+        - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,address))
           handler: handleNewContractCreated
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
@@ -169,7 +169,7 @@ templates:
           handler: handleUpdatedPermissions
         - event: UpdatedRoyalties(uint256,address,(uint32,address))
           handler: handleUpdatedRoyalties
-        - event: UpdatedToken(address,uint256,(string,uint256,uint256))
+        - event: UpdatedToken(indexed address,indexed uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
@@ -177,6 +177,12 @@ templates:
           handler: handleTransferBatch
         - event: Upgraded(indexed address)
           handler: handleUpgraded
+        - event: ContractMetadataUpdated(indexed address,string,string)
+          handler: handleContractMetadataUpdated
+        - event: Purchased(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handlePurchased
+        - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
+          handler: handleSetupNewToken
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: {{network}}

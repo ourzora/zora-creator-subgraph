@@ -124,7 +124,8 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   token.tokenId = event.params.tokenId;
   token.uri = event.params.tokenData.uri;
   token.maxSupply = event.params.tokenData.maxSupply;
-  token.totalSupply = event.params.tokenData.totalSupply;
+  // token.totalSupply = event.params.tokenData.totalSupply;
+  // token.totalMinted = event.params.tokenData.totalMinted;
 
   token.save();
 }
@@ -135,7 +136,8 @@ export function handleTransferSingle(event: TransferSingle): void {
     const id = `${event.address.toHex()}-${event.params.id.toString()}`;
     const token = ZoraCreateToken.load(id);
     if (token) {
-      token.totalSupply = token.totalSupply.plus(event.params.value);
+      // token.totalSupply = token.totalSupply.plus(event.params.value);
+      // token.totalMinted = token.totalMinted.plus(event.params.value);
       token.save();
     }
   }
@@ -148,7 +150,8 @@ export function handleTransferBatch(event: TransferBatch): void {
       const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
       const token = ZoraCreateToken.load(id);
       if (token) {
-        token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        // token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        // token.totalMinted = token.totalMinted.plus(event.params.values);
         token.save();
       }
     }
@@ -163,4 +166,13 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
     createContract.txn = makeTransaction(event);
     createContract.save();
   }
+}
+
+export function handleContractMetadataUpdated(event: ContractMetadataUpdated): void {
+  
+}
+
+
+export function handleSetupNewToken(event: SetupNewToken): void {
+
 }

@@ -28,7 +28,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.creator = event.params.creator;
   createdContract.initialDefaultAdmin = event.params.defaultAdmin;
   createdContract.owner = event.params.defaultAdmin;
-  createdContract.name = null;
+  createdContract.name = event.params.name;
   createdContract.symbol = null;
   createdContract.contractVersion = createdContract.contractVersion;
   createdContract.rendererContract = createdContract.rendererContract;
