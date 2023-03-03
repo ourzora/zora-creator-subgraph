@@ -20,7 +20,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8548964
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -43,9 +43,9 @@ dataSources:
     name: ZoraNFTCreatorFactory1155
     network: goerli
     source:
-      address: "0xd0dfdd4AbBbf000DAA1979dcAde162bD1Df7c128"
+      address: "0xe15e39b23248a3d5372e3d6491da30060b56f27f"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: 8548964
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -191,8 +191,6 @@ templates:
           handler: handleUpgraded
         - event: ContractMetadataUpdated(indexed address,string,string)
           handler: handleContractMetadataUpdated
-        - event: Purchased(indexed address,indexed address,indexed uint256,uint256,uint256)
-          handler: handlePurchased
         - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
           handler: handleSetupNewToken
   - name: ZoraCreatorFixedPriceSaleStrategy

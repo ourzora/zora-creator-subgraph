@@ -179,8 +179,6 @@ templates:
           handler: handleUpgraded
         - event: ContractMetadataUpdated(indexed address,string,string)
           handler: handleContractMetadataUpdated
-        - event: Purchased(indexed address,indexed address,indexed uint256,uint256,uint256)
-          handler: handlePurchased
         - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
           handler: handleSetupNewToken
   - name: ZoraCreatorFixedPriceSaleStrategy
