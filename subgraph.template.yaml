@@ -130,7 +130,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
+      file: ./src/ERC721LegacyMappings/templates/DropMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
