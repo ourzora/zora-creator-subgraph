@@ -45,7 +45,7 @@ dataSources:
     source:
       address: "0xd0dfdd4AbBbf000DAA1979dcAde162bD1Df7c128"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: 8504420
+      startBlock: 8550458
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -67,7 +67,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8548964
+      startBlock: 8504420
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -183,6 +183,7 @@ templates:
     network: goerli
     source:
       abi: ZoraCreator1155Impl
+      startBlock: 8550458
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

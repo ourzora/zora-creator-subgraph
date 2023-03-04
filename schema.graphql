@@ -157,7 +157,7 @@ type ZoraCreateContract @entity {
   contractVersion: String
   metadata: MetadataInfo
 
-  mintFeePerTxn: BigInt!
+  mintFeePerTxn: BigInt
   mintFeePerQuantity: BigInt!
 
   rendererContract: Bytes

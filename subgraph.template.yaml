@@ -171,6 +171,7 @@ templates:
     network: {{network}}
     source:
       abi: ZoraCreator1155Impl
+      startBlock: {{1155StartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
