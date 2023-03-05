@@ -109,6 +109,8 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
   royalties.user = event.params.user;
   royalties.royaltyBPS = event.params.configuration.royaltyBPS;
   royalties.royaltyRecipient = event.params.configuration.royaltyRecipient;
+  royalties.royaltyMintSchedule =
+    event.params.configuration.royaltyMintSchedule;
 
   if (event.params.tokenId.equals(BigInt.zero())) {
     royalties.contract = event.address.toHexString();

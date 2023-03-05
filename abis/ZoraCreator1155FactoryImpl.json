@@ -185,6 +185,11 @@
         "components": [
           {
             "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
             "name": "royaltyBPS",
             "type": "uint32"
           },
@@ -295,6 +300,11 @@
       },
       {
         "components": [
+          {
+            "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
           {
             "internalType": "uint32",
             "name": "royaltyBPS",
