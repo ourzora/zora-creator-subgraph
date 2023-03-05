@@ -24,17 +24,22 @@ import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
-  if (!impl) {
-    return;
-  }
   const contract = ZoraCreateContract.load(event.address.toHex());
-  if (!contract) {
+  if (!impl || !contract) {
     return;
   }
 
-  contract.mintFeePerTxn = impl.mintFee();
-  contract.mintFeePerQuantity = BigInt.fromString("0");
-  contract.contractVersion = impl.contractVersion();
+  const mint_fee = impl.try_mintFee();
+  if (mint_fee.reverted == false) {
+    contract.mintFeePerTxn = impl.try_mintFee().value;
+  }
+
+  const contract_version = impl.try_contractVersion();
+  if (contract_version.reverted == false) {
+    contract.contractVersion = impl.try_contractVersion().value;
+  }
+
+  contract.mintFeePerQuantity = BigInt.zero();
   contract.save();
 }
 
