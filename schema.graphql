@@ -70,9 +70,10 @@ type ERC721Drop @entity {
 type ZoraCreate721Factory @entity {
   id: ID!
   implementation: Bytes!
-  version: BigInt!
-
-  updatedAt: Int!
+  version: String!
+  txn: TransactionInfo!
+  dropMetadataRendererFactory: Bytes!
+  editionMetadataRendererFactory: Bytes!
 }
 
 type DropRole @entity {
@@ -156,7 +157,7 @@ type ZoraCreateContract @entity {
   contractVersion: String
   metadata: MetadataInfo
 
-  mintFeePerTxn: BigInt!
+  mintFeePerTxn: BigInt
   mintFeePerQuantity: BigInt!
 
   rendererContract: Bytes
@@ -275,4 +276,3 @@ type RoyaltyConfig @entity {
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
 }
-
