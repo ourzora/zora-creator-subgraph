@@ -15,6 +15,8 @@ import {
   UpdatedRoyalties,
   UpdatedToken,
   URI,
+  ContractMetadataUpdated,
+  SetupNewToken,
   ZoraCreator1155Impl,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
@@ -129,7 +131,8 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   token.tokenId = event.params.tokenId;
   token.uri = event.params.tokenData.uri;
   token.maxSupply = event.params.tokenData.maxSupply;
-  token.totalSupply = event.params.tokenData.totalSupply;
+  token.totalMinted = event.params.tokenData.totalMinted;
+  token.totalSupply = event.params.tokenData.totalMinted;
 
   token.save();
 }
@@ -141,6 +144,7 @@ export function handleTransferSingle(event: TransferSingle): void {
     const token = ZoraCreateToken.load(id);
     if (token) {
       token.totalSupply = token.totalSupply.plus(event.params.value);
+      token.totalMinted = token.totalMinted.plus(event.params.value);
       token.save();
     }
   }
@@ -154,6 +158,17 @@ export function handleTransferBatch(event: TransferBatch): void {
       const token = ZoraCreateToken.load(id);
       if (token) {
         token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        token.totalMinted = token.totalMinted.plus(event.params.values[i]);
+        token.save();
+      }
+    }
+  }
+  if (event.params.to === Address.zero()) {
+    for (let i = 0; i < event.params.ids.length; i++) {
+      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
+      const token = ZoraCreateToken.load(id);
+      if (token) {
+        token.totalSupply = token.totalSupply.minus(event.params.values[i]);
         token.save();
       }
     }
@@ -168,4 +183,41 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
     createContract.txn = makeTransaction(event);
     createContract.save();
   }
+}
+
+export function handleContractMetadataUpdated(
+  event: ContractMetadataUpdated
+): void {
+  const createContract = ZoraCreateContract.load(event.address.toHex());
+  if (createContract) {
+    createContract.contractURI = event.params.uri;
+    const ipfsHostPath = getIPFSHostFromURI(event.params.uri);
+    if (ipfsHostPath !== null) {
+      createContract.metadata = ipfsHostPath;
+      MetadataInfoTemplate.create(ipfsHostPath);
+    }
+    createContract.save();
+  }
+}
+
+export function handleSetupNewToken(event: SetupNewToken): void {
+  const token = new ZoraCreateToken(
+    `${event.address.toHex()}-${event.params.tokenId}`
+  );
+
+  token.createdAtBlock = event.block.number;
+  token.tokenId = event.params.tokenId;
+  token.uri = event.params._uri;
+  token.maxSupply = event.params.maxSupply;
+  token.txn = makeTransaction(event);
+  token.contract = event.address.toHex();
+
+  const ipfsHostPath = getIPFSHostFromURI(event.params._uri);
+  if (ipfsHostPath !== null) {
+    token.metadata = ipfsHostPath;
+    MetadataInfoTemplate.create(ipfsHostPath);
+  }
+  token.totalMinted = BigInt.zero();
+  token.totalSupply = BigInt.zero();
+  token.save();
 }

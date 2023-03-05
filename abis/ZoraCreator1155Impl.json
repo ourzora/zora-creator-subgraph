@@ -132,6 +132,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "NotAllowedContractBaseIDUpdate",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -245,6 +250,31 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "ContractMetadataUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "contract IRenderer1155",
         "name": "renderer",
@@ -290,19 +320,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "sender",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "minter",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -352,13 +382,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "sender",
         "type": "address"
@@ -538,13 +568,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -563,7 +593,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "totalSupply",
+            "name": "totalMinted",
             "type": "uint256"
           }
         ],
@@ -1144,6 +1174,19 @@
   },
   {
     "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "nextTokenId",
     "outputs": [
       {
@@ -1468,6 +1511,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -1489,11 +1545,29 @@
       },
       {
         "internalType": "uint256",
-        "name": "totalSupply",
+        "name": "totalMinted",
         "type": "uint256"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_newURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_newName",
+        "type": "string"
+      }
+    ],
+    "name": "updateContractMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
