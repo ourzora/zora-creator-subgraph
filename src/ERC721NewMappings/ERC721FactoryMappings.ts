@@ -22,8 +22,8 @@ import { makeTransaction } from "../common/makeTransaction";
 import { ERC721Drop as ERC721DropContract } from "../../generated/templates/ERC721Drop/ERC721Drop";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import {
-  ZoraCreator1155Impl as ZoraCreator1155ImplTemplate,
   MetadataInfo as MetadataInfoTemplate,
+  NewERC721Drop as NewERC721DropTemplate
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 
@@ -80,5 +80,5 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
-  ZoraCreator1155ImplTemplate.create(event.params.editionContractAddress);
+  NewERC721DropTemplate.create(event.params.editionContractAddress);
 }

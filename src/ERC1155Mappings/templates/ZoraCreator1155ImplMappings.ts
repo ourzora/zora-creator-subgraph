@@ -33,15 +33,8 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  const mint_fee = impl.try_mintFee();
-  if (mint_fee.reverted == false) {
-    contract.mintFeePerTxn = impl.try_mintFee().value;
-  }
-
-  const contract_version = impl.try_contractVersion();
-  if (contract_version.reverted == false) {
-    contract.contractVersion = impl.try_contractVersion().value;
-  }
+  contract.mintFeePerTxn = impl.mintFee();
+  contract.contractVersion = impl.contractVersion();
 
   contract.mintFeePerQuantity = BigInt.zero();
   contract.save();

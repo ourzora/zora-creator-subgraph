@@ -16,7 +16,6 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   sale.saleStart = event.params.salesConfig.saleStart;
   sale.saleEnd = event.params.salesConfig.saleEnd;
   sale.maxTokensPerAddress = event.params.salesConfig.maxTokensPerAddress;
-  sale.maxTokensPerTransaction = BigInt.fromI32(0);
   const txn = makeTransaction(event);
   sale.txn = txn;
   sale.tokenId = event.params.tokenId;

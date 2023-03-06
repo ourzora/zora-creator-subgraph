@@ -58,8 +58,8 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     const strategyPresale = new SalesConfigMerkleMinterStrategy(
       presaleConfigId
     );
+    strategyPresale.tokenId = BigInt.zero();
     strategyPresale.contract = event.address.toHexString();
-    strategyPresale.fundsRecipient = Address.zero();
     strategyPresale.presaleStart = salesConfigObject.getPresaleStart();
     strategyPresale.presaleEnd = salesConfigObject.getPresaleEnd();
     strategyPresale.merkleRoot = salesConfigObject.getPresaleMerkleRoot();
@@ -86,8 +86,9 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     const fixedPriceSaleStrategy = new SalesConfigFixedPriceSaleStrategy(
       publicSaleConfigId
     );
+    fixedPriceSaleStrategy.tokenId = BigInt.zero();
     fixedPriceSaleStrategy.contract = event.address.toHexString();
-    fixedPriceSaleStrategy.fundsRecipient = Address.zero();
+    fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
     fixedPriceSaleStrategy.saleEnd = salesConfigObject.getPublicSaleEnd();
     fixedPriceSaleStrategy.pricePerToken = salesConfigObject.getPublicSalePrice();
@@ -131,7 +132,14 @@ export function handleRoleGranted(event: RoleGranted): void {
 
   if (!permissions) {
     permissions = new ZoraCreatorPermissions(id);
+    permissions.isAdmin = false;
+    permissions.isFundsManager = false;
+    permissions.isMetadataManager = false;
+    permissions.isSalesManager = false;
+    permissions.isMinter = false;
   }
+  permissions.user = event.params.account;
+  permissions.tokenId = BigInt.zero();
   const roleHex = event.params.role.toHexString().toLowerCase();
   if (roleHex === KNOWN_TYPE_DEFAULT_ADMIN) {
     permissions.isAdmin = true;
@@ -157,10 +165,10 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   );
 
   let permissions = ZoraCreatorPermissions.load(id);
-
   if (!permissions) {
-    permissions = new ZoraCreatorPermissions(id);
+    return;
   }
+
   const roleHex = event.params.role.toHexString().toLowerCase();
   if (roleHex === KNOWN_TYPE_DEFAULT_ADMIN) {
     permissions.isAdmin = false;
@@ -174,6 +182,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
 
   permissions.txn = makeTransaction(event);
   permissions.contract = event.address.toHexString();
+  permissions.user = event.params.account;
 
   permissions.save();
 }
