@@ -23,7 +23,7 @@ type ContractConfig @entity {
 
   metadataRenderer: Bytes!
   editionSize: BigInt!
-  royaltyBPS: Int!
+  royaltyBPS: BigInt!
   fundsRecipient: Bytes!
 
   drop: ERC721Drop!
@@ -198,7 +198,6 @@ type ZoraCreateToken @entity {
 
   uri: String!
   totalSupply: BigInt!
-  totalMinted: BigInt!
   maxSupply: BigInt!
   totalMinted: BigInt!
 

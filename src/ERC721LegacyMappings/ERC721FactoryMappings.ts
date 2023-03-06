@@ -1,4 +1,4 @@
-import { Address, dataSource } from "@graphprotocol/graph-ts";
+import { Address, dataSource, BigInt } from "@graphprotocol/graph-ts";
 
 import {
   ERC721Drop as ERC721DropFactory,
@@ -70,10 +70,10 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const contractConfig = new ContractConfig(configId);
   contractConfig.drop = dropId;
   const dropConfig = dropContract.config();
-  contractConfig.metadataRenderer = dropConfig.value0;
-  contractConfig.editionSize = dropConfig.value1;
-  contractConfig.royaltyBPS = dropConfig.value2;
-  contractConfig.fundsRecipient = dropConfig.value3;
+  contractConfig.metadataRenderer = dropConfig.getMetadataRenderer();
+  contractConfig.editionSize = dropConfig.getEditionSize();
+  contractConfig.royaltyBPS = BigInt.fromI32(dropConfig.getRoyaltyBPS());
+  contractConfig.fundsRecipient = dropConfig.getFundsRecipient();
   contractConfig.save();
 
   const salesConfigId = event.transaction.hash.toHex();

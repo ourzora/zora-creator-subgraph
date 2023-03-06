@@ -12,6 +12,7 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadata.extension = event.params.metadataExtension;
   metadata.base = event.params.metadataBase;
   metadata.freezeAt = event.params.freezeAt;
+  metadata.drop = event.params.target.toHexString();
   metadata.save();
 
   const drop = ERC721Drop.load(event.params.target.toHex());

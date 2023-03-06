@@ -8,12 +8,7 @@ import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
-<<<<<<< HEAD
-  // todo rename sender to mediaContract
-  const id = getSalesConfigKey(event.address, event.params.sender, event.params.tokenId)
-=======
-  const id = `${event.address.toHex()}-${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
->>>>>>> test_run_locally
+  const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   let sale = new SalesConfigMerkleMinterStrategy(id);
   sale.presaleStart = event.params.merkleSaleSettings.presaleStart;
   sale.presaleEnd = event.params.merkleSaleSettings.presaleEnd;
