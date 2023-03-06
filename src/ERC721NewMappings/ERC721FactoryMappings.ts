@@ -9,6 +9,7 @@ import {
   Upgrade,
   ZoraCreateContract,
   ZoraCreate721Factory,
+  ZoraCreateToken,
 } from "../../generated/schema";
 
 import {
@@ -26,6 +27,7 @@ import {
   NewERC721Drop as NewERC721DropTemplate
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
+import { getDefaultTokenId } from "../common/getTokenId";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
@@ -80,5 +82,17 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
+
+  // create token from contract
+  const createTokenId = getDefaultTokenId(dropAddress);
+  const newToken = new ZoraCreateToken(createTokenId)
+  newToken.rendererContract = createdContract.rendererContract;
+  newToken.totalSupply = BigInt.fromI32(0);
+  newToken.maxSupply = event.params.editionSize;
+  newToken.totalMinted = BigInt.zero();
+  newToken.contract = contractId;
+  newToken.tokenId = BigInt.zero();
+  newToken.save();
+
   NewERC721DropTemplate.create(event.params.editionContractAddress);
 }

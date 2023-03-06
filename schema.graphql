@@ -196,7 +196,7 @@ type ZoraCreateToken @entity {
   id: ID!
   txn: TransactionInfo!
 
-  uri: String!
+  uri: String
   totalSupply: BigInt!
   maxSupply: BigInt!
   totalMinted: BigInt!
