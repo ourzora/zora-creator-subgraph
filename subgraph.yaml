@@ -20,7 +20,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8504420
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -43,9 +43,9 @@ dataSources:
     name: ZoraNFTCreatorFactory1155
     network: goerli
     source:
-      address: "0xd0dfdd4AbBbf000DAA1979dcAde162bD1Df7c128"
+      address: "0xe15e39b23248a3d5372e3d6491da30060b56f27f"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: 8550458
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -56,7 +56,7 @@ dataSources:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
       eventHandlers:
-        - event: SetupNewContract(address,address,address,string,(uint32,address))
+        - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
@@ -67,7 +67,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8504420
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -183,7 +183,7 @@ templates:
     network: goerli
     source:
       abi: ZoraCreator1155Impl
-      startBlock: 8550458
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -205,9 +205,9 @@ templates:
           handler: handleURI
         - event: UpdatedPermissions(uint256,address,uint256)
           handler: handleUpdatedPermissions
-        - event: UpdatedRoyalties(uint256,address,(uint32,address))
+        - event: UpdatedRoyalties(uint256,address,(uint32,uint32,address))
           handler: handleUpdatedRoyalties
-        - event: UpdatedToken(address,uint256,(string,uint256,uint256))
+        - event: UpdatedToken(indexed address,indexed uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
@@ -215,6 +215,10 @@ templates:
           handler: handleTransferBatch
         - event: Upgraded(indexed address)
           handler: handleUpgraded
+        - event: ContractMetadataUpdated(indexed address,string,string)
+          handler: handleContractMetadataUpdated
+        - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
+          handler: handleSetupNewToken
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: goerli

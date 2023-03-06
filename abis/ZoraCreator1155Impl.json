@@ -132,6 +132,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "NotAllowedContractBaseIDUpdate",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -245,6 +250,31 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "ContractMetadataUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "contract IRenderer1155",
         "name": "renderer",
@@ -290,19 +320,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "sender",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "minter",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -352,13 +382,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "sender",
         "type": "address"
@@ -516,6 +546,11 @@
         "components": [
           {
             "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
             "name": "royaltyBPS",
             "type": "uint32"
           },
@@ -538,13 +573,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -563,7 +598,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "totalSupply",
+            "name": "totalMinted",
             "type": "uint256"
           }
         ],
@@ -955,6 +990,11 @@
         "components": [
           {
             "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
             "name": "royaltyBPS",
             "type": "uint32"
           },
@@ -981,6 +1021,11 @@
       },
       {
         "components": [
+          {
+            "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
           {
             "internalType": "uint32",
             "name": "royaltyBPS",
@@ -1144,6 +1189,19 @@
   },
   {
     "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "nextTokenId",
     "outputs": [
       {
@@ -1261,6 +1319,11 @@
     ],
     "name": "royalties",
     "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "royaltyMintSchedule",
+        "type": "uint32"
+      },
       {
         "internalType": "uint32",
         "name": "royaltyBPS",
@@ -1451,6 +1514,40 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalSupply",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "mintAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "supplyRoyaltyInfo",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "royaltyAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes4",
         "name": "interfaceId",
         "type": "bytes4"
@@ -1465,6 +1562,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1489,11 +1599,29 @@
       },
       {
         "internalType": "uint256",
-        "name": "totalSupply",
+        "name": "totalMinted",
         "type": "uint256"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_newURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_newName",
+        "type": "string"
+      }
+    ],
+    "name": "updateContractMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1505,6 +1633,11 @@
       },
       {
         "components": [
+          {
+            "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
           {
             "internalType": "uint32",
             "name": "royaltyBPS",

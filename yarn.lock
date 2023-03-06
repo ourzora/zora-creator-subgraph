@@ -858,10 +858,10 @@
     typechain "8.0.0"
     typescript "4.6.3"
 
-"@zoralabs/zora-creator-contracts@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zora-creator-contracts/-/zora-creator-contracts-0.0.2.tgz#70bfbc567296d2747587114986af4320a27e6926"
-  integrity sha512-koAIKhuKuEz3PKgmoykmZD9O9oiQgrJSrm86MuBiWh7cgWj9ceUnJlO0H+LqxwAOVUFYCvGjrxEsWuEiJ2KdCg==
+"@zoralabs/zora-creator-contracts@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zora-creator-contracts/-/zora-creator-contracts-0.0.6.tgz#cf620199a4543643839ea70a0f214fbe370c4d50"
+  integrity sha512-R6xCWFPJE3NhQpaU95cDZ+lhmexFwKhf4uHAiBoBXJJst8rGxhh3XJL71heI4AslCQsrZlvt9Z/3ykH9Qbx6bw==
   dependencies:
     "@openzeppelin/contracts" "4.8.0"
     "@openzeppelin/contracts-upgradeable" "4.8.0"
