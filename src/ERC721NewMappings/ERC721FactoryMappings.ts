@@ -92,6 +92,8 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.totalMinted = BigInt.zero();
   newToken.contract = contractId;
   newToken.tokenId = BigInt.zero();
+  newToken.txn = makeTransaction(event);
+  newToken.createdAtBlock = event.block.number;
   newToken.save();
 
   NewERC721DropTemplate.create(event.params.editionContractAddress);
