@@ -4,4 +4,4 @@ export const getPermissionsKey = (
   user: Address,
   address: Address,
   tokenId: BigInt
-) => `${user.toHex()}-${address.toHex()}-${tokenId.toString()}`;
+): string => `${user.toHex()}-${address.toHex()}-${tokenId.toString()}`;
