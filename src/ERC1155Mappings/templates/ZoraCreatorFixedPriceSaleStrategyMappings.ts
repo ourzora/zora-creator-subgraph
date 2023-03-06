@@ -4,10 +4,11 @@ import {
   SalesStrategyConfig,
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
+import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
-  const id = `${event.address.toHex()}-${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
+  const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   const sale = new SalesConfigFixedPriceSaleStrategy(id);
   sale.contract = event.params.mediaContract.toHex();
   sale.fundsRecipient = event.params.salesConfig.fundsRecipient;

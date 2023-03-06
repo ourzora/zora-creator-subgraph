@@ -199,6 +199,7 @@ type ZoraCreateToken @entity {
   uri: String!
   totalSupply: BigInt!
   maxSupply: BigInt!
+  totalMinted: BigInt!
 
   rendererContract: Bytes
 

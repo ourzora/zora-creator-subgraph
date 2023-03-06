@@ -4,10 +4,12 @@ import {
   SalesStrategyConfig,
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorMerkleMinterStrategy/ZoraCreatorMerkleMinterStrategy";
+import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
-  const id = `${event.address.toHex()}-${event.params.sender.toHex()}-${event.params.tokenId.toString()}`;
+  // todo rename sender to mediaContract
+  const id = getSalesConfigKey(event.address, event.params.sender, event.params.tokenId)
   let sale = new SalesConfigMerkleMinterStrategy(id);
   sale.presaleStart = event.params.merkleSaleSettings.presaleStart;
   sale.presaleEnd = event.params.merkleSaleSettings.presaleEnd;
