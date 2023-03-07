@@ -245,6 +245,7 @@ export function handleNFTTransfer(event: Transfer): void {
   }
   createToken.totalMinted = createToken.totalMinted.plus(BigInt.fromI32(1));
   createToken.totalSupply = createToken.totalSupply.plus(BigInt.fromI32(1));
+  createToken.save();
 }
 
 /* handle ownership transfer */
