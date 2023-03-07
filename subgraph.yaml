@@ -16,11 +16,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ZoraNFTCreatorV1
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x2d2acD205bd6d9D0B3E79990e093768375AD3a30"
+      address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 10655635
+      startBlock: 7412408
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -38,13 +38,11 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: EditionMetadataRenderer
-    network: rinkeby
+    network: goerli
     source:
       abi: EditionMetadataRenderer
     mapping:
@@ -68,7 +66,7 @@ templates:
       file: ./src/edition.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: rinkeby
+    network: goerli
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -88,7 +86,7 @@ templates:
       file: ./src/metadata.ts
   - name: ERC721Drop
     kind: ethereum/contract
-    network: rinkeby
+    network: goerli
     source:
       abi: ERC721Drop
     mapping:
@@ -105,8 +103,6 @@ templates:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
       eventHandlers:
-        - event: SalesConfigChanged(indexed address,(uint104,uint32,uint64,uint64,uint64,uint64,bytes32))
-          handler: handleSalesConfigChanged
         - event: SalesConfigChanged(indexed address)
           handler: handleSalesConfigChanged
         - event: OpenMintFinalized(indexed address,uint256)
@@ -121,3 +117,5 @@ templates:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
           handler: handleRoleRevoked
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
