@@ -163,7 +163,7 @@ type ZoraCreateContract @entity {
 
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
   permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "contract")
-  royalties: [RoyaltyConfig!]! @derivedFrom(field: "contract")
+  royalties: RoyaltyConfig @derivedFrom(field: "contract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "contract")
 

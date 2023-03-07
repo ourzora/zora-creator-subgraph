@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
@@ -83,6 +83,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.isSalesManager = hasBit(3, event.params.permissions);
   permissions.isMetadataManager = hasBit(4, event.params.permissions);
   permissions.isFundsManager = hasBit(5, event.params.permissions);
+  permissions.raw = Bytes.fromHexString(event.params.permissions.toHex());
 
   permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);
@@ -99,7 +100,9 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 }
 
 export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
-  const id = `${event.params.user.toHex()}-${event.params.tokenId.toString()}-${event.address.toHex()}`;
+  const id = event.params.tokenId.equals(BigInt.zero())
+    ? event.address.toHex()
+    : `${event.params.tokenId.toString()}-${event.address.toHex()}`;
   let royalties = new RoyaltyConfig(id);
   if (!royalties) {
     royalties = new RoyaltyConfig(id);
