@@ -144,6 +144,8 @@ type ZoraCreateContract @entity {
   id: ID!
   txn: TransactionInfo!
 
+  address: Bytes!
+
   name: String
   symbol: String
 
@@ -191,6 +193,8 @@ type ZoraCreatorPermission @entity {
 type ZoraCreateToken @entity {
   id: ID!
   txn: TransactionInfo!
+
+  address: Bytes!
 
   uri: String
   totalSupply: BigInt!

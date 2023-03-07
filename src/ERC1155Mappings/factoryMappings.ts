@@ -23,6 +23,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
   const createdContract = new ZoraCreateContract(contractId);
 
+  createdContract.address = event.params.newContract;
   createdContract.contractStandard = "ERC1155";
   createdContract.contractURI = event.params.contractURI;
   createdContract.creator = event.params.creator;

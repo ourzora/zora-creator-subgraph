@@ -129,6 +129,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.address = event.address;
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
   }

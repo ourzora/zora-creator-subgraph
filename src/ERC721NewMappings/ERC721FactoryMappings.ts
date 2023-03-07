@@ -55,6 +55,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const contractId = event.params.editionContractAddress.toHex();
   const createdContract = new ZoraCreateContract(contractId);
 
+  createdContract.address = dropAddress;
   createdContract.contractVersion = dropContract.contractVersion().toString();
   const dropConfig = dropContract.config();
 
@@ -97,6 +98,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 
   // create token from contract
   const newToken = new ZoraCreateToken(getDefaultTokenId(dropAddress))
+  newToken.address = dropAddress;
   newToken.rendererContract = createdContract.rendererContract;
   newToken.totalSupply = BigInt.zero();
   newToken.maxSupply = event.params.editionSize;
