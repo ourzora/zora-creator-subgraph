@@ -87,6 +87,7 @@ templates:
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: {{network}}
@@ -98,6 +99,9 @@ templates:
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
+        - ZoraCreateToken
+        - OnChainMetadata
+        - TransactionInfo
       abis:
         - name: EditionMetadataRenderer
           file: ./abis/EditionMetadataRenderer.json
@@ -110,7 +114,8 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/EditionMetadataRendererMappings.ts
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: {{network}}
@@ -122,6 +127,9 @@ templates:
       language: wasm/assemblyscript
       entities:
         - DropMetadata
+        - ZoraCreateToken
+        - OnChainMetadata
+        - TransactionInfo
       abis:
         - name: DropMetadataRenderer
           file: ./abis/DropMetadataRenderer.json
@@ -130,7 +138,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721LegacyMappings/templates/DropMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
@@ -158,8 +166,8 @@ templates:
           handler: handleFundsRecipientChanged
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleNFTTransfer
-        - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
-          handler: handleSale
+        # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
+        #   handler: handleSale
         - event: RoleGranted(indexed bytes32,indexed address,indexed address)
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)

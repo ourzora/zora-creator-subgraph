@@ -23,6 +23,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
   const createdContract = new ZoraCreateContract(contractId);
 
+  createdContract.address = event.params.newContract;
   createdContract.contractStandard = "ERC1155";
   createdContract.contractURI = event.params.contractURI;
   createdContract.creator = event.params.creator;
@@ -36,6 +37,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   // These will get updated when the Upgraded event is captured.
   createdContract.mintFeePerQuantity = BigInt.zero();
   createdContract.mintFeePerTxn = BigInt.zero();
+
   const ipfsHostPath = getIPFSHostFromURI(event.params.contractURI);
   if (ipfsHostPath !== null) {
     createdContract.metadata = ipfsHostPath;
@@ -43,8 +45,8 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   }
   createdContract.txn = makeTransaction(event);
   createdContract.createdAtBlock = event.block.number;
-
   createdContract.save();
+
   ZoraCreator1155ImplTemplate.create(event.params.newContract);
 }
 

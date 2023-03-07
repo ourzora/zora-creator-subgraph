@@ -1,8 +1,8 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
-  ZoraCreatorPermissions,
+  ZoraCreatorPermission,
   RoyaltyConfig,
 } from "../../../generated/schema";
 import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
@@ -53,7 +53,7 @@ export function handleContractRendererUpdated(
 }
 
 export function handleURI(event: URI): void {
-  const id = getTokenId(event.address, event.params.id)
+  const id = getTokenId(event.address, event.params.id);
   const token = ZoraCreateToken.load(id);
   if (!token) {
     return;
@@ -68,10 +68,14 @@ export function handleURI(event: URI): void {
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {
-  const id = getPermissionsKey(event.params.user, event.address, event.params.tokenId);
-  let permissions = ZoraCreatorPermissions.load(id);
+  const id = getPermissionsKey(
+    event.params.user,
+    event.address,
+    event.params.tokenId
+  );
+  let permissions = ZoraCreatorPermission.load(id);
   if (!permissions) {
-    permissions = new ZoraCreatorPermissions(id);
+    permissions = new ZoraCreatorPermission(id);
   }
 
   permissions.isAdmin = hasBit(1, event.params.permissions);
@@ -79,9 +83,11 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.isSalesManager = hasBit(3, event.params.permissions);
   permissions.isMetadataManager = hasBit(4, event.params.permissions);
   permissions.isFundsManager = hasBit(5, event.params.permissions);
+  permissions.raw = Bytes.fromHexString(event.params.permissions.toHex());
 
   permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);
+  permissions.tokenId = event.params.tokenId;
 
   permissions.tokenId = event.params.tokenId;
   if (event.params.tokenId.equals(BigInt.zero())) {
@@ -94,7 +100,9 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 }
 
 export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
-  const id = `${event.params.user.toHex()}-${event.params.tokenId.toString()}-${event.address.toHex()}`;
+  const id = event.params.tokenId.equals(BigInt.zero())
+    ? event.address.toHex()
+    : `${event.params.tokenId.toString()}-${event.address.toHex()}`;
   let royalties = new RoyaltyConfig(id);
   if (!royalties) {
     royalties = new RoyaltyConfig(id);
@@ -121,6 +129,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.address = event.address;
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
   }

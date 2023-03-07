@@ -69,6 +69,7 @@ type ERC721Drop @entity {
 
 type ZoraCreate721Factory @entity {
   id: ID!
+
   implementation: Bytes!
   version: String!
   txn: TransactionInfo!
@@ -87,11 +88,6 @@ type DropRole @entity {
   granted: Boolean!
 
   drop: ERC721Drop!
-}
-
-type DropRoleHistory @entity {
-  # txn hash for granted role
-  id: ID!
 }
 
 type NFTEditionSale @entity {
@@ -114,9 +110,8 @@ type Upgrade @entity {
 type EditionMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop!
+  drop: ERC721Drop
   description: String!
-  contractURI: String
   imageURI: String!
   animationURI: String!
 }
@@ -124,7 +119,7 @@ type EditionMetadata @entity {
 type DropMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop!
+  drop: ERC721Drop
   base: String!
   extension: String!
   freezeAt: BigInt!
@@ -149,6 +144,8 @@ type ZoraCreateContract @entity {
   id: ID!
   txn: TransactionInfo!
 
+  address: Bytes!
+
   name: String
   symbol: String
 
@@ -167,21 +164,22 @@ type ZoraCreateContract @entity {
   owner: Bytes!
 
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
-  permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
-  royalties: [RoyaltyConfig!]! @derivedFrom(field: "contract")
+  permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "contract")
+  royalties: RoyaltyConfig @derivedFrom(field: "contract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "contract")
 
   createdAtBlock: BigInt!
 }
 
-type ZoraCreatorPermissions @entity {
+type ZoraCreatorPermission @entity {
   id: ID!
   txn: TransactionInfo!
 
   user: Bytes!
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
+  raw: Bytes!
 
   tokenId: BigInt!
 
@@ -196,6 +194,8 @@ type ZoraCreateToken @entity {
   id: ID!
   txn: TransactionInfo!
 
+  address: Bytes!
+
   uri: String
   totalSupply: BigInt!
   maxSupply: BigInt!
@@ -209,13 +209,28 @@ type ZoraCreateToken @entity {
 
   metadata: MetadataInfo
 
-  permissions: [ZoraCreatorPermissions!]!
+  onChainMetadataHistory: [OnChainMetadataHistory!]! @derivedFrom(field: "tokenAndContract")
+
+  permissions: [ZoraCreatorPermission!]!
     @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "tokenAndContract")
   createdAtBlock: BigInt!
 }
+
+type OnChainMetadataHistory @entity(immutable: true) {
+  id: ID!
+  txn: TransactionInfo!
+  tokenAndContract: ZoraCreateToken!
+
+  createdAtBlock: BigInt!
+
+  editionMetadata: EditionMetadata
+  dropMetadata: DropMetadata
+  knownType: String!
+}
+
 
 type SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!

@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, bigInt, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -6,8 +6,9 @@ import {
   SalesConfigMerkleMinterStrategy,
   SalesStrategyConfig,
   SalesConfigFixedPriceSaleStrategy,
-  ZoraCreatorPermissions,
+  ZoraCreatorPermission,
   ZoraCreateToken,
+  RoyaltyConfig,
 } from "../../../generated/schema";
 
 import {
@@ -21,9 +22,7 @@ import {
   Transfer,
   Upgraded,
 } from "../../../generated/templates/ERC721Drop/ERC721Drop";
-import {
-  getSalesConfigOnLegacyMarket,
-} from "../../common/getSalesConfigKey";
+import { getSalesConfigOnLegacyMarket } from "../../common/getSalesConfigKey";
 import {
   SALE_CONFIG_PRESALE,
   SALE_CONFIG_FIXED_PRICE,
@@ -108,12 +107,20 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 /* handle upgraded – updates contract version */
 
 export function handleUpgraded(event: Upgraded): void {
-  const drop = ERC721DropContract.bind(Address.fromBytes(event.address));
+  const drop = ERC721DropContract.bind(event.address);
   if (drop) {
     const version = drop.contractVersion();
-    const savedContract = ZoraCreateContract.load(event.address.toHex());
+    const savedContract = ZoraCreateContract.load(event.address.toHexString());
     if (savedContract) {
       savedContract.contractVersion = version.toString();
+      const dropConfig = drop.config();
+      const royalties = new RoyaltyConfig(event.address.toHexString());
+      royalties.royaltyRecipient = dropConfig.getFundsRecipient();
+      royalties.royaltyMintSchedule = BigInt.zero();
+      royalties.contract = savedContract.id;
+      royalties.tokenId = BigInt.zero();
+      royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
+      royalties.save();
       savedContract.save();
     }
   }
@@ -128,10 +135,10 @@ export function handleRoleGranted(event: RoleGranted): void {
     BigInt.zero()
   );
 
-  let permissions = ZoraCreatorPermissions.load(id);
+  let permissions = ZoraCreatorPermission.load(id);
 
   if (!permissions) {
-    permissions = new ZoraCreatorPermissions(id);
+    permissions = new ZoraCreatorPermission(id);
     permissions.isAdmin = false;
     permissions.isFundsManager = false;
     permissions.isMetadataManager = false;
@@ -140,14 +147,17 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
   permissions.user = event.params.account;
   permissions.tokenId = BigInt.zero();
-  const roleHex = event.params.role.toHexString().toLowerCase();
-  if (roleHex === KNOWN_TYPE_DEFAULT_ADMIN) {
+  permissions.raw = event.params.role;
+
+  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_DEFAULT_ADMIN))) {
     permissions.isAdmin = true;
   }
-  if (roleHex === KNOWN_TYPE_MINTER_ROLE) {
+  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_MINTER_ROLE))) {
     permissions.isMinter = true;
   }
-  if (roleHex === KNOWN_TYPE_SALES_MANAGER_ROLE) {
+  if (
+    event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_SALES_MANAGER_ROLE))
+  ) {
     permissions.isSalesManager = true;
   }
 
@@ -164,7 +174,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     BigInt.zero()
   );
 
-  let permissions = ZoraCreatorPermissions.load(id);
+  let permissions = ZoraCreatorPermission.load(id);
   if (!permissions) {
     return;
   }
@@ -219,6 +229,12 @@ export function handleFundsRecipientChanged(
     merkleStrategyPrice.fundsRecipient = event.params.newAddress;
     merkleStrategyPrice.save();
   }
+
+  const royaltyConfig = RoyaltyConfig.load(event.address.toHexString());
+  if (royaltyConfig) {
+    royaltyConfig.royaltyRecipient = event.params.newAddress;
+    royaltyConfig.save();
+  }
 }
 
 /* NFT transfer event */
@@ -228,8 +244,14 @@ export function handleNFTTransfer(event: Transfer): void {
   if (!createToken) {
     return;
   }
-  createToken.totalMinted = createToken.totalMinted.plus(BigInt.fromI32(1));
-  createToken.totalSupply = createToken.totalSupply.plus(BigInt.fromI32(1));
+  if (event.params.from.equals(Address.zero())) {
+    createToken.totalMinted = createToken.totalMinted.plus(BigInt.fromI32(1));
+    createToken.totalSupply = createToken.totalSupply.plus(BigInt.fromI32(1));
+  }
+  if (event.params.to.equals(Address.zero())) {
+    createToken.totalSupply = createToken.totalSupply.minus(BigInt.fromI32(1));
+  }
+  createToken.save();
 }
 
 /* handle ownership transfer */
