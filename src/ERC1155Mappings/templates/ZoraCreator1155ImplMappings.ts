@@ -236,5 +236,6 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   }
   token.totalMinted = BigInt.zero();
   token.totalSupply = BigInt.zero();
+  token.tokenStandard = "ERC1155";
   token.save();
 }
