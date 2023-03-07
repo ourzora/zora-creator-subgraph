@@ -53,7 +53,7 @@ export function handleContractRendererUpdated(
 }
 
 export function handleURI(event: URI): void {
-  const id = getTokenId(event.address, event.params.id)
+  const id = getTokenId(event.address, event.params.id);
   const token = ZoraCreateToken.load(id);
   if (!token) {
     return;
@@ -68,7 +68,11 @@ export function handleURI(event: URI): void {
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {
-  const id = getPermissionsKey(event.params.user, event.address, event.params.tokenId);
+  const id = getPermissionsKey(
+    event.params.user,
+    event.address,
+    event.params.tokenId
+  );
   let permissions = ZoraCreatorPermission.load(id);
   if (!permissions) {
     permissions = new ZoraCreatorPermission(id);
@@ -82,6 +86,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 
   permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);
+  permissions.tokenId = event.params.tokenId;
 
   permissions.tokenId = event.params.tokenId;
   if (event.params.tokenId.equals(BigInt.zero())) {
