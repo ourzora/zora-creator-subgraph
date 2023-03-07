@@ -83,7 +83,6 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   permissions.isSalesManager = hasBit(3, event.params.permissions);
   permissions.isMetadataManager = hasBit(4, event.params.permissions);
   permissions.isFundsManager = hasBit(5, event.params.permissions);
-  permissions.raw = Bytes.fromHexString(event.params.permissions.toHex());
 
   permissions.user = event.params.user;
   permissions.txn = makeTransaction(event);

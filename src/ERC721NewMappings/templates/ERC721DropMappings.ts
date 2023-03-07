@@ -147,7 +147,6 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
   permissions.user = event.params.account;
   permissions.tokenId = BigInt.zero();
-  permissions.raw = event.params.role;
 
   if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_DEFAULT_ADMIN))) {
     permissions.isAdmin = true;
