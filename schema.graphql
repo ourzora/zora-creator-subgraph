@@ -112,7 +112,6 @@ type EditionMetadata @entity {
 
   drop: ERC721Drop!
   description: String!
-  contractURI: String
   imageURI: String!
   animationURI: String!
 }
@@ -205,8 +204,7 @@ type ZoraCreateToken @entity {
 
   metadata: MetadataInfo
 
-  onChainMetadata: OnChainMetadata
-  onChainMetadataHistory: [OnChainMetadata!]! @derivedFrom(field: "tokenAndContract")
+  onChainMetadataHistory: [OnChainMetadataHistory!]! @derivedFrom(field: "tokenAndContract")
 
   permissions: [ZoraCreatorPermission!]!
     @derivedFrom(field: "tokenAndContract")
@@ -216,7 +214,7 @@ type ZoraCreateToken @entity {
   createdAtBlock: BigInt!
 }
 
-type OnChainMetadata @entity {
+type OnChainMetadataHistory @entity(immutable: true) {
   id: ID!
   txn: TransactionInfo!
   tokenAndContract: ZoraCreateToken!
@@ -227,6 +225,7 @@ type OnChainMetadata @entity {
   dropMetadata: DropMetadata
   knownType: String!
 }
+
 
 type SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!

@@ -10,6 +10,7 @@ import {
   ZoraCreateContract,
   ZoraCreate721Factory,
   ZoraCreateToken,
+  RoyaltyConfig,
 } from "../../generated/schema";
 
 import {
@@ -49,12 +50,23 @@ export function handleFactoryUpgraded(event: Upgraded): void {
 
 export function handleCreatedDrop(event: CreatedDrop): void {
   const dropAddress = event.params.editionContractAddress;
-  const dropContract = ERC721DropContract.bind(
-    Address.fromString(dropAddress.toHex())
-  );
+  const dropContract = ERC721DropContract.bind(dropAddress);
 
   const contractId = event.params.editionContractAddress.toHex();
   const createdContract = new ZoraCreateContract(contractId);
+
+  createdContract.contractVersion = dropContract.contractVersion().toString();
+  const dropConfig = dropContract.config();
+
+  // setup royalties
+  const royalties = new RoyaltyConfig(event.address.toHexString());
+  royalties.royaltyRecipient = dropConfig.getFundsRecipient();
+  royalties.royaltyMintSchedule = BigInt.zero();
+  royalties.contract = createdContract.id;
+  royalties.tokenId = BigInt.zero();
+  royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
+  royalties.user = event.params.creator;
+  royalties.save();
 
   createdContract.contractStandard = "ERC721";
   const contractURIResponse = dropContract.try_contractURI();
@@ -84,10 +96,9 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.save();
 
   // create token from contract
-  const createTokenId = getDefaultTokenId(dropAddress);
-  const newToken = new ZoraCreateToken(createTokenId)
+  const newToken = new ZoraCreateToken(getDefaultTokenId(dropAddress))
   newToken.rendererContract = createdContract.rendererContract;
-  newToken.totalSupply = BigInt.fromI32(0);
+  newToken.totalSupply = BigInt.zero();
   newToken.maxSupply = event.params.editionSize;
   newToken.totalMinted = BigInt.zero();
   newToken.contract = contractId;
@@ -96,5 +107,5 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.createdAtBlock = event.block.number;
   newToken.save();
 
-  NewERC721DropTemplate.create(event.params.editionContractAddress);
+  NewERC721DropTemplate.create(dropAddress);
 }

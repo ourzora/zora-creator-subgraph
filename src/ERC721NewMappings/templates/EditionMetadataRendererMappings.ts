@@ -3,134 +3,103 @@ import {
   MediaURIsUpdated,
   DescriptionUpdated,
 } from "../../../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
-import { EditionMetadata, OnChainMetadata, ZoraCreateToken } from "../../../generated/schema";
+import {
+  EditionMetadata,
+  OnChainMetadataHistory,
+} from "../../../generated/schema";
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
+import { EditionMetadataRenderer } from "../../../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
-  const metadata = new EditionMetadata(event.params.target.toHexString());
+  const metadataRecord = new EditionMetadata(
+    event.transaction.hash.toHexString()
+  );
+  metadataRecord.animationURI = event.params.animationURI;
+  metadataRecord.description = event.params.description;
+  metadataRecord.drop = event.params.target.toHexString();
+  metadataRecord.imageURI = event.params.imageURI;
+  metadataRecord.save();
 
-  metadata.animationURI = event.params.animationURI;
-  metadata.description = event.params.description;
-  metadata.drop = event.params.target.toHex();
-  metadata.imageURI = event.params.imageURI;
-  metadata.save();
+  const metadataRecordCompat = new EditionMetadata(
+    event.params.target.toHex()
+  );
+  metadataRecordCompat.animationURI = event.params.animationURI;
+  metadataRecordCompat.description = event.params.description;
+  metadataRecordCompat.drop = event.params.target.toHexString();
+  metadataRecordCompat.imageURI = event.params.imageURI;
+  metadataRecordCompat.save();
 
-  const metadataHistory = new EditionMetadata(event.transaction.hash.toHexString());
-  metadataHistory.animationURI = event.params.animationURI;
-  metadataHistory.description = event.params.description;
-  metadataHistory.drop = event.params.target.toHexString();
-  metadataHistory.imageURI = event.params.imageURI;
-  metadataHistory.save();
-
-  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
+  const metadataLinkHistory = new OnChainMetadataHistory(
+    event.transaction.hash.toHexString()
+  );
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.editionMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = metadataRecord.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
-
-  const metadataLink = new OnChainMetadata(event.params.target.toHexString());
-  metadataLink.createdAtBlock = event.block.number;
-  metadataLink.editionMetadata = metadata.id;
-  metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
-  metadataLink.txn = makeTransaction(event);
-  metadataLink.knownType = "ERC721_EDITION";
-  metadataLink.save();
-
-  const currentToken = ZoraCreateToken.load(metadataLink.tokenAndContract);
-  if (currentToken) {
-    currentToken.onChainMetadata = metadataLink.id;
-    currentToken.save();
-  }
 }
 
 export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
-  const lastMetadata = EditionMetadata.load(event.params.target.toHexString());
+  const metadataRenderer = EditionMetadataRenderer.bind(event.address);
+  const tokenInfo = metadataRenderer.tokenInfos(event.params.target);
 
-  if (!lastMetadata) {
-    return;
-  }
+  const newMetadata = new EditionMetadata(event.params.target.toHexString());
+  newMetadata.animationURI = event.params.animationURI;
+  newMetadata.drop = event.params.target.toHex();
+  newMetadata.description = tokenInfo.getDescription();
+  newMetadata.imageURI = event.params.imageURI;
+  newMetadata.save();
 
-  lastMetadata.animationURI = event.params.animationURI;
-  lastMetadata.drop = event.params.target.toHex();
-  lastMetadata.imageURI = event.params.imageURI;
-  lastMetadata.save();
+  const metadataRecordCompat = new EditionMetadata(
+    event.params.target.toHex()
+  );
+  metadataRecordCompat.animationURI = event.params.animationURI;
+  metadataRecordCompat.description = tokenInfo.getDescription();
+  metadataRecordCompat.drop = event.params.target.toHexString();
+  metadataRecordCompat.imageURI = event.params.imageURI;
+  metadataRecordCompat.save();
 
-  const metadataHistory = new EditionMetadata(event.transaction.hash.toHexString());
-  metadataHistory.animationURI = event.params.animationURI;
-  metadataHistory.description = lastMetadata.description;
-  metadataHistory.drop = event.params.target.toHexString();
-  metadataHistory.imageURI = event.params.imageURI;
-  metadataHistory.save();
-
-  const metadataPin = new EditionMetadata(event.params.target.toHexString());
-  metadataPin.animationURI = event.params.animationURI;
-  metadataPin.description = lastMetadata.description;
-  metadataPin.drop = event.params.target.toHexString();
-  metadataPin.imageURI = event.params.imageURI;
-  metadataPin.save();
-
-  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
+  const metadataLinkHistory = new OnChainMetadataHistory(
+    event.transaction.hash.toHexString()
+  );
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.editionMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = newMetadata.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
-
-  const metadataLink = new OnChainMetadata(event.params.target.toHexString());
-  metadataLink.createdAtBlock = event.block.number;
-  metadataLink.editionMetadata = metadataPin.id;
-  metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
-  metadataLink.txn = makeTransaction(event);
-  metadataLink.knownType = "ERC721_EDITION";
-  metadataLink.save();
-
-  const currentToken = ZoraCreateToken.load(metadataLink.tokenAndContract);
-  if (currentToken) {
-    currentToken.onChainMetadata = metadataLink.id;
-    currentToken.save();
-  }
 }
 
 export function handleUpdateDescription(event: DescriptionUpdated): void {
-  const lastMetadata = EditionMetadata.load(event.params.target.toHexString());
+  const metadataRenderer = EditionMetadataRenderer.bind(event.address);
 
-  if (!lastMetadata) {
-    return;
-  }
+  const tokenInfo = metadataRenderer.tokenInfos(event.params.target);
 
-  lastMetadata.description = event.params.newDescription;
-  lastMetadata.save();
+  const newMetadata = new EditionMetadata(event.transaction.hash.toHexString());
+  newMetadata.description = event.params.newDescription;
+  newMetadata.drop = event.params.target.toHexString();
+  newMetadata.imageURI = tokenInfo.getImageURI();
+  newMetadata.animationURI = tokenInfo.getAnimationURI();
+  newMetadata.save();
 
-  const metadataHistory = new EditionMetadata(event.transaction.hash.toHexString());
-  metadataHistory.animationURI = lastMetadata.animationURI;
-  metadataHistory.description = event.params.newDescription;
-  metadataHistory.drop = event.params.target.toHexString();
-  metadataHistory.imageURI = lastMetadata.imageURI;
-  metadataHistory.save();
+  const metadataRecordCompat = new EditionMetadata(
+    event.params.target.toHex()
+  );
+  metadataRecordCompat.description = event.params.newDescription;
+  metadataRecordCompat.drop = event.params.target.toHexString();
+  metadataRecordCompat.imageURI = tokenInfo.getImageURI();
+  metadataRecordCompat.animationURI = tokenInfo.getAnimationURI();
+  metadataRecordCompat.save();
 
-  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
+  const metadataLinkHistory = new OnChainMetadataHistory(
+    event.transaction.hash.toHexString()
+  );
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.editionMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = newMetadata.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
-
-  const metadataLink = new OnChainMetadata(event.params.target.toHexString());
-  metadataLink.createdAtBlock = event.block.number;
-  metadataLink.editionMetadata = metadataHistory.id;
-  metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
-  metadataLink.txn = makeTransaction(event);
-  metadataLink.knownType = "ERC721_EDITION";
-  metadataLink.save();
-
-  const currentToken = ZoraCreateToken.load(metadataLink.tokenAndContract);
-  if (currentToken) {
-    currentToken.onChainMetadata = metadataLink.id;
-    currentToken.save();
-  }
 }

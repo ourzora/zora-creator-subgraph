@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, bigInt, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -8,6 +8,7 @@ import {
   SalesConfigFixedPriceSaleStrategy,
   ZoraCreatorPermission,
   ZoraCreateToken,
+  RoyaltyConfig,
 } from "../../../generated/schema";
 
 import {
@@ -21,9 +22,7 @@ import {
   Transfer,
   Upgraded,
 } from "../../../generated/templates/ERC721Drop/ERC721Drop";
-import {
-  getSalesConfigOnLegacyMarket,
-} from "../../common/getSalesConfigKey";
+import { getSalesConfigOnLegacyMarket } from "../../common/getSalesConfigKey";
 import {
   SALE_CONFIG_PRESALE,
   SALE_CONFIG_FIXED_PRICE,
@@ -108,12 +107,19 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 /* handle upgraded – updates contract version */
 
 export function handleUpgraded(event: Upgraded): void {
-  const drop = ERC721DropContract.bind(Address.fromBytes(event.address));
+  const drop = ERC721DropContract.bind(event.address);
   if (drop) {
     const version = drop.contractVersion();
-    const savedContract = ZoraCreateContract.load(event.address.toHex());
+    const savedContract = ZoraCreateContract.load(event.address.toHexString());
     if (savedContract) {
       savedContract.contractVersion = version.toString();
+      const dropConfig = drop.config();
+      const royalties = new RoyaltyConfig(event.address.toHexString());
+      royalties.royaltyRecipient = dropConfig.getFundsRecipient();
+      royalties.royaltyMintSchedule = BigInt.zero();
+      royalties.contract = savedContract.id;
+      royalties.tokenId = BigInt.zero();
+      royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
       savedContract.save();
     }
   }
@@ -148,7 +154,9 @@ export function handleRoleGranted(event: RoleGranted): void {
   if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_MINTER_ROLE))) {
     permissions.isMinter = true;
   }
-  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_SALES_MANAGER_ROLE))) {
+  if (
+    event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_SALES_MANAGER_ROLE))
+  ) {
     permissions.isSalesManager = true;
   }
 
@@ -219,6 +227,12 @@ export function handleFundsRecipientChanged(
   if (merkleStrategyPrice) {
     merkleStrategyPrice.fundsRecipient = event.params.newAddress;
     merkleStrategyPrice.save();
+  }
+
+  const royaltyConfig = RoyaltyConfig.load(event.address.toHexString());
+  if (royaltyConfig) {
+    royaltyConfig.royaltyRecipient = event.params.newAddress;
+    royaltyConfig.save();
   }
 }
 
