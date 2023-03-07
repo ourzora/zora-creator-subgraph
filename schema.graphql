@@ -205,6 +205,7 @@ type ZoraCreateToken @entity {
 
   contract: ZoraCreateContract!
   tokenId: BigInt!
+  tokenStandard: String!
 
   metadata: MetadataInfo
 

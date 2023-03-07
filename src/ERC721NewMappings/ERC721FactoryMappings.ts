@@ -24,7 +24,7 @@ import { ERC721Drop as ERC721DropContract } from "../../generated/templates/ERC7
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import {
   MetadataInfo as MetadataInfoTemplate,
-  NewERC721Drop as NewERC721DropTemplate
+  NewERC721Drop as NewERC721DropTemplate,
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
@@ -85,7 +85,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
 
   // create token from contract
   const createTokenId = getDefaultTokenId(dropAddress);
-  const newToken = new ZoraCreateToken(createTokenId)
+  const newToken = new ZoraCreateToken(createTokenId);
   newToken.rendererContract = createdContract.rendererContract;
   newToken.totalSupply = BigInt.fromI32(0);
   newToken.maxSupply = event.params.editionSize;
@@ -94,6 +94,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.tokenId = BigInt.zero();
   newToken.txn = makeTransaction(event);
   newToken.createdAtBlock = event.block.number;
+  newToken.tokenStandard = "ERC721";
   newToken.save();
 
   NewERC721DropTemplate.create(event.params.editionContractAddress);
