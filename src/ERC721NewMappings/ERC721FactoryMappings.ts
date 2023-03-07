@@ -82,8 +82,13 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.contractVersion = dropContract.contractVersion().toString();
   createdContract.rendererContract = dropContract.metadataRenderer();
 
-  createdContract.mintFeePerQuantity = BigInt.zero();
+  const feePerAmount = dropContract.try_zoraFeeForAmount(BigInt.fromI64(1));
+  if (feePerAmount.reverted) {
+    createdContract.mintFeePerQuantity = BigInt.zero();
+  }
+  createdContract.mintFeePerQuantity = feePerAmount.value.getFee();
   createdContract.mintFeePerTxn = BigInt.zero();
+
   if (!contractURIResponse.reverted) {
     const ipfsHostPath = getIPFSHostFromURI(contractURIResponse.value);
     if (ipfsHostPath !== null) {
