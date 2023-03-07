@@ -23,7 +23,7 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   metadataHistory.imageURI = event.params.imageURI;
   metadataHistory.save();
 
-  const metadataLinkHistory = new OnChainMetadata(event.params.target.toHexString());
+  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = metadataHistory.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);

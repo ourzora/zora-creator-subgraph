@@ -12,7 +12,15 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadata.drop = event.params.target.toHexString();
   metadata.save();
 
-  const metadataLink = new OnChainMetadata(event.transaction.hash.toHexString());
+  const metadataLinkHistorical = new OnChainMetadata(event.transaction.hash.toHexString());
+  metadataLinkHistorical.createdAtBlock = event.block.number;
+  metadataLinkHistorical.dropMetadata = metadata.id;
+  metadataLinkHistorical.tokenAndContract = getDefaultTokenId(event.params.target);
+  metadataLinkHistorical.txn = makeTransaction(event);
+  metadataLinkHistorical.knownType = "ERC721_DROP";
+  metadataLinkHistorical.save();
+
+  const metadataLink = new OnChainMetadata(event.params.target.toHexString());
   metadataLink.createdAtBlock = event.block.number;
   metadataLink.dropMetadata = metadata.id;
   metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);

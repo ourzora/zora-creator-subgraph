@@ -140,14 +140,15 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
   permissions.user = event.params.account;
   permissions.tokenId = BigInt.zero();
-  const roleHex = event.params.role.toHexString().toLowerCase();
-  if (roleHex === KNOWN_TYPE_DEFAULT_ADMIN) {
+  permissions.raw = event.params.role;
+
+  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_DEFAULT_ADMIN))) {
     permissions.isAdmin = true;
   }
-  if (roleHex === KNOWN_TYPE_MINTER_ROLE) {
+  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_MINTER_ROLE))) {
     permissions.isMinter = true;
   }
-  if (roleHex === KNOWN_TYPE_SALES_MANAGER_ROLE) {
+  if (event.params.role.equals(Bytes.fromHexString(KNOWN_TYPE_SALES_MANAGER_ROLE))) {
     permissions.isSalesManager = true;
   }
 

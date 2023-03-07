@@ -178,6 +178,7 @@ type ZoraCreatorPermission @entity {
   user: Bytes!
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
+  raw: Bytes!
 
   tokenId: BigInt!
 
