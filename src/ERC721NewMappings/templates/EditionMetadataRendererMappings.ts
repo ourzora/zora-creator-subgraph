@@ -17,7 +17,6 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   );
   metadataRecord.animationURI = event.params.animationURI;
   metadataRecord.description = event.params.description;
-  metadataRecord.drop = event.params.target.toHexString();
   metadataRecord.imageURI = event.params.imageURI;
   metadataRecord.save();
 
@@ -47,7 +46,6 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
 
   const newMetadata = new EditionMetadata(event.params.target.toHexString());
   newMetadata.animationURI = event.params.animationURI;
-  newMetadata.drop = event.params.target.toHex();
   newMetadata.description = tokenInfo.getDescription();
   newMetadata.imageURI = event.params.imageURI;
   newMetadata.save();
@@ -79,7 +77,6 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
 
   const newMetadata = new EditionMetadata(event.transaction.hash.toHexString());
   newMetadata.description = event.params.newDescription;
-  newMetadata.drop = event.params.target.toHexString();
   newMetadata.imageURI = tokenInfo.getImageURI();
   newMetadata.animationURI = tokenInfo.getAnimationURI();
   newMetadata.save();

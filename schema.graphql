@@ -110,7 +110,7 @@ type Upgrade @entity {
 type EditionMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop!
+  drop: ERC721Drop
   description: String!
   imageURI: String!
   animationURI: String!
@@ -119,7 +119,7 @@ type EditionMetadata @entity {
 type DropMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop!
+  drop: ERC721Drop
   base: String!
   extension: String!
   freezeAt: BigInt!

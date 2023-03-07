@@ -120,6 +120,7 @@ export function handleUpgraded(event: Upgraded): void {
       royalties.contract = savedContract.id;
       royalties.tokenId = BigInt.zero();
       royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
+      royalties.save();
       savedContract.save();
     }
   }
@@ -243,8 +244,13 @@ export function handleNFTTransfer(event: Transfer): void {
   if (!createToken) {
     return;
   }
-  createToken.totalMinted = createToken.totalMinted.plus(BigInt.fromI32(1));
-  createToken.totalSupply = createToken.totalSupply.plus(BigInt.fromI32(1));
+  if (event.params.from.equals(Address.zero())) {
+    createToken.totalMinted = createToken.totalMinted.plus(BigInt.fromI32(1));
+    createToken.totalSupply = createToken.totalSupply.plus(BigInt.fromI32(1));
+  }
+  if (event.params.to.equals(Address.zero())) {
+    createToken.totalSupply = createToken.totalSupply.minus(BigInt.fromI32(1));
+  }
   createToken.save();
 }
 

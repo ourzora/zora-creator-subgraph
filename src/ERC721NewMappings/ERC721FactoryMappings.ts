@@ -59,7 +59,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const dropConfig = dropContract.config();
 
   // setup royalties
-  const royalties = new RoyaltyConfig(event.address.toHexString());
+  const royalties = new RoyaltyConfig(dropAddress.toHex());
   royalties.royaltyRecipient = dropConfig.getFundsRecipient();
   royalties.royaltyMintSchedule = BigInt.zero();
   royalties.contract = createdContract.id;

@@ -11,7 +11,6 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadata.contractURI = event.params.contractURI;
   metadata.extension = event.params.metadataExtension;
   metadata.base = event.params.metadataBase;
-  metadata.drop = event.params.target.toHex();
   metadata.freezeAt = event.params.freezeAt;
   metadata.save();
 
