@@ -25,7 +25,7 @@ export function handleCreatedEdition(event: EditionInitialized): void {
 
   const metadataLinkHistory = new OnChainMetadata(event.params.target.toHexString());
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.dropMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = metadataHistory.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
@@ -33,7 +33,7 @@ export function handleCreatedEdition(event: EditionInitialized): void {
 
   const metadataLink = new OnChainMetadata(event.params.target.toHexString());
   metadataLink.createdAtBlock = event.block.number;
-  metadataLink.dropMetadata = metadata.id;
+  metadataLink.editionMetadata = metadata.id;
   metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLink.txn = makeTransaction(event);
   metadataLink.knownType = "ERC721_EDITION";
@@ -65,9 +65,16 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   metadataHistory.imageURI = event.params.imageURI;
   metadataHistory.save();
 
-  const metadataLinkHistory = new OnChainMetadata(event.params.target.toHexString());
+  const metadataPin = new EditionMetadata(event.params.target.toHexString());
+  metadataPin.animationURI = event.params.animationURI;
+  metadataPin.description = lastMetadata.description;
+  metadataPin.drop = event.params.target.toHexString();
+  metadataPin.imageURI = event.params.imageURI;
+  metadataPin.save();
+
+  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.dropMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = metadataHistory.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
@@ -75,7 +82,7 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
 
   const metadataLink = new OnChainMetadata(event.params.target.toHexString());
   metadataLink.createdAtBlock = event.block.number;
-  metadataLink.dropMetadata = metadataHistory.id;
+  metadataLink.editionMetadata = metadataPin.id;
   metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLink.txn = makeTransaction(event);
   metadataLink.knownType = "ERC721_EDITION";
@@ -105,9 +112,9 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   metadataHistory.imageURI = lastMetadata.imageURI;
   metadataHistory.save();
 
-  const metadataLinkHistory = new OnChainMetadata(event.params.target.toHexString());
+  const metadataLinkHistory = new OnChainMetadata(event.transaction.hash.toHexString());
   metadataLinkHistory.createdAtBlock = event.block.number;
-  metadataLinkHistory.dropMetadata = metadataHistory.id;
+  metadataLinkHistory.editionMetadata = metadataHistory.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
@@ -115,7 +122,7 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
 
   const metadataLink = new OnChainMetadata(event.params.target.toHexString());
   metadataLink.createdAtBlock = event.block.number;
-  metadataLink.dropMetadata = metadataHistory.id;
+  metadataLink.editionMetadata = metadataHistory.id;
   metadataLink.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLink.txn = makeTransaction(event);
   metadataLink.knownType = "ERC721_EDITION";

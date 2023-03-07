@@ -2,7 +2,7 @@ import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
-  ZoraCreatorPermissions,
+  ZoraCreatorPermission,
   RoyaltyConfig,
 } from "../../../generated/schema";
 import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
@@ -69,9 +69,9 @@ export function handleURI(event: URI): void {
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   const id = getPermissionsKey(event.params.user, event.address, event.params.tokenId);
-  let permissions = ZoraCreatorPermissions.load(id);
+  let permissions = ZoraCreatorPermission.load(id);
   if (!permissions) {
-    permissions = new ZoraCreatorPermissions(id);
+    permissions = new ZoraCreatorPermission(id);
   }
 
   permissions.isAdmin = hasBit(1, event.params.permissions);

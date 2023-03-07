@@ -69,6 +69,7 @@ type ERC721Drop @entity {
 
 type ZoraCreate721Factory @entity {
   id: ID!
+
   implementation: Bytes!
   version: String!
   txn: TransactionInfo!
@@ -87,11 +88,6 @@ type DropRole @entity {
   granted: Boolean!
 
   drop: ERC721Drop!
-}
-
-type DropRoleHistory @entity {
-  # txn hash for granted role
-  id: ID!
 }
 
 type NFTEditionSale @entity {
@@ -167,7 +163,7 @@ type ZoraCreateContract @entity {
   owner: Bytes!
 
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
-  permissions: [ZoraCreatorPermissions!]! @derivedFrom(field: "contract")
+  permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "contract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "contract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "contract")
@@ -175,7 +171,7 @@ type ZoraCreateContract @entity {
   createdAtBlock: BigInt!
 }
 
-type ZoraCreatorPermissions @entity {
+type ZoraCreatorPermission @entity {
   id: ID!
   txn: TransactionInfo!
 
@@ -211,7 +207,7 @@ type ZoraCreateToken @entity {
   onChainMetadata: OnChainMetadata
   onChainMetadataHistory: [OnChainMetadata!]! @derivedFrom(field: "tokenAndContract")
 
-  permissions: [ZoraCreatorPermissions!]!
+  permissions: [ZoraCreatorPermission!]!
     @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
   salesStrategies: [SalesStrategyConfig!]!

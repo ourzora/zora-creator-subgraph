@@ -6,7 +6,7 @@ import {
   SalesConfigMerkleMinterStrategy,
   SalesStrategyConfig,
   SalesConfigFixedPriceSaleStrategy,
-  ZoraCreatorPermissions,
+  ZoraCreatorPermission,
   ZoraCreateToken,
 } from "../../../generated/schema";
 
@@ -128,10 +128,10 @@ export function handleRoleGranted(event: RoleGranted): void {
     BigInt.zero()
   );
 
-  let permissions = ZoraCreatorPermissions.load(id);
+  let permissions = ZoraCreatorPermission.load(id);
 
   if (!permissions) {
-    permissions = new ZoraCreatorPermissions(id);
+    permissions = new ZoraCreatorPermission(id);
     permissions.isAdmin = false;
     permissions.isFundsManager = false;
     permissions.isMetadataManager = false;
@@ -164,7 +164,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     BigInt.zero()
   );
 
-  let permissions = ZoraCreatorPermissions.load(id);
+  let permissions = ZoraCreatorPermission.load(id);
   if (!permissions) {
     return;
   }

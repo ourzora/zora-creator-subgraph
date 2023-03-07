@@ -99,6 +99,9 @@ templates:
       language: wasm/assemblyscript
       entities:
         - EditionMetadata
+        - ZoraCreateToken
+        - OnChainMetadata
+        - TransactionInfo
       abis:
         - name: EditionMetadataRenderer
           file: ./abis/EditionMetadataRenderer.json
@@ -124,6 +127,9 @@ templates:
       language: wasm/assemblyscript
       entities:
         - DropMetadata
+        - ZoraCreateToken
+        - OnChainMetadata
+        - TransactionInfo
       abis:
         - name: DropMetadataRenderer
           file: ./abis/DropMetadataRenderer.json
