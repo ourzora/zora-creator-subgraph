@@ -20,7 +20,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8578621
+      startBlock: 8513970
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -43,7 +43,7 @@ dataSources:
     name: ZoraNFTCreatorFactory1155
     network: goerli
     source:
-      address: "0xe15e39b23248a3d5372e3d6491da30060b56f27f"
+      address: "0xF46F4c96377C94982Fb58F7df96f72dd80ABa068"
       abi: ZoraCreator1155FactoryImpl
       startBlock: 8578621
     mapping:
@@ -67,7 +67,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8578621
+      startBlock: 8513970
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -99,6 +99,7 @@ templates:
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: goerli
@@ -122,7 +123,8 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/EditionMetadataRendererMappings.ts
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: goerli
@@ -142,7 +144,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721LegacyMappings/templates/DropMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: goerli

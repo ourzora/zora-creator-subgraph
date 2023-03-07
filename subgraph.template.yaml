@@ -87,6 +87,7 @@ templates:
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: {{network}}
@@ -110,7 +111,8 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/ERC721LegacyMappings/templates/EditionMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/EditionMetadataRendererMappings.ts
+  # not legacy mapping – shared
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: {{network}}
@@ -130,7 +132,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721LegacyMappings/templates/DropMetadataRendererMappings.ts
+      file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}

@@ -36,6 +36,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   // These will get updated when the Upgraded event is captured.
   createdContract.mintFeePerQuantity = BigInt.zero();
   createdContract.mintFeePerTxn = BigInt.zero();
+
   const ipfsHostPath = getIPFSHostFromURI(event.params.contractURI);
   if (ipfsHostPath !== null) {
     createdContract.metadata = ipfsHostPath;
@@ -43,8 +44,8 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   }
   createdContract.txn = makeTransaction(event);
   createdContract.createdAtBlock = event.block.number;
-
   createdContract.save();
+
   ZoraCreator1155ImplTemplate.create(event.params.newContract);
 }
 

@@ -208,12 +208,27 @@ type ZoraCreateToken @entity {
 
   metadata: MetadataInfo
 
+  onChainMetadata: OnChainMetadata
+  onChainMetadataHistory: [OnChainMetadata!]! @derivedFrom(field: "tokenAndContract")
+
   permissions: [ZoraCreatorPermissions!]!
     @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "tokenAndContract")
   createdAtBlock: BigInt!
+}
+
+type OnChainMetadata @entity {
+  id: ID!
+  txn: TransactionInfo!
+  tokenAndContract: ZoraCreateToken!
+
+  createdAtBlock: BigInt!
+
+  editionMetadata: EditionMetadata
+  dropMetadata: DropMetadata
+  knownType: String!
 }
 
 type SalesConfigFixedPriceSaleStrategy @entity {
