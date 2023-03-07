@@ -21,6 +21,8 @@ import {
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
+import { getPermissionsKey } from "../../common/getPermissionsKey";
+import { getTokenId } from "../../common/getTokenId";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 
@@ -31,15 +33,8 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  const mint_fee = impl.try_mintFee();
-  if (mint_fee.reverted == false) {
-    contract.mintFeePerTxn = impl.try_mintFee().value;
-  }
-
-  const contract_version = impl.try_contractVersion();
-  if (contract_version.reverted == false) {
-    contract.contractVersion = impl.try_contractVersion().value;
-  }
+  contract.mintFeePerTxn = impl.mintFee();
+  contract.contractVersion = impl.contractVersion();
 
   contract.mintFeePerQuantity = BigInt.zero();
   contract.save();
@@ -58,7 +53,7 @@ export function handleContractRendererUpdated(
 }
 
 export function handleURI(event: URI): void {
-  const id = `${event.address.toHex()}-${event.params.id.toString()}`;
+  const id = getTokenId(event.address, event.params.id)
   const token = ZoraCreateToken.load(id);
   if (!token) {
     return;
@@ -73,7 +68,7 @@ export function handleURI(event: URI): void {
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {
-  const id = `${event.params.user.toHex()}-${event.address.toHex()}-${event.params.tokenId.toString()}`;
+  const id = getPermissionsKey(event.params.user, event.address, event.params.tokenId);
   let permissions = ZoraCreatorPermissions.load(id);
   if (!permissions) {
     permissions = new ZoraCreatorPermissions(id);
@@ -127,6 +122,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   if (!token) {
     token = new ZoraCreateToken(id);
     token.createdAtBlock = event.block.number;
+    token.totalMinted = BigInt.zero();
   }
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
@@ -150,6 +146,14 @@ export function handleTransferSingle(event: TransferSingle): void {
       token.save();
     }
   }
+  if (event.params.to === Address.zero()) {
+    const id = `${event.address.toHex()}-${event.params.id.toString()}`;
+    const token = ZoraCreateToken.load(id);
+    if (token) {
+      token.totalSupply = token.totalSupply.minus(event.params.value);
+      token.save();
+    }
+  }
 }
 
 // update the minted number and max number
@@ -160,6 +164,17 @@ export function handleTransferBatch(event: TransferBatch): void {
       const token = ZoraCreateToken.load(id);
       if (token) {
         token.totalSupply = token.totalSupply.plus(event.params.values[i]);
+        token.totalMinted = token.totalMinted.plus(event.params.values[i]);
+        token.save();
+      }
+    }
+  }
+  if (event.params.to === Address.zero()) {
+    for (let i = 0; i < event.params.ids.length; i++) {
+      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
+      const token = ZoraCreateToken.load(id);
+      if (token) {
+        token.totalSupply = token.totalSupply.minus(event.params.values[i]);
         token.totalMinted = token.totalMinted.plus(event.params.values[i]);
         token.save();
       }
