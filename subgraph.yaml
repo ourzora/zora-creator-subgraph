@@ -20,7 +20,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8513970
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -55,6 +55,8 @@ dataSources:
       abis:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
       eventHandlers:
         - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated
@@ -67,7 +69,7 @@ dataSources:
     source:
       address: "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519"
       abi: ZoraNFTCreatorV1
-      startBlock: 8513970
+      startBlock: 8578621
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

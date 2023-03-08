@@ -43,6 +43,8 @@ dataSources:
       abis:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
       eventHandlers:
         - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated

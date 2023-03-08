@@ -36,10 +36,6 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.contractVersion = createdContract.contractVersion;
   createdContract.rendererContract = createdContract.rendererContract;
 
-  // These will get updated when the Upgraded event is captured.
-  createdContract.mintFeePerQuantity = BigInt.zero();
-  createdContract.mintFeePerTxn = BigInt.zero();
-
   const ipfsHostPath = getIPFSHostFromURI(event.params.contractURI);
   if (ipfsHostPath !== null) {
     createdContract.metadata = ipfsHostPath;
@@ -49,7 +45,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.createdAtBlock = event.block.number;
 
   // query for more information about contract
-  const impl = ZoraCreator1155Impl.bind(event.address);
+  const impl = ZoraCreator1155Impl.bind(event.params.newContract);
   createdContract.mintFeePerQuantity = impl.mintFee();
   createdContract.contractVersion = impl.contractVersion();
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
