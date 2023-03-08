@@ -25,6 +25,7 @@ import { getPermissionsKey } from "../../common/getPermissionsKey";
 import { getTokenId } from "../../common/getTokenId";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
+import { TOKEN_STANDARD_ERC1155 } from "../../constants/tokenStandard";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
@@ -35,6 +36,7 @@ export function handleUpgraded(event: Upgraded): void {
 
   contract.mintFeePerTxn = impl.mintFee();
   contract.contractVersion = impl.contractVersion();
+  contract.contractStandard = TOKEN_STANDARD_ERC1155;
 
   contract.mintFeePerQuantity = BigInt.zero();
   contract.save();
@@ -128,6 +130,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.tokenStandard = TOKEN_STANDARD_ERC1155;
     token.address = event.address;
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
@@ -236,6 +239,7 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   token.maxSupply = event.params.maxSupply;
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
+  token.tokenStandard = TOKEN_STANDARD_ERC1155;
 
   const ipfsHostPath = getIPFSHostFromURI(event.params._uri);
   if (ipfsHostPath !== null) {
@@ -244,6 +248,5 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   }
   token.totalMinted = BigInt.zero();
   token.totalSupply = BigInt.zero();
-  token.tokenStandard = "ERC1155";
   token.save();
 }

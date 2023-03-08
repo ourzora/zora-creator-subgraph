@@ -18,13 +18,15 @@ import {
 import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import { BigInt } from "@graphprotocol/graph-ts";
+import { TOKEN_STANDARD_ERC1155 } from "../constants/tokenStandard";
+import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const contractId = event.params.newContract.toHex();
   const createdContract = new ZoraCreateContract(contractId);
 
   createdContract.address = event.params.newContract;
-  createdContract.contractStandard = "ERC1155";
+  createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
   createdContract.contractURI = event.params.contractURI;
   createdContract.creator = event.params.creator;
   createdContract.initialDefaultAdmin = event.params.defaultAdmin;
@@ -45,6 +47,14 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   }
   createdContract.txn = makeTransaction(event);
   createdContract.createdAtBlock = event.block.number;
+
+  // query for more information about contract
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  createdContract.mintFeePerQuantity = impl.mintFee();
+  createdContract.contractVersion = impl.contractVersion();
+  createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
+
+  createdContract.mintFeePerTxn = BigInt.zero();
   createdContract.save();
 
   ZoraCreator1155ImplTemplate.create(event.params.newContract);

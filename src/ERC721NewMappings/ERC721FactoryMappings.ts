@@ -29,6 +29,7 @@ import {
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
+import { TOKEN_STANDARD_ERC721 } from "../constants/tokenStandard";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
@@ -69,7 +70,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   royalties.user = event.params.creator;
   royalties.save();
 
-  createdContract.contractStandard = "ERC721";
+  createdContract.contractStandard = TOKEN_STANDARD_ERC721;
   const contractURIResponse = dropContract.try_contractURI();
   if (!contractURIResponse.reverted) {
     createdContract.contractURI = contractURIResponse.value;
@@ -113,7 +114,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.tokenId = BigInt.zero();
   newToken.txn = makeTransaction(event);
   newToken.createdAtBlock = event.block.number;
-  newToken.tokenStandard = "ERC721";
+  newToken.tokenStandard = TOKEN_STANDARD_ERC721;
   newToken.save();
 
   NewERC721DropTemplate.create(dropAddress);
