@@ -2,6 +2,6 @@
   "network": "goerli",
   "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
   "1155Address": "0xF46F4c96377C94982Fb58F7df96f72dd80ABa068",
-  "startBlock": "8578621",
-  "1155StartBlock": "8578621"
+  "startBlock": "8591124",
+  "1155StartBlock": "8591124"
 }

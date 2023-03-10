@@ -166,8 +166,8 @@ templates:
           handler: handleOpenMintFinalized
         - event: FundsRecipientChanged(indexed address,indexed address)
           handler: handleFundsRecipientChanged
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleNFTTransfer
+        # - event: Transfer(indexed address,indexed address,indexed uint256)
+        #   handler: handleNFTTransfer
         # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
         #   handler: handleSale
         - event: RoleGranted(indexed bytes32,indexed address,indexed address)
@@ -186,9 +186,10 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ERC1155Drop
-        - TransferSingle
-        - TransferBatch
+        - ZoraCreateContract,
+        - ZoraCreateToken,
+        - ZoraCreatorPermission,
+        - RoyaltyConfig
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
       abis:
@@ -226,7 +227,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ERC1155Sale
+        - SalesConfigFixedPriceSaleStrategy
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreatorFixedPriceSaleStrategyMappings.ts
       abis:
@@ -244,7 +245,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ERC1155Sale
+        - SalesConfigMerkleMinterStrategy
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraMerkleMinterStrategyMappings.ts
       abis:
