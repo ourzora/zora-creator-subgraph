@@ -178,14 +178,14 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     return;
   }
 
-  const roleHex = event.params.role.toHexString().toLowerCase();
-  if (roleHex === KNOWN_TYPE_DEFAULT_ADMIN) {
+  const role = event.params.role;
+  if (role.equals(Bytes.fromHexString(KNOWN_TYPE_DEFAULT_ADMIN))) {
     permissions.isAdmin = false;
   }
-  if (roleHex === KNOWN_TYPE_MINTER_ROLE) {
+  if (role.equals(Bytes.fromHexString(KNOWN_TYPE_MINTER_ROLE))) {
     permissions.isMinter = false;
   }
-  if (roleHex === KNOWN_TYPE_SALES_MANAGER_ROLE) {
+  if (role.equals(Bytes.fromHexString(KNOWN_TYPE_SALES_MANAGER_ROLE))) {
     permissions.isSalesManager = false;
   }
 
