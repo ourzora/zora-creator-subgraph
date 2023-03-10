@@ -148,18 +148,19 @@ export function handleUpdatedToken(event: UpdatedToken): void {
 
 // update the minted number and mx number
 export function handleTransferSingle(event: TransferSingle): void {
-  if (event.params.from === Address.zero()) {
-    const id = `${event.address.toHex()}-${event.params.id.toString()}`;
-    const token = ZoraCreateToken.load(id);
+  if (event.params.from.equals(Address.zero())) {
+    const tokenId = getTokenId(event.address, event.params.id);
+    const token = ZoraCreateToken.load(tokenId);
     if (token) {
       token.totalSupply = token.totalSupply.plus(event.params.value);
       token.totalMinted = token.totalMinted.plus(event.params.value);
       token.save();
     }
   }
-  if (event.params.to === Address.zero()) {
-    const id = `${event.address.toHex()}-${event.params.id.toString()}`;
-    const token = ZoraCreateToken.load(id);
+
+  if (event.params.to.equals(Address.zero())) {
+    const tokenId = getTokenId(event.address, event.params.id);
+    const token = ZoraCreateToken.load(tokenId);
     if (token) {
       token.totalSupply = token.totalSupply.minus(event.params.value);
       token.save();
@@ -169,10 +170,10 @@ export function handleTransferSingle(event: TransferSingle): void {
 
 // update the minted number and max number
 export function handleTransferBatch(event: TransferBatch): void {
-  if (event.params.from === Address.zero()) {
+  if (event.params.from.equals(Address.zero())) {
     for (let i = 0; i < event.params.ids.length; i++) {
-      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
-      const token = ZoraCreateToken.load(id);
+      const tokenId = getTokenId(event.address, event.params.ids[i]);
+      const token = ZoraCreateToken.load(tokenId);
       if (token) {
         token.totalSupply = token.totalSupply.plus(event.params.values[i]);
         token.totalMinted = token.totalMinted.plus(event.params.values[i]);
@@ -180,21 +181,11 @@ export function handleTransferBatch(event: TransferBatch): void {
       }
     }
   }
-  if (event.params.to === Address.zero()) {
+
+  if (event.params.to.equals(Address.zero())) {
     for (let i = 0; i < event.params.ids.length; i++) {
-      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
-      const token = ZoraCreateToken.load(id);
-      if (token) {
-        token.totalSupply = token.totalSupply.minus(event.params.values[i]);
-        token.totalMinted = token.totalMinted.plus(event.params.values[i]);
-        token.save();
-      }
-    }
-  }
-  if (event.params.to === Address.zero()) {
-    for (let i = 0; i < event.params.ids.length; i++) {
-      const id = `${event.address.toHex()}-${event.params.ids[i].toString()}`;
-      const token = ZoraCreateToken.load(id);
+      const tokenId = getTokenId(event.address, event.params.ids[i]);
+      const token = ZoraCreateToken.load(tokenId);
       if (token) {
         token.totalSupply = token.totalSupply.minus(event.params.values[i]);
         token.save();
