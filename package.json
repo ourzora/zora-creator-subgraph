@@ -1,21 +1,28 @@
 {
   "name": "nft-drop-subgraph",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
-    "codegen": "yarn gen-yaml-config && graph codegen",
-    "build": "echo 'need to run codegen first' && yarn run codegen && graph build",
+    "copy-abis": "bash abis/copy-abis.sh",
+    "codegen": "yarn gen-yaml-config && graph codegen && echo 'import { Address } from \"@graphprotocol/graph-ts\";' >> generated/templates.ts",
+    "build": "yarn run codegen && graph build",
     "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
     "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
-    "network-deploy": "chmod u+x deploy.sh; ./deploy.sh"
+    "network-deploy": "./deploy.sh",
+    "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
-    "@goldskycom/cli": "^0.5.0",
-    "@graphprotocol/graph-cli": "0.25.1",
-    "@graphprotocol/graph-ts": "0.24.1",
-    "@zoralabs/nft-drop-contracts": "^1.10.0",
+    "@goldskycom/cli": "^0.8.2",
+    "@graphprotocol/graph-cli": "^0.41.1",
+    "@graphprotocol/graph-ts": "^0.29.3",
+    "@zoralabs/nft-drop-contracts": "^1.11.1",
+    "@zoralabs/zora-creator-contracts": "^0.0.6",
+    "jq": "^1.7.2",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "^0.5.1"
   }
 }

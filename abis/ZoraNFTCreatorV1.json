@@ -155,6 +155,107 @@
         "type": "address"
       },
       {
+        "internalType": "bytes[]",
+        "name": "setupCalls",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "contract IMetadataRenderer",
+        "name": "metadataRenderer",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadataInitializer",
+        "type": "bytes"
+      }
+    ],
+    "name": "createAndConfigureDrop",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "newDropAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "defaultAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "editionSize",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint16",
+        "name": "royaltyBPS",
+        "type": "uint16"
+      },
+      {
+        "internalType": "address payable",
+        "name": "fundsRecipient",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint104",
+            "name": "publicSalePrice",
+            "type": "uint104"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxSalePurchasePerAddress",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "presaleMerkleRoot",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IERC721Drop.SalesConfiguration",
+        "name": "saleConfig",
+        "type": "tuple"
+      },
+      {
         "internalType": "string",
         "name": "metadataURIBase",
         "type": "string"
@@ -209,6 +310,48 @@
         "type": "address"
       },
       {
+        "components": [
+          {
+            "internalType": "uint104",
+            "name": "publicSalePrice",
+            "type": "uint104"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxSalePurchasePerAddress",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "presaleMerkleRoot",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IERC721Drop.SalesConfiguration",
+        "name": "saleConfig",
+        "type": "tuple"
+      },
+      {
         "internalType": "string",
         "name": "description",
         "type": "string"
@@ -219,19 +362,9 @@
         "type": "string"
       },
       {
-        "internalType": "bytes32",
-        "name": "animationHash",
-        "type": "bytes32"
-      },
-      {
         "internalType": "string",
         "name": "imageURI",
         "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "imageHash",
-        "type": "bytes32"
       }
     ],
     "name": "createEdition",
@@ -292,25 +425,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newImplementation",
-        "type": "address"
-      }
-    ],
-    "name": "isValidUpgrade",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -340,6 +454,102 @@
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "defaultAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "editionSize",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint16",
+        "name": "royaltyBPS",
+        "type": "uint16"
+      },
+      {
+        "internalType": "address payable",
+        "name": "fundsRecipient",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint104",
+            "name": "publicSalePrice",
+            "type": "uint104"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxSalePurchasePerAddress",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "publicSaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleStart",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "presaleEnd",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "presaleMerkleRoot",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IERC721Drop.SalesConfiguration",
+        "name": "saleConfig",
+        "type": "tuple"
+      },
+      {
+        "internalType": "contract IMetadataRenderer",
+        "name": "metadataRenderer",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "metadataInitializer",
+        "type": "bytes"
+      }
+    ],
+    "name": "setupDropsContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },

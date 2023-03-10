@@ -1,5 +1,7 @@
 {
     "network": "mainnet",
     "address": "0xF74B146ce44CC162b601deC3BE331784DB111DC1",
-    "startBlock": "14758780"
-}
+    "1155Address": "0xF46F4c96377C94982Fb58F7df96f72dd80ABa068",
+    "startBlock": "14758780",
+    "1155StartBlock": "16779284"
+  }

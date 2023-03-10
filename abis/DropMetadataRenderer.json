@@ -1,5 +1,15 @@
 [
   {
+    "inputs": [],
+    "name": "Access_OnlyAdmin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MetadataFrozen",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
