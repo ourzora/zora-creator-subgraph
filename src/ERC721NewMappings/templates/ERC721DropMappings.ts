@@ -45,8 +45,9 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
   const salesConfigObject = dropContract.salesConfig();
 
   if (
-    salesConfigObject.getPresaleMerkleRoot() ==
-    Bytes.fromHexString("0x0000000000000000000000000000000000000000")
+    !salesConfigObject
+      .getPresaleMerkleRoot()
+      .equals(Bytes.empty())
   ) {
     const presaleConfigId = getSalesConfigOnLegacyMarket(
       // market is the same as media contract for this impl
