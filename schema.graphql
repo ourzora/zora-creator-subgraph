@@ -1,6 +1,8 @@
 type TransactionInfo @entity {
   id: ID!
   block: BigInt!
+  logIndex: BigInt!
+  transactionLogIndex: BigInt!
   timestamp: BigInt!
 }
 
