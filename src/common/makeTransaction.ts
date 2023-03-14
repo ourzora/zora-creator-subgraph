@@ -6,7 +6,7 @@ export function makeTransaction(txn: ethereum.Event): string {
   txnInfo.block = txn.block.number;
   txnInfo.timestamp = txn.block.timestamp;
   txnInfo.logIndex = txn.logIndex;
-  txnInfo.transactionLogIndex = txn.transactionLogIndex;
+  txnInfo.address = txn.address;
   txnInfo.save();
 
   return txnInfo.id;
