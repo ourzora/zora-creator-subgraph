@@ -2,7 +2,7 @@ type TransactionInfo @entity {
   id: ID!
   block: BigInt!
   logIndex: BigInt!
-  transactionLogIndex: BigInt!
+  address: Bytes!
   timestamp: BigInt!
 }
 
