@@ -61,8 +61,8 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   const factory = new ZoraCreate1155Factory(event.address.toHex());
   const creator = ZoraCreator1155FactoryImpl.bind(event.address);
 
-  ZoraCreatorFixedPriceSaleStrategy.create(creator.defaultMinters()[0]);
-  ZoraCreatorMerkleMinterStrategy.create(creator.defaultMinters()[1]);
+  ZoraCreatorFixedPriceSaleStrategy.create(creator.fixedPriceMinter());
+  ZoraCreatorMerkleMinterStrategy.create(creator.merkleMinter());
 
   factory.txn = makeTransaction(event);
   factory.fixedPriceSaleStrategyAddress = creator.defaultMinters()[0];
