@@ -226,13 +226,13 @@ export function handleSetupNewToken(event: SetupNewToken): void {
 
   token.createdAtBlock = event.block.number;
   token.tokenId = event.params.tokenId;
-  token.uri = event.params._uri;
+  token.uri = event.params.newURI;
   token.maxSupply = event.params.maxSupply;
   token.txn = makeTransaction(event);
   token.contract = event.address.toHex();
   token.tokenStandard = TOKEN_STANDARD_ERC1155;
 
-  const ipfsHostPath = getIPFSHostFromURI(event.params._uri);
+  const ipfsHostPath = getIPFSHostFromURI(event.params.newURI);
   if (ipfsHostPath !== null) {
     token.metadata = ipfsHostPath;
     MetadataInfoTemplate.create(ipfsHostPath);

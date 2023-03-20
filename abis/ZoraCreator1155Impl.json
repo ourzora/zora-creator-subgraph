@@ -18,8 +18,39 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "Burn_NotOwnerOrApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalMinted",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxSupply",
         "type": "uint256"
       }
     ],
@@ -45,6 +76,17 @@
   {
     "inputs": [],
     "name": "CannotSetMintFeeToZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "proposedAddress",
+        "type": "address"
+      }
+    ],
+    "name": "Config_TransferHookNotSupported",
     "type": "error"
   },
   {
@@ -81,7 +123,7 @@
   },
   {
     "inputs": [],
-    "name": "Metadata_CallFailed",
+    "name": "InvalidMintSchedule",
     "type": "error"
   },
   {
@@ -148,8 +190,35 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "reason",
+        "type": "bytes"
+      }
+    ],
+    "name": "Renderer_CallFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "Renderer_NotValidRendererContract",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "Sale_CallFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "targetContract",
+        "type": "address"
+      }
+    ],
+    "name": "Sale_CannotCallNonSalesContract",
     "type": "error"
   },
   {
@@ -244,6 +313,63 @@
       }
     ],
     "name": "BeaconUpgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "updater",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum IZoraCreator1155.ConfigUpdate",
+        "name": "updateType",
+        "type": "uint8"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "__gap1",
+            "type": "uint96"
+          },
+          {
+            "internalType": "address payable",
+            "name": "fundsRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "__gap2",
+            "type": "uint96"
+          },
+          {
+            "internalType": "contract ITransferHookReceiver",
+            "name": "transferHook",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "__gap3",
+            "type": "uint96"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IZoraCreator1155TypesV1.ContractConfig",
+        "name": "newConfig",
+        "type": "tuple"
+      }
+    ],
+    "name": "ConfigUpdated",
     "type": "event"
   },
   {
@@ -357,19 +483,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "renderer",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "user",
         "type": "address"
@@ -396,7 +522,7 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "_uri",
+        "name": "newURI",
         "type": "string"
       },
       {
@@ -506,19 +632,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "user",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "permissions",
         "type": "uint256"
@@ -531,13 +657,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "user",
         "type": "address"
@@ -784,6 +910,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "lastTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "assumeLastTokenIdMatches",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "account",
         "type": "address"
@@ -832,17 +971,22 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
       }
     ],
-    "name": "burn",
+    "name": "burnBatch",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -945,7 +1089,7 @@
     "outputs": [
       {
         "internalType": "contract IRenderer1155",
-        "name": "renderer",
+        "name": "customRenderer",
         "type": "address"
       }
     ],
@@ -956,7 +1100,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "token",
+        "name": "tokenId",
         "type": "uint256"
       },
       {
@@ -1015,6 +1159,42 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTokenInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalMinted",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IZoraCreator1155TypesV1.TokenData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "newContractURI",
         "type": "string"
@@ -1042,7 +1222,7 @@
         "type": "tuple"
       },
       {
-        "internalType": "address",
+        "internalType": "address payable",
         "name": "defaultAdmin",
         "type": "address"
       },
@@ -1055,19 +1235,6 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "lastTokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "invariantLastTokenIdMatches",
-    "outputs": [],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1140,6 +1307,34 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IMinter1155",
+        "name": "minter",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "minterArguments",
+        "type": "bytes"
+      }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1232,6 +1427,11 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "name": "permissions",
@@ -1256,34 +1456,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IMinter1155",
-        "name": "minter",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "minterArguments",
-        "type": "bytes"
-      }
-    ],
-    "name": "purchase",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1454,6 +1626,19 @@
   {
     "inputs": [
       {
+        "internalType": "address payable",
+        "name": "fundsRecipient",
+        "type": "address"
+      }
+    ],
+    "name": "setFundsRecipient",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -1490,8 +1675,21 @@
   {
     "inputs": [
       {
+        "internalType": "contract ITransferHookReceiver",
+        "name": "transferHook",
+        "type": "address"
+      }
+    ],
+    "name": "setTransferHook",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
-        "name": "_uri",
+        "name": "newURI",
         "type": "string"
       },
       {
@@ -1575,35 +1773,6 @@
       }
     ],
     "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokens",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "uri",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxSupply",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "totalMinted",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1729,25 +1898,7 @@
   },
   {
     "inputs": [],
-    "name": "withdrawAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawCustom",
+    "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

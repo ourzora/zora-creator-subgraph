@@ -198,13 +198,13 @@ templates:
       eventHandlers:
         - event: ContractRendererUpdated(address)
           handler: handleContractRendererUpdated
-        - event: RendererUpdated(uint256,address,address)
+        - event: RendererUpdated(indexed uint256,indexed address,indexed address)
           handler: handleRendererUpdated
         - event: URI(string,indexed uint256)
           handler: handleURI
-        - event: UpdatedPermissions(uint256,address,uint256)
+        - event: UpdatedPermissions(indexed uint256,indexed address,indexed uint256)
           handler: handleUpdatedPermissions
-        - event: UpdatedRoyalties(uint256,address,(uint32,uint32,address))
+        - event: UpdatedRoyalties(indexed uint256,indexed address,(uint32,uint32,address))
           handler: handleUpdatedRoyalties
         - event: UpdatedToken(indexed address,indexed uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
@@ -234,7 +234,7 @@ templates:
         - name: ZoraCreatorFixedPriceSaleStrategy
           file: ./abis/ZoraCreatorFixedPriceSaleStrategy.json
       eventHandlers:
-        - event: SaleSet(address,uint256,(uint64,uint64,uint64,uint96,address))
+        - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,uint64,uint96,address))
           handler: handleFixedPriceStrategySaleSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
@@ -252,7 +252,7 @@ templates:
         - name: ZoraCreatorMerkleMinterStrategy
           file: ./abis/ZoraCreatorMerkleMinterStrategy.json
       eventHandlers:
-        - event: SaleSet(address,uint256,(uint64,uint64,address,bytes32))
+        - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,address,bytes32))
           handler: handleMerkleMinterStrategySaleSet
   # new mappings
   - name: NewERC721Drop
