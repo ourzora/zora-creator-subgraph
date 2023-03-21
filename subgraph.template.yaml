@@ -186,9 +186,11 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ZoraCreateContract,
-        - ZoraCreateToken,
-        - ZoraCreatorPermission,
+        - ZoraCreateContract
+        - ZoraCreateToken
+        - ZoraCreatorPermission
+        - Token1155Holder
+        - OnChainMetadataHistory
         - RoyaltyConfig
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
