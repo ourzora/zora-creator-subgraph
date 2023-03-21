@@ -2,6 +2,7 @@ import { MetadataUpdated } from "../../../generated/templates/DropMetadataRender
 import {
   DropMetadata,
   OnChainMetadataHistory,
+  ZoraCreateContract,
 } from "../../../generated/schema";
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
@@ -25,6 +26,7 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   const metadataLinkHistorical = new OnChainMetadataHistory(
     event.transaction.hash.toHexString()
   );
+  metadataLinkHistorical.rendererAddress = event.address;
   metadataLinkHistorical.createdAtBlock = event.block.number;
   metadataLinkHistorical.dropMetadata = metadata.id;
   metadataLinkHistorical.tokenAndContract = getDefaultTokenId(
@@ -33,4 +35,11 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadataLinkHistorical.txn = makeTransaction(event);
   metadataLinkHistorical.knownType = "ERC721_DROP";
   metadataLinkHistorical.save();
+
+  // update contract uri
+  const contract = ZoraCreateContract.load(event.params.target.toHex());
+  if (contract) {
+    contract.contractURI = event.params.contractURI;
+    contract.save();
+  }
 }

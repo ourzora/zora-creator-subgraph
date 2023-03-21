@@ -290,3 +290,5 @@ templates:
           handler: handleRoleRevoked
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
+        - event: UpdatedMetadataRenderer(address,address)
+          handler: handleUpdatedMetadataRenderer

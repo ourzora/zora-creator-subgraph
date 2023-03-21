@@ -225,6 +225,8 @@ type OnChainMetadataHistory @entity(immutable: true) {
   txn: TransactionInfo!
   tokenAndContract: ZoraCreateToken!
 
+  rendererAddress: Bytes!
+
   createdAtBlock: BigInt!
 
   editionMetadata: EditionMetadata
@@ -236,6 +238,8 @@ type OnChainMetadataHistory @entity(immutable: true) {
 type SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!
   txn: TransactionInfo!
+
+  configAddress: Bytes!
 
   tokenId: BigInt!
   contract: ZoraCreateContract!
@@ -250,6 +254,8 @@ type SalesConfigFixedPriceSaleStrategy @entity {
 type SalesConfigMerkleMinterStrategy @entity {
   id: ID!
   txn: TransactionInfo!
+
+  configAddress: Bytes!
 
   tokenId: BigInt!
   contract: ZoraCreateContract!

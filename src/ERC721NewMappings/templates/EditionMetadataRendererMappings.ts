@@ -6,10 +6,13 @@ import {
 import {
   EditionMetadata,
   OnChainMetadataHistory,
+  ZoraCreateContract,
 } from "../../../generated/schema";
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { EditionMetadataRenderer } from "../../../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
+import { ERC721Drop as ERC721DropFactory } from "../../../generated/templates/ERC721Drop/ERC721Drop";
+import { Address } from "@graphprotocol/graph-ts";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
   const metadataRecord = new EditionMetadata(
@@ -32,12 +35,15 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   const metadataLinkHistory = new OnChainMetadataHistory(
     event.transaction.hash.toHexString()
   );
+  metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = metadataRecord.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
+
+  updateContractURI(event.params.target);
 }
 
 export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
@@ -68,6 +74,8 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
+
+  updateContractURI(event.params.target);
 }
 
 export function handleUpdateDescription(event: DescriptionUpdated): void {
@@ -93,10 +101,25 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   const metadataLinkHistory = new OnChainMetadataHistory(
     event.transaction.hash.toHexString()
   );
+  metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = newMetadata.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
   metadataLinkHistory.txn = makeTransaction(event);
   metadataLinkHistory.knownType = "ERC721_EDITION";
   metadataLinkHistory.save();
+
+  updateContractURI(event.params.target);
+}
+
+function updateContractURI(target: Address): void {
+    // update contract uri from drop string
+    const contract = ZoraCreateContract.load(target.toHex());
+    if (contract) {
+      const erc721Drop = ERC721DropFactory.bind(target);
+      if (erc721Drop) {
+        contract.contractURI = erc721Drop.contractURI();
+        contract.save();
+      }
+    }
 }

@@ -5,6 +5,7 @@ import {
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
+import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
@@ -26,7 +27,7 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   if (event.params.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = event.params.mediaContract.toHex();
   } else {
-    saleJoin.tokenAndContract = `${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
+    saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }
   saleJoin.fixedPrice = id;
   saleJoin.type = "fixedPrice";
