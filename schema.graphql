@@ -212,6 +212,9 @@ type ZoraCreateToken @entity {
 
   onChainMetadataHistory: [OnChainMetadataHistory!]! @derivedFrom(field: "tokenAndContract")
 
+  holders1155Number: BigInt!
+  holders1155: [Token1155Holder!]! @derivedFrom(field: "tokenAndContract")
+
   permissions: [ZoraCreatorPermission!]!
     @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
@@ -298,4 +301,13 @@ type RoyaltyConfig @entity {
   royaltyMintSchedule: BigInt!
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
+}
+
+type Token1155Holder @entity {
+  # id is (contract, token, user)
+  id: ID!
+  user: Bytes!
+  lastUpdatedBlock: BigInt!
+  tokenAndContract: ZoraCreateToken!
+  balance: BigInt!
 }

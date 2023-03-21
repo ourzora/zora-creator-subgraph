@@ -89,6 +89,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
       publicSaleConfigId
     );
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
+    fixedPriceSaleStrategy.configAddress = event.address;
     fixedPriceSaleStrategy.contract = event.address.toHexString();
     fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();

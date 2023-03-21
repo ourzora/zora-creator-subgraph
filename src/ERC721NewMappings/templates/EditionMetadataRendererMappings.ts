@@ -68,6 +68,7 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   const metadataLinkHistory = new OnChainMetadataHistory(
     event.transaction.hash.toHexString()
   );
+  metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = newMetadata.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);

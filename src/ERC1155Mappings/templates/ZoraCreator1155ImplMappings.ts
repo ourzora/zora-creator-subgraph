@@ -1,9 +1,10 @@
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
   ZoraCreatorPermission,
   RoyaltyConfig,
+  Token1155Holder,
 } from "../../../generated/schema";
 import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
 import {
@@ -22,6 +23,7 @@ import {
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
 import { getPermissionsKey } from "../../common/getPermissionsKey";
+import { getToken1155HolderId } from "../../common/getToken1155HolderId";
 import { getTokenId } from "../../common/getTokenId";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
@@ -131,11 +133,59 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
   royalties.save();
 }
 
+function _updateHolderTransfer(
+  blockNumber: BigInt,
+  contractAddress: Address,
+  from: Address,
+  to: Address,
+  id: BigInt,
+  value: BigInt
+): void {
+  const holderId = getToken1155HolderId(to, contractAddress, id);
+  let holder = Token1155Holder.load(holderId);
+  if (!holder) {
+    holder = new Token1155Holder(holderId);
+    holder.balance = value;
+    holder.tokenAndContract = getTokenId(contractAddress, id);
+    holder.user = to;
+    // update token counter
+    const token = ZoraCreateToken.load(getTokenId(contractAddress, id));
+    if (token) {
+      token.holders1155Number += new BigInt(1);
+      token.save()
+    }
+  } else {
+    holder.balance += value;
+  }
+  holder.lastUpdatedBlock = blockNumber;
+  holder.save();
+
+  if (!from.equals(Address.zero())) {
+    const fromHolder = Token1155Holder.load(
+      getToken1155HolderId(from, contractAddress, id)
+    );
+    if (fromHolder) {
+      fromHolder.balance -= value;
+      fromHolder.lastUpdatedBlock = blockNumber;
+      fromHolder.save();
+      if (fromHolder.balance.equals(BigInt.zero())) {
+        const token = ZoraCreateToken.load(getTokenId(contractAddress, id));
+        if (token) {
+          // update token counter
+          token.holders1155Number -= new BigInt(1);
+          token.save()
+        }
+      }
+    }
+  }
+}
+
 export function handleUpdatedToken(event: UpdatedToken): void {
   const id = getTokenId(event.address, event.params.tokenId);
   let token = ZoraCreateToken.load(id);
   if (!token) {
     token = new ZoraCreateToken(id);
+    token.holders1155Number = new BigInt(0);
     token.tokenStandard = TOKEN_STANDARD_ERC1155;
     token.address = event.address;
     token.createdAtBlock = event.block.number;
@@ -172,6 +222,15 @@ export function handleTransferSingle(event: TransferSingle): void {
       token.save();
     }
   }
+
+  _updateHolderTransfer(
+    event.block.number,
+    event.address,
+    event.params.from,
+    event.params.to,
+    event.params.id,
+    event.params.value
+  );
 }
 
 // update the minted number and max number
@@ -197,6 +256,17 @@ export function handleTransferBatch(event: TransferBatch): void {
         token.save();
       }
     }
+  }
+
+  for (let i = 0; i < event.params.ids.length; i++) {
+    _updateHolderTransfer(
+      event.block.number,
+      event.address,
+      event.params.from,
+      event.params.to,
+      event.params.ids[i],
+      event.params.values[i]
+    );
   }
 }
 
@@ -230,6 +300,7 @@ export function handleSetupNewToken(event: SetupNewToken): void {
     getTokenId(event.address, event.params.tokenId)
   );
 
+  token.holders1155Number = new BigInt(0);
   token.createdAtBlock = event.block.number;
   token.tokenId = event.params.tokenId;
   token.uri = event.params.newURI;

@@ -11,6 +11,7 @@ import { makeTransaction } from "../../common/makeTransaction";
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   const sale = new SalesConfigFixedPriceSaleStrategy(id);
+  sale.configAddress = event.address;
   sale.contract = event.params.mediaContract.toHex();
   sale.fundsRecipient = event.params.salesConfig.fundsRecipient;
   sale.pricePerToken = event.params.salesConfig.pricePerToken;
