@@ -5,11 +5,13 @@ import {
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorMerkleMinterStrategy/ZoraCreatorMerkleMinterStrategy";
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
+import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   let sale = new SalesConfigMerkleMinterStrategy(id);
+  sale.configAddress = event.address;
   sale.presaleStart = event.params.merkleSaleSettings.presaleStart;
   sale.presaleEnd = event.params.merkleSaleSettings.presaleEnd;
   sale.fundsRecipient = event.params.merkleSaleSettings.fundsRecipient;
@@ -24,7 +26,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   if (event.params.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = event.params.mediaContract.toHex();
   } else {
-    saleJoin.tokenAndContract = `${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
+    saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }
   saleJoin.presale = id;
   saleJoin.type = "presale";

@@ -5,11 +5,13 @@ import {
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
+import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   const sale = new SalesConfigFixedPriceSaleStrategy(id);
+  sale.configAddress = event.address;
   sale.contract = event.params.mediaContract.toHex();
   sale.fundsRecipient = event.params.salesConfig.fundsRecipient;
   sale.pricePerToken = event.params.salesConfig.pricePerToken;
@@ -26,7 +28,7 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   if (event.params.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = event.params.mediaContract.toHex();
   } else {
-    saleJoin.tokenAndContract = `${event.params.mediaContract.toHex()}-${event.params.tokenId.toString()}`;
+    saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }
   saleJoin.fixedPrice = id;
   saleJoin.type = "fixedPrice";

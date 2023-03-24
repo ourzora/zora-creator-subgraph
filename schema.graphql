@@ -212,6 +212,9 @@ type ZoraCreateToken @entity {
 
   onChainMetadataHistory: [OnChainMetadataHistory!]! @derivedFrom(field: "tokenAndContract")
 
+  holders1155Number: BigInt!
+  holders1155: [Token1155Holder!]! @derivedFrom(field: "tokenAndContract")
+
   permissions: [ZoraCreatorPermission!]!
     @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
@@ -225,6 +228,8 @@ type OnChainMetadataHistory @entity(immutable: true) {
   txn: TransactionInfo!
   tokenAndContract: ZoraCreateToken!
 
+  rendererAddress: Bytes!
+
   createdAtBlock: BigInt!
 
   editionMetadata: EditionMetadata
@@ -236,6 +241,8 @@ type OnChainMetadataHistory @entity(immutable: true) {
 type SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!
   txn: TransactionInfo!
+
+  configAddress: Bytes!
 
   tokenId: BigInt!
   contract: ZoraCreateContract!
@@ -250,6 +257,8 @@ type SalesConfigFixedPriceSaleStrategy @entity {
 type SalesConfigMerkleMinterStrategy @entity {
   id: ID!
   txn: TransactionInfo!
+
+  configAddress: Bytes!
 
   tokenId: BigInt!
   contract: ZoraCreateContract!
@@ -292,4 +301,13 @@ type RoyaltyConfig @entity {
   royaltyMintSchedule: BigInt!
   contract: ZoraCreateContract
   tokenAndContract: ZoraCreateToken
+}
+
+type Token1155Holder @entity {
+  # id is (contract, token, user)
+  id: ID!
+  user: Bytes!
+  lastUpdatedBlock: BigInt!
+  tokenAndContract: ZoraCreateToken!
+  balance: BigInt!
 }

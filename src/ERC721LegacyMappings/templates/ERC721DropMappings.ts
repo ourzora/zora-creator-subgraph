@@ -23,6 +23,7 @@ import {
 } from "../../../generated/templates/ERC721Drop/ERC721Drop";
 
 import { lookupRole } from "../utils/roleUtils";
+import { getPermissionsKey } from "../../common/getPermissionsKey";
 
 
 /* sales config updated */

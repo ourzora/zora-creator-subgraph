@@ -20,6 +20,7 @@ import {
   RoleRevoked,
   SalesConfigChanged,
   Transfer,
+  UpdatedMetadataRenderer,
   Upgraded,
 } from "../../../generated/templates/ERC721Drop/ERC721Drop";
 import { getSalesConfigOnLegacyMarket } from "../../common/getSalesConfigKey";
@@ -58,6 +59,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     const strategyPresale = new SalesConfigMerkleMinterStrategy(
       presaleConfigId
     );
+    strategyPresale.configAddress = event.address;
     strategyPresale.tokenId = BigInt.zero();
     strategyPresale.contract = event.address.toHexString();
     strategyPresale.presaleStart = salesConfigObject.getPresaleStart();
@@ -87,6 +89,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
       publicSaleConfigId
     );
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
+    fixedPriceSaleStrategy.configAddress = event.address;
     fixedPriceSaleStrategy.contract = event.address.toHexString();
     fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
@@ -235,6 +238,16 @@ export function handleFundsRecipientChanged(
     royaltyConfig.royaltyRecipient = event.params.newAddress;
     royaltyConfig.save();
   }
+}
+
+export function handleUpdatedMetadataRenderer(event: UpdatedMetadataRenderer): void {
+  const createToken = ZoraCreateToken.load(getDefaultTokenId(event.address));
+  if (!createToken) {
+    return;
+  }
+
+  createToken.rendererContract = event.params.renderer;
+  createToken.save();
 }
 
 /* NFT transfer event */

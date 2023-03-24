@@ -186,9 +186,11 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ZoraCreateContract,
-        - ZoraCreateToken,
-        - ZoraCreatorPermission,
+        - ZoraCreateContract
+        - ZoraCreateToken
+        - ZoraCreatorPermission
+        - Token1155Holder
+        - OnChainMetadataHistory
         - RoyaltyConfig
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
@@ -290,3 +292,10 @@ templates:
           handler: handleRoleRevoked
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
+        - event: UpdatedMetadataRenderer(address,address)
+          handler: handleUpdatedMetadataRenderer
+# features:
+#   - grafting
+# graft:
+#   base: QmPbpNj3qZEAhfSTshC7ZV6Qq9ytsGgbGcE94zd9pTzyfA # subgraph ID of base subgraph
+#   block: 8666854 # block number
