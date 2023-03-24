@@ -140,44 +140,36 @@ function _updateHolderTransfer(
   to: Address,
   id: BigInt,
   value: BigInt
-): void {
-  const holderId = getToken1155HolderId(to, contractAddress, id);
-  let holder = Token1155Holder.load(holderId);
-  if (!holder) {
-    holder = new Token1155Holder(holderId);
-    holder.balance = value;
-    holder.tokenAndContract = getTokenId(contractAddress, id);
-    holder.user = to;
-    // update token counter
-    const token = ZoraCreateToken.load(getTokenId(contractAddress, id));
-    if (token) {
-      token.holders1155Number += new BigInt(1);
-      token.save()
+): BigInt {
+  let tokenHolderCountChange = new BigInt(0);
+  if (!to.equals(Address.zero())) {
+    const holderId = getToken1155HolderId(to, contractAddress, id);
+    let holder = Token1155Holder.load(holderId);
+    if (!holder) {
+      holder = new Token1155Holder(holderId);
+      holder.balance = value;
+      holder.tokenAndContract = getTokenId(contractAddress, id);
+      holder.user = to;
+      tokenHolderCountChange = tokenHolderCountChange.plus(new BigInt(1));
+    } else {
+      holder.balance = holder.balance.plus(value);
     }
+    holder.lastUpdatedBlock = blockNumber;
+    holder.save();
   } else {
-    holder.balance += value;
-  }
-  holder.lastUpdatedBlock = blockNumber;
-  holder.save();
-
-  if (!from.equals(Address.zero())) {
     const fromHolder = Token1155Holder.load(
       getToken1155HolderId(from, contractAddress, id)
     );
     if (fromHolder) {
-      fromHolder.balance -= value;
+      fromHolder.balance = fromHolder.balance.minus(value);
       fromHolder.lastUpdatedBlock = blockNumber;
       fromHolder.save();
       if (fromHolder.balance.equals(BigInt.zero())) {
-        const token = ZoraCreateToken.load(getTokenId(contractAddress, id));
-        if (token) {
-          // update token counter
-          token.holders1155Number -= new BigInt(1);
-          token.save()
-        }
+        tokenHolderCountChange = tokenHolderCountChange.minus(new BigInt(1));
       }
     }
   }
+  return tokenHolderCountChange;
 }
 
 export function handleUpdatedToken(event: UpdatedToken): void {
@@ -204,26 +196,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
 
 // update the minted number and mx number
 export function handleTransferSingle(event: TransferSingle): void {
-  if (event.params.from.equals(Address.zero())) {
-    const tokenId = getTokenId(event.address, event.params.id);
-    const token = ZoraCreateToken.load(tokenId);
-    if (token) {
-      token.totalSupply = token.totalSupply.plus(event.params.value);
-      token.totalMinted = token.totalMinted.plus(event.params.value);
-      token.save();
-    }
-  }
-
-  if (event.params.to.equals(Address.zero())) {
-    const tokenId = getTokenId(event.address, event.params.id);
-    const token = ZoraCreateToken.load(tokenId);
-    if (token) {
-      token.totalSupply = token.totalSupply.minus(event.params.value);
-      token.save();
-    }
-  }
-
-  _updateHolderTransfer(
+  const newHolderNumber = _updateHolderTransfer(
     event.block.number,
     event.address,
     event.params.from,
@@ -231,42 +204,88 @@ export function handleTransferSingle(event: TransferSingle): void {
     event.params.id,
     event.params.value
   );
+
+  const token = ZoraCreateToken.load(
+    getTokenId(event.address, event.params.id)
+  );
+  if (event.params.from.equals(Address.zero())) {
+    if (token) {
+      token.totalSupply = token.totalSupply.plus(event.params.value);
+      token.totalMinted = token.totalMinted.plus(event.params.value);
+      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+    }
+  } else if (event.params.to.equals(Address.zero())) {
+    if (token) {
+      token.totalSupply = token.totalSupply.minus(event.params.value);
+      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+    }
+  } else if (newHolderNumber.gt(new BigInt(0))) {
+    if (token) {
+      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+    }
+  }
+  
+  if (token) {
+    token.save();
+  }
 }
 
 // update the minted number and max number
 export function handleTransferBatch(event: TransferBatch): void {
   if (event.params.from.equals(Address.zero())) {
     for (let i = 0; i < event.params.ids.length; i++) {
+      const newTokenHolderBalance = _updateHolderTransfer(
+        event.block.number,
+        event.address,
+        event.params.from,
+        event.params.to,
+        event.params.ids[i],
+        event.params.values[i]
+      );
       const tokenId = getTokenId(event.address, event.params.ids[i]);
       const token = ZoraCreateToken.load(tokenId);
       if (token) {
+        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
         token.totalSupply = token.totalSupply.plus(event.params.values[i]);
         token.totalMinted = token.totalMinted.plus(event.params.values[i]);
         token.save();
       }
     }
-  }
-
-  if (event.params.to.equals(Address.zero())) {
+  } else if (event.params.to.equals(Address.zero())) {
     for (let i = 0; i < event.params.ids.length; i++) {
+      const newTokenHolderBalance = _updateHolderTransfer(
+        event.block.number,
+        event.address,
+        event.params.from,
+        event.params.to,
+        event.params.ids[i],
+        event.params.values[i]
+      );
       const tokenId = getTokenId(event.address, event.params.ids[i]);
       const token = ZoraCreateToken.load(tokenId);
       if (token) {
+        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
         token.totalSupply = token.totalSupply.minus(event.params.values[i]);
         token.save();
       }
     }
-  }
-
-  for (let i = 0; i < event.params.ids.length; i++) {
-    _updateHolderTransfer(
-      event.block.number,
-      event.address,
-      event.params.from,
-      event.params.to,
-      event.params.ids[i],
-      event.params.values[i]
-    );
+  } else {
+    for (let i = 0; i < event.params.ids.length; i++) {
+      const newTokenHolderBalance = _updateHolderTransfer(
+        event.block.number,
+        event.address,
+        event.params.from,
+        event.params.to,
+        event.params.ids[i],
+        event.params.values[i]
+      );
+      const tokenId = getTokenId(event.address, event.params.ids[i]);
+      const token = ZoraCreateToken.load(tokenId);
+      if (token) {
+        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
+        token.save();
+      }
+    }
   }
 }
 
