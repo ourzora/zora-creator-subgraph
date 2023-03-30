@@ -305,6 +305,7 @@ export function handleContractMetadataUpdated(
   const createContract = ZoraCreateContract.load(event.address.toHex());
   if (createContract) {
     createContract.contractURI = event.params.uri;
+    createContract.name = event.params.name;
     const ipfsHostPath = getIPFSHostFromURI(event.params.uri);
     if (ipfsHostPath !== null) {
       createContract.metadata = ipfsHostPath;

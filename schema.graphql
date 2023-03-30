@@ -230,10 +230,19 @@ type OnChainMetadataHistory @entity(immutable: true) {
 
   rendererAddress: Bytes!
 
+  # history created at block
   createdAtBlock: BigInt!
 
+  # 721-only edition metadata
   editionMetadata: EditionMetadata
+  # 721-only drop metadata
   dropMetadata: DropMetadata
+
+  # 1155 static uri
+  uri: String
+  # metadata info – optional
+  metadataInfo: MetadataInfo
+
   knownType: String!
 }
 
