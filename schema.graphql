@@ -234,6 +234,9 @@ type OnChainMetadataHistory @entity(immutable: true) {
 
   editionMetadata: EditionMetadata
   dropMetadata: DropMetadata
+  directURI: String
+  directURIMetadata: MetadataInfo
+
   knownType: String!
 }
 
