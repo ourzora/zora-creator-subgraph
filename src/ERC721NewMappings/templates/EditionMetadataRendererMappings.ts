@@ -50,7 +50,7 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   const metadataRenderer = EditionMetadataRenderer.bind(event.address);
   const tokenInfo = metadataRenderer.tokenInfos(event.params.target);
 
-  const newMetadata = new EditionMetadata(event.params.target.toHexString());
+  const newMetadata = new EditionMetadata(event.transaction.hash.toHex());
   newMetadata.animationURI = event.params.animationURI;
   newMetadata.description = tokenInfo.getDescription();
   newMetadata.imageURI = event.params.imageURI;
