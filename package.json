@@ -7,6 +7,7 @@
     "build": "yarn run codegen && graph build",
     "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
+    "postinstall": "yarn run copy-abis",
     "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
