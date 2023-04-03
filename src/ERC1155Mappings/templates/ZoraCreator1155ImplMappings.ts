@@ -1,10 +1,11 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
   ZoraCreatorPermission,
   RoyaltyConfig,
   Token1155Holder,
+  OnChainMetadataHistory,
 } from "../../../generated/schema";
 import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
 import {
@@ -62,6 +63,7 @@ export function handleURI(event: URI): void {
   if (!token) {
     return;
   }
+
   const ipfsHostPath = getIPFSHostFromURI(event.params.value);
   if (ipfsHostPath !== null) {
     token.metadata = ipfsHostPath;
@@ -69,6 +71,18 @@ export function handleURI(event: URI): void {
   }
   token.uri = event.params.value;
   token.save();
+
+  const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
+  history.txn = makeTransaction(event);
+  history.tokenAndContract = id;
+  history.rendererAddress = Bytes.fromHexString('0x0000000000000000000000000000000000000000');
+  history.createdAtBlock = event.block.number;
+  history.directURI = event.params.value;
+  if (ipfsHostPath !== null) {
+    history.directURIMetadata = ipfsHostPath;
+  }
+  history.knownType = "DIRECT_URI";
+  history.save();
 }
 
 export function handleUpdatedPermissions(event: UpdatedPermissions): void {

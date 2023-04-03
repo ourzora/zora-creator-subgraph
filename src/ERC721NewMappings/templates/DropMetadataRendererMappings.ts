@@ -6,6 +6,7 @@ import {
 } from "../../../generated/schema";
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
+import { METADATA_ERC721_DROP } from "../../constants/metadataHistoryTypes";
 
 export function handleMetadataUpdated(event: MetadataUpdated): void {
   const metadata = new DropMetadata(event.transaction.hash.toHex());
@@ -33,7 +34,7 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
     event.params.target
   );
   metadataLinkHistorical.txn = makeTransaction(event);
-  metadataLinkHistorical.knownType = "ERC721_DROP";
+  metadataLinkHistorical.knownType = METADATA_ERC721_DROP;
   metadataLinkHistorical.save();
 
   // update contract uri

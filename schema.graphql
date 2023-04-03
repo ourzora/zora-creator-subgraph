@@ -223,6 +223,12 @@ type ZoraCreateToken @entity {
   createdAtBlock: BigInt!
 }
 
+type KnownRenderer @entity(immutable: true) {
+  id: ID!
+  address: Bytes!
+  txn: TransactionInfo!
+}
+
 type OnChainMetadataHistory @entity(immutable: true) {
   id: ID!
   txn: TransactionInfo!
@@ -234,6 +240,9 @@ type OnChainMetadataHistory @entity(immutable: true) {
 
   editionMetadata: EditionMetadata
   dropMetadata: DropMetadata
+  directURI: String
+  directURIMetadata: MetadataInfo
+
   knownType: String!
 }
 

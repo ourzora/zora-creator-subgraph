@@ -14,11 +14,11 @@
     "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
-    "@goldskycom/cli": "^0.8.2",
+    "@goldskycom/cli": "1.3.0",
     "@graphprotocol/graph-cli": "^0.41.1",
     "@graphprotocol/graph-ts": "^0.29.3",
     "@zoralabs/nft-drop-contracts": "^1.11.1",
-    "@zoralabs/zora-creator-contracts": "^1.0.0",
+    "@zoralabs/zora-1155-contracts": "^1.1.0",
     "jq": "^1.7.2",
     "mustache": "^4.2.0"
   },

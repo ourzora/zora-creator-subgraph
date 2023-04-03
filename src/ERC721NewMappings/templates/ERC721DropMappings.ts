@@ -9,6 +9,8 @@ import {
   ZoraCreatorPermission,
   ZoraCreateToken,
   RoyaltyConfig,
+  OnChainMetadataHistory,
+  KnownRenderer,
 } from "../../../generated/schema";
 
 import {
@@ -34,7 +36,8 @@ import {
   KNOWN_TYPE_MINTER_ROLE,
   KNOWN_TYPE_SALES_MANAGER_ROLE,
 } from "../../ERC721LegacyMappings/utils/roleUtils";
-import { getDefaultTokenId } from "../../common/getTokenId";
+import { getDefaultTokenId, getTokenId } from "../../common/getTokenId";
+import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
 
 /* sales config updated */
 
@@ -45,11 +48,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 
   const salesConfigObject = dropContract.salesConfig();
 
-  if (
-    !salesConfigObject
-      .getPresaleMerkleRoot()
-      .equals(Bytes.empty())
-  ) {
+  if (!salesConfigObject.getPresaleMerkleRoot().equals(Bytes.empty())) {
     const presaleConfigId = getSalesConfigOnLegacyMarket(
       // market is the same as media contract for this impl
       // token ID for 721 is 0
@@ -240,7 +239,14 @@ export function handleFundsRecipientChanged(
   }
 }
 
-export function handleUpdatedMetadataRenderer(event: UpdatedMetadataRenderer): void {
+export function handleUpdatedMetadataRenderer(
+  event: UpdatedMetadataRenderer
+): void {
+  const createContract = ZoraCreateContract.load(event.address.toHex());
+  if (createContract) {
+    createContract.rendererContract = event.params.renderer;
+  }
+
   const createToken = ZoraCreateToken.load(getDefaultTokenId(event.address));
   if (!createToken) {
     return;
@@ -248,6 +254,16 @@ export function handleUpdatedMetadataRenderer(event: UpdatedMetadataRenderer): v
 
   createToken.rendererContract = event.params.renderer;
   createToken.save();
+
+  if (!KnownRenderer.load(event.params.renderer.toHex())) {
+    const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
+    history.tokenAndContract = getDefaultTokenId(event.address);
+    history.knownType = METADATA_CUSTOM_RENDERER;
+    history.createdAtBlock = event.block.timestamp;
+    history.rendererAddress = event.params.renderer;
+    history.txn = makeTransaction(event);
+    history.save();
+  }
 }
 
 /* NFT transfer event */

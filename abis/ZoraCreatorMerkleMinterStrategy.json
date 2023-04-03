@@ -27,17 +27,33 @@
   },
   {
     "inputs": [],
-    "name": "MintedTooManyForAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "SaleEnded",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "SaleHasNotStarted",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestedAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "UserExceedsMintLimit",
     "type": "error"
   },
   {
@@ -174,21 +190,21 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "tokenContract",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "tokenId",
         "type": "uint256"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "wallet",
         "type": "address"
       }
     ],
-    "name": "mintedPerAddress",
+    "name": "getMintedPerWallet",
     "outputs": [
       {
         "internalType": "uint256",
