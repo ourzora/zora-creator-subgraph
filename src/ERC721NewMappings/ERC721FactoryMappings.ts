@@ -43,15 +43,19 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   DropMetadataRendererFactory.create(dropRendererAddress);
   EditionMetadataRendererFactory.create(creator.editionMetadataRenderer());
 
-  const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
-  knownDropRenderer.txn = makeTransaction(event);
-  knownDropRenderer.address = dropRendererAddress;
-  knownDropRenderer.save();
+  if (!KnownRenderer.load(dropRendererAddress.toHex())) {
+    const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
+    knownDropRenderer.txn = makeTransaction(event);
+    knownDropRenderer.address = dropRendererAddress;
+    knownDropRenderer.save();
+  }
 
-  const knownEditionRenderer = new KnownRenderer(editionRendererAddress.toHex());
-  knownEditionRenderer.txn = makeTransaction(event);
-  knownEditionRenderer.address = editionRendererAddress;
-  knownEditionRenderer.save();
+  if (!KnownRenderer.load(editionRendererAddress.toHex())) {
+    const knownEditionRenderer = new KnownRenderer(editionRendererAddress.toHex());
+    knownEditionRenderer.txn = makeTransaction(event);
+    knownEditionRenderer.address = editionRendererAddress;
+    knownEditionRenderer.save();
+  }
 
   factory.txn = makeTransaction(event);
   factory.dropMetadataRendererFactory = creator.dropMetadataRenderer();
