@@ -24,3 +24,4 @@ get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155FactoryProxy'
 # minters 1155
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorFixedPriceSaleStrategy'
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorMerkleMinterStrategy'
+get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterFactory'

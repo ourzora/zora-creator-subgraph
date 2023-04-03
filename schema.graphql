@@ -263,6 +263,11 @@ type SalesConfigFixedPriceSaleStrategy @entity {
   fundsRecipient: Bytes
 }
 
+type ZoraCreatorRedeemConfig @entity {
+  id: ID!
+  txn: TransactionInfo!
+}
+
 type SalesConfigMerkleMinterStrategy @entity {
   id: ID!
   txn: TransactionInfo!

@@ -238,6 +238,24 @@ templates:
       eventHandlers:
         - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,uint64,uint96,address))
           handler: handleFixedPriceStrategySaleSet
+  - name: ZoraCreatorRedeemMinterFactory
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ZoraCreatorRedeemMinterFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - ZoraCreatorRedeemConfig
+      language: wasm/assemblyscript
+      file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterFactory.ts
+      abis:
+        - name: ZoraCreatorRedeemMinterFactory
+          file: ./abis/ZoraCreatorRedeemMinterFactory.json
+      eventHandlers:
+        - event: RedeemMinterDeployed(indexed address,indexed address)
+          handler: handleRedeemMinterDeployed
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: {{network}}
