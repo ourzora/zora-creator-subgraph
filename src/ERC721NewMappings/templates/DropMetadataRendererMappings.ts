@@ -7,9 +7,10 @@ import {
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { METADATA_ERC721_DROP } from "../../constants/metadataHistoryTypes";
+import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 
 export function handleMetadataUpdated(event: MetadataUpdated): void {
-  const metadata = new DropMetadata(event.transaction.hash.toHex());
+  const metadata = new DropMetadata(getOnChainMetadataKey(event));
   metadata.contractURI = event.params.contractURI;
   metadata.extension = event.params.metadataExtension;
   metadata.base = event.params.metadataBase;
@@ -25,7 +26,7 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadataCompat.save();
 
   const metadataLinkHistorical = new OnChainMetadataHistory(
-    event.transaction.hash.toHexString()
+    getOnChainMetadataKey(event)
   );
   metadataLinkHistorical.rendererAddress = event.address;
   metadataLinkHistorical.createdAtBlock = event.block.number;

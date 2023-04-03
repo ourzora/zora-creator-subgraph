@@ -14,10 +14,11 @@ import { EditionMetadataRenderer } from "../../../generated/templates/EditionMet
 import { ERC721Drop as ERC721DropFactory } from "../../../generated/templates/ERC721Drop/ERC721Drop";
 import { Address } from "@graphprotocol/graph-ts";
 import { METADATA_ERC721_EDITION } from "../../constants/metadataHistoryTypes";
+import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
   const metadataRecord = new EditionMetadata(
-    event.transaction.hash.toHexString()
+    getOnChainMetadataKey(event)
   );
   metadataRecord.animationURI = event.params.animationURI;
   metadataRecord.description = event.params.description;
@@ -34,7 +35,7 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   metadataRecordCompat.save();
 
   const metadataLinkHistory = new OnChainMetadataHistory(
-    event.transaction.hash.toHexString()
+    getOnChainMetadataKey(event)
   );
   metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
@@ -51,7 +52,7 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   const metadataRenderer = EditionMetadataRenderer.bind(event.address);
   const tokenInfo = metadataRenderer.tokenInfos(event.params.target);
 
-  const newMetadata = new EditionMetadata(event.transaction.hash.toHex());
+  const newMetadata = new EditionMetadata(getOnChainMetadataKey(event));
   newMetadata.animationURI = event.params.animationURI;
   newMetadata.description = tokenInfo.getDescription();
   newMetadata.imageURI = event.params.imageURI;
@@ -67,7 +68,7 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   metadataRecordCompat.save();
 
   const metadataLinkHistory = new OnChainMetadataHistory(
-    event.transaction.hash.toHexString()
+    getOnChainMetadataKey(event)
   );
   metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
@@ -85,7 +86,7 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
 
   const tokenInfo = metadataRenderer.tokenInfos(event.params.target);
 
-  const newMetadata = new EditionMetadata(event.transaction.hash.toHexString());
+  const newMetadata = new EditionMetadata(getOnChainMetadataKey(event));
   newMetadata.description = event.params.newDescription;
   newMetadata.imageURI = tokenInfo.getImageURI();
   newMetadata.animationURI = tokenInfo.getAnimationURI();
@@ -101,7 +102,7 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   metadataRecordCompat.save();
 
   const metadataLinkHistory = new OnChainMetadataHistory(
-    event.transaction.hash.toHexString()
+    getOnChainMetadataKey(event)
   );
   metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;

@@ -38,6 +38,7 @@ import {
 } from "../../ERC721LegacyMappings/utils/roleUtils";
 import { getDefaultTokenId, getTokenId } from "../../common/getTokenId";
 import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
+import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 
 /* sales config updated */
 
@@ -256,7 +257,7 @@ export function handleUpdatedMetadataRenderer(
   createToken.save();
 
   if (!KnownRenderer.load(event.params.renderer.toHex())) {
-    const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
+    const history = new OnChainMetadataHistory(getOnChainMetadataKey(event));
     history.tokenAndContract = getDefaultTokenId(event.address);
     history.knownType = METADATA_CUSTOM_RENDERER;
     history.createdAtBlock = event.block.timestamp;
