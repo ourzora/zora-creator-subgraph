@@ -11,6 +11,7 @@ import {
   ZoraCreate721Factory,
   ZoraCreateToken,
   RoyaltyConfig,
+  KnownRenderer,
 } from "../../generated/schema";
 
 import {
@@ -36,8 +37,21 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   const factory = new ZoraCreate721Factory(event.address.toHex());
   const creator = ZoraNFTCreatorV1.bind(event.address);
 
-  DropMetadataRendererFactory.create(creator.dropMetadataRenderer());
+  const dropRendererAddress = creator.dropMetadataRenderer();
+  const editionRendererAddress = creator.editionMetadataRenderer();
+
+  DropMetadataRendererFactory.create(dropRendererAddress);
   EditionMetadataRendererFactory.create(creator.editionMetadataRenderer());
+
+  const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
+  knownDropRenderer.txn = makeTransaction(event);
+  knownDropRenderer.address = dropRendererAddress;
+  knownDropRenderer.save();
+
+  const knownEditionRenderer = new KnownRenderer(editionRendererAddress.toHex());
+  knownEditionRenderer.txn = makeTransaction(event);
+  knownEditionRenderer.address = editionRendererAddress;
+  knownEditionRenderer.save();
 
   factory.txn = makeTransaction(event);
   factory.dropMetadataRendererFactory = creator.dropMetadataRenderer();

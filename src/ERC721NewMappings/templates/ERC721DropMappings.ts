@@ -10,6 +10,7 @@ import {
   ZoraCreateToken,
   RoyaltyConfig,
   OnChainMetadataHistory,
+  KnownRenderer,
 } from "../../../generated/schema";
 
 import {
@@ -47,11 +48,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 
   const salesConfigObject = dropContract.salesConfig();
 
-  if (
-    !salesConfigObject
-      .getPresaleMerkleRoot()
-      .equals(Bytes.empty())
-  ) {
+  if (!salesConfigObject.getPresaleMerkleRoot().equals(Bytes.empty())) {
     const presaleConfigId = getSalesConfigOnLegacyMarket(
       // market is the same as media contract for this impl
       // token ID for 721 is 0
@@ -242,7 +239,9 @@ export function handleFundsRecipientChanged(
   }
 }
 
-export function handleUpdatedMetadataRenderer(event: UpdatedMetadataRenderer): void {
+export function handleUpdatedMetadataRenderer(
+  event: UpdatedMetadataRenderer
+): void {
   const createContract = ZoraCreateContract.load(event.address.toHex());
   if (createContract) {
     createContract.rendererContract = event.params.renderer;
@@ -256,13 +255,15 @@ export function handleUpdatedMetadataRenderer(event: UpdatedMetadataRenderer): v
   createToken.rendererContract = event.params.renderer;
   createToken.save();
 
-  const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
-  history.tokenAndContract = getDefaultTokenId(event.address);
-  history.knownType = METADATA_CUSTOM_RENDERER;
-  history.createdAtBlock = event.block.timestamp;
-  history.rendererAddress = event.params.renderer;
-  history.txn = makeTransaction(event);
-  history.save();
+  if (!KnownRenderer.load(event.params.renderer.toHex())) {
+    const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
+    history.tokenAndContract = getDefaultTokenId(event.address);
+    history.knownType = METADATA_CUSTOM_RENDERER;
+    history.createdAtBlock = event.block.timestamp;
+    history.rendererAddress = event.params.renderer;
+    history.txn = makeTransaction(event);
+    history.save();
+  }
 }
 
 /* NFT transfer event */
