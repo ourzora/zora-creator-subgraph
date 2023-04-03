@@ -1,7 +1,7 @@
 REL_BASE=$(dirname "$0")
 
 ERC721_ARTIFACTS_PATH=$REL_BASE/../node_modules/@zoralabs/nft-drop-contracts/dist/artifacts/
-ERC1155_ARTIFACTS_PATH=$REL_BASE/../node_modules/@zoralabs/zora-creator-contracts/dist/artifacts/
+ERC1155_ARTIFACTS_PATH=$REL_BASE/../node_modules/@zoralabs/zora-1155-contracts/dist/artifacts/
 
 get_contract () {
   node -e 'var fs = require("fs");console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[1])).abi, null, 2))' $1/$2.sol/$2.json > $REL_BASE/$2.json

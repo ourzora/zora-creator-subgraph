@@ -413,10 +413,10 @@
     graphql-import-node "^0.0.5"
     js-yaml "^4.1.0"
 
-"@goldskycom/cli@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@goldskycom/cli/-/cli-1.4.0.tgz#8defb015f93755613fe5974c4c345fc818e1774a"
-  integrity sha512-Q3GX7lhzkb6nJZyhvHtNAUTGX7fVuDqjkbIMO9LMEVvWshoi+lOcEYW8hYjOcYI9gxHne3uUmVybV3i8dEd+pg==
+"@goldskycom/cli@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@goldskycom/cli/-/cli-1.3.0.tgz#f36807e9914c567502e03b12136b40cf806cf38d"
+  integrity sha512-fwcKQ87JnqvKE7tXEpXGFSpSjSQ9Lqp9rqr8grFdyoOukvcjFrZxPZZWNuammoUNDrMTwMXCTcDMWEMKhJ7GOQ==
   dependencies:
     readline-sync "^1.4.10"
     update-notifier "^6.0.2"
@@ -640,15 +640,15 @@
     widest-line "^3.1.0"
     wrap-ansi "^6.2.0"
 
-"@openzeppelin/contracts-upgradeable@4.8.0":
-  version "4.8.0"
-  resolved "https://registry.npmjs.org/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.0.tgz"
-  integrity sha512-5GeFgqMiDlqGT8EdORadp1ntGF0qzWZLmEY7Wbp/yVhN7/B3NNzCxujuI77ktlyG81N3CUZP8cZe3ZAQ/cW10w==
+"@openzeppelin/contracts-upgradeable@4.8.2":
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.8.2.tgz#edef522bdbc46d478481391553bababdd2199e27"
+  integrity sha512-zIggnBwemUmmt9IS73qxi+tumALxCY4QEs3zLCII78k0Gfse2hAOdAkuAeLUzvWUpneMUfFE5sGHzEUSTvn4Ag==
 
-"@openzeppelin/contracts@4.8.0":
-  version "4.8.0"
-  resolved "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.8.0.tgz"
-  integrity sha512-AGuwhRRL+NaKx73WKRNzeCxOCOCxpaqF+kp8TJ89QzAipSwZy/NoflkWaL9bywXFRhIzXt8j38sfF7KBKCPWLw==
+"@openzeppelin/contracts@4.8.2":
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.2.tgz#d815ade0027b50beb9bcca67143c6bcc3e3923d6"
+  integrity sha512-kEUOgPQszC0fSYWpbh2kT94ltOJwj1qfT2DWo+zVttmGmf97JZ99LspePNaeeaLhCImaHVeBbjaQFZQn7+Zc5g==
 
 "@pnpm/network.ca-file@^1.0.1":
   version "1.0.2"
@@ -816,13 +816,13 @@
     typechain "8.0.0"
     typescript "4.6.3"
 
-"@zoralabs/zora-creator-contracts@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zora-creator-contracts/-/zora-creator-contracts-1.0.0.tgz#8a62ce3942d900c74d16572da04e899ba641e468"
-  integrity sha512-rXvPc1xDjX6wMgpstRGEUpYrt0KDCt9LEZLWq1t64gqtBIen4GV8bE2dKbkiAQ6oD2trNnlesBjrxZAQXkf2rQ==
+"@zoralabs/zora-1155-contracts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.1.0.tgz#5dfb9b2021a1d03f1932c748768721a864bcddb5"
+  integrity sha512-g1vZqcy5tyQXTVuEX6gLDY28R7sEhrWMn2QjRnXPiB8aTV5uxvI4uUi7P5IDtBx0B5fqSWRv8Mx1X9FEx4euYQ==
   dependencies:
-    "@openzeppelin/contracts" "4.8.0"
-    "@openzeppelin/contracts-upgradeable" "4.8.0"
+    "@openzeppelin/contracts" "4.8.2"
+    "@openzeppelin/contracts-upgradeable" "4.8.2"
     ds-test "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b"
     forge-std "https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
 
@@ -1842,9 +1842,9 @@ drbg.js@^1.0.1:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
 
-"ds-test@https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b":
+"ds-test@git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b":
   version "1.0.0"
-  resolved "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b"
+  resolved "git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b"
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -2177,9 +2177,9 @@ forever-agent@~0.6.1:
   resolved "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-"forge-std@https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
+"forge-std@git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
   version "1.1.1"
-  resolved "https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
+  resolved "git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
 
 form-data-encoder@^2.1.2:
   version "2.1.4"

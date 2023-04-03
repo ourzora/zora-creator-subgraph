@@ -10,6 +10,11 @@
         "internalType": "address",
         "name": "_mintFeeRecipient",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -29,6 +34,17 @@
       }
     ],
     "name": "Burn_NotOwnerOrApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "reason",
+        "type": "bytes"
+      }
+    ],
+    "name": "CallFailed",
     "type": "error"
   },
   {
@@ -174,11 +190,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "NotAllowedContractBaseIDUpdate",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -190,24 +201,8 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "reason",
-        "type": "bytes"
-      }
-    ],
-    "name": "Renderer_CallFailed",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "Renderer_NotValidRendererContract",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Sale_CallFailed",
     "type": "error"
   },
   {
@@ -1196,6 +1191,11 @@
     "inputs": [
       {
         "internalType": "string",
+        "name": "contractName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
         "name": "newContractURI",
         "type": "string"
       },
@@ -1660,11 +1660,6 @@
         "internalType": "contract IRenderer1155",
         "name": "renderer",
         "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "setupData",
-        "type": "bytes"
       }
     ],
     "name": "setTokenMetadataRenderer",
