@@ -23,6 +23,7 @@ import {
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
 import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
+import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 import { getPermissionsKey } from "../../common/getPermissionsKey";
 import { getToken1155HolderId } from "../../common/getToken1155HolderId";
 import { getTokenId } from "../../common/getTokenId";
@@ -72,10 +73,14 @@ export function handleURI(event: URI): void {
   token.uri = event.params.value;
   token.save();
 
-  const history = new OnChainMetadataHistory(event.transaction.hash.toHex());
+  const history = new OnChainMetadataHistory(
+    getOnChainMetadataKey(event)
+  );
   history.txn = makeTransaction(event);
   history.tokenAndContract = id;
-  history.rendererAddress = Bytes.fromHexString('0x0000000000000000000000000000000000000000');
+  history.rendererAddress = Bytes.fromHexString(
+    "0x0000000000000000000000000000000000000000"
+  );
   history.createdAtBlock = event.block.number;
   history.directURI = event.params.value;
   if (ipfsHostPath !== null) {
@@ -238,7 +243,7 @@ export function handleTransferSingle(event: TransferSingle): void {
       token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
     }
   }
-  
+
   if (token) {
     token.save();
   }
@@ -259,7 +264,9 @@ export function handleTransferBatch(event: TransferBatch): void {
       const tokenId = getTokenId(event.address, event.params.ids[i]);
       const token = ZoraCreateToken.load(tokenId);
       if (token) {
-        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
+        token.holders1155Number = token.holders1155Number.plus(
+          newTokenHolderBalance
+        );
         token.totalSupply = token.totalSupply.plus(event.params.values[i]);
         token.totalMinted = token.totalMinted.plus(event.params.values[i]);
         token.save();
@@ -278,7 +285,9 @@ export function handleTransferBatch(event: TransferBatch): void {
       const tokenId = getTokenId(event.address, event.params.ids[i]);
       const token = ZoraCreateToken.load(tokenId);
       if (token) {
-        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
+        token.holders1155Number = token.holders1155Number.plus(
+          newTokenHolderBalance
+        );
         token.totalSupply = token.totalSupply.minus(event.params.values[i]);
         token.save();
       }
@@ -296,7 +305,9 @@ export function handleTransferBatch(event: TransferBatch): void {
       const tokenId = getTokenId(event.address, event.params.ids[i]);
       const token = ZoraCreateToken.load(tokenId);
       if (token) {
-        token.holders1155Number = token.holders1155Number.plus(newTokenHolderBalance);
+        token.holders1155Number = token.holders1155Number.plus(
+          newTokenHolderBalance
+        );
         token.save();
       }
     }
