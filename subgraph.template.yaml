@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ZoraNFTCreatorV1
-    network: { { network } }
+    network: {{network}}
     source:
       address: "{{address}}"
       abi: ZoraNFTCreatorV1
-      startBlock: { { startBlock } }
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -29,11 +29,11 @@ dataSources:
       file: ./src/ERC721LegacyMappings/ERC721FactoryMappings.ts
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
-    network: { { network } }
+    network: {{network}}
     source:
       address: "{{1155Address}}"
       abi: ZoraCreator1155FactoryImpl
-      startBlock: { { 1155StartBlock } }
+      startBlock: {{1155StartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -53,11 +53,11 @@ dataSources:
       file: ./src/ERC1155Mappings/factoryMappings.ts
   - kind: ethereum/contract
     name: NewZoraNFTCreatorV1
-    network: { { network } }
+    network: {{network}}
     source:
       address: "{{address}}"
       abi: ZoraNFTCreatorV1
-      startBlock: { { startBlock } }
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -92,7 +92,7 @@ templates:
   # not legacy mapping – shared
   - kind: ethereum/contract
     name: EditionMetadataRenderer
-    network: { { network } }
+    network: {{network}}
     source:
       abi: EditionMetadataRenderer
     mapping:
@@ -120,7 +120,7 @@ templates:
   # not legacy mapping – shared
   - kind: ethereum/contract
     name: DropMetadataRenderer
-    network: { { network } }
+    network: {{network}}
     source:
       abi: DropMetadataRenderer
     mapping:
@@ -143,7 +143,7 @@ templates:
       file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
   - name: ERC721Drop
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ERC721Drop
     mapping:
@@ -178,10 +178,10 @@ templates:
           handler: handleOwnershipTransferred
   - name: ZoraCreator1155Impl
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreator1155Impl
-      startBlock: { { 1155StartBlock } }
+      startBlock: {{1155StartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -222,7 +222,7 @@ templates:
           handler: handleSetupNewToken
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreatorFixedPriceSaleStrategy
     mapping:
@@ -240,7 +240,7 @@ templates:
           handler: handleFixedPriceStrategySaleSet
   - name: ZoraCreatorRedeemMinterFactory
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreatorRedeemMinterFactory
     mapping:
@@ -258,7 +258,7 @@ templates:
           handler: handleRedeemMinterDeployed
   - name: ZoraCreatorRedeemMinterStrategy
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreatorRedeemMinterStrategy
     mapping:
@@ -280,7 +280,7 @@ templates:
           handler: handleRedeemSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ZoraCreatorMerkleMinterStrategy
     mapping:
@@ -299,7 +299,7 @@ templates:
   # new mappings
   - name: NewERC721Drop
     kind: ethereum/contract
-    network: { { network } }
+    network: {{network}}
     source:
       abi: ERC721Drop
     mapping:
