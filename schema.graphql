@@ -168,8 +168,7 @@ type ZoraCreateContract @entity {
   tokens: [ZoraCreateToken!]! @derivedFrom(field: "contract")
   permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "contract")
   royalties: RoyaltyConfig @derivedFrom(field: "contract")
-  salesStrategies: [SalesStrategyConfig!]!
-    @derivedFrom(field: "contract")
+  salesStrategies: [SalesStrategyConfig!]! @derivedFrom(field: "contract")
 
   createdAtBlock: BigInt!
 }
@@ -210,13 +209,13 @@ type ZoraCreateToken @entity {
 
   metadata: MetadataInfo
 
-  onChainMetadataHistory: [OnChainMetadataHistory!]! @derivedFrom(field: "tokenAndContract")
+  onChainMetadataHistory: [OnChainMetadataHistory!]!
+    @derivedFrom(field: "tokenAndContract")
 
   holders1155Number: BigInt!
   holders1155: [Token1155Holder!]! @derivedFrom(field: "tokenAndContract")
 
-  permissions: [ZoraCreatorPermission!]!
-    @derivedFrom(field: "tokenAndContract")
+  permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "tokenAndContract")
@@ -246,7 +245,6 @@ type OnChainMetadataHistory @entity(immutable: true) {
   knownType: String!
 }
 
-
 type SalesConfigFixedPriceSaleStrategy @entity {
   id: ID!
   txn: TransactionInfo!
@@ -266,6 +264,46 @@ type SalesConfigFixedPriceSaleStrategy @entity {
 type ZoraCreatorRedeemConfig @entity {
   id: ID!
   txn: TransactionInfo!
+  creatorAddress: Bytes!
+  minterAddress: Bytes!
+}
+
+type RedeemToken @entity {
+  id: ID!
+  tokenContract: Bytes!
+  tokenId: BigInt!
+  amount: BigInt!
+  tokenType: Int!
+}
+
+type RedeemInstructions @entity {
+  id: ID!
+  tokenType: Int!
+  amount: BigInt!
+  tokenIdStart: BigInt!
+  tokenIdEnd: BigInt!
+  tokenContract: Bytes!
+  transferRecipient: Bytes!
+  burnFunction: Bytes!
+}
+
+type SalesConfigRedeemMinterStrategy @entity {
+  id: ID!
+  txn: TransactionInfo!
+
+  configAddress: Bytes!
+
+  # tokenId: BigInt!
+  # contract: ZoraCreateContract!
+
+  target: Bytes!
+  redeemsInstructionsHash: Bytes!
+  redeemToken: RedeemToken!
+  redeemInstructions: [RedeemInstructions!]
+  saleStart: BigInt!
+  saleEnd: BigInt!
+  ethAmount: BigInt!
+  ethRecipient: Bytes!
 }
 
 type SalesConfigMerkleMinterStrategy @entity {
