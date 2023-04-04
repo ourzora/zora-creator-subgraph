@@ -19,7 +19,7 @@
     "@graphprotocol/graph-cli": "^0.41.1",
     "@graphprotocol/graph-ts": "^0.29.3",
     "@zoralabs/nft-drop-contracts": "^1.11.1",
-    "@zoralabs/zora-1155-contracts": "^1.2.0-pre2",
+    "@zoralabs/zora-1155-contracts": "^1.2.0-pre3",
     "jq": "^1.7.2",
     "mustache": "^4.2.0"
   },

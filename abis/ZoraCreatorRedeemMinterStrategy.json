@@ -6,7 +6,7 @@
   },
   {
     "inputs": [],
-    "name": "CallerNotDropContract",
+    "name": "CallerNotCreatorContract",
     "type": "error"
   },
   {
@@ -16,17 +16,12 @@
   },
   {
     "inputs": [],
-    "name": "EthRecipientCannotBeZero",
+    "name": "IncorrectBurnOrTransferAmount",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ExternalCallFailed",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "IncorrectAmount",
+    "name": "IncorrectMintAmount",
     "type": "error"
   },
   {
@@ -36,7 +31,7 @@
   },
   {
     "inputs": [],
-    "name": "InvalidDropContract",
+    "name": "InvalidCreatorContract",
     "type": "error"
   },
   {
@@ -56,6 +51,16 @@
   },
   {
     "inputs": [],
+    "name": "MintTokenContractMustBeCreatorContract",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MintTokenTypeMustBeERC1155",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "MustBurnOrTransfer",
     "type": "error"
   },
@@ -71,12 +76,7 @@
   },
   {
     "inputs": [],
-    "name": "RedeemInstructionNotSet",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RedeemTokenTypeMustBeERC1155",
+    "name": "RedeemInstructionNotAllowed",
     "type": "error"
   },
   {
@@ -110,25 +110,6 @@
       }
     ],
     "name": "Initialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "redeemInstructionsHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "RedeemCleared",
     "type": "event"
   },
   {
@@ -190,8 +171,8 @@
                 "type": "uint8"
               }
             ],
-            "internalType": "struct ZoraCreatorRedeemMinterStrategy.RedeemToken",
-            "name": "redeemToken",
+            "internalType": "struct ZoraCreatorRedeemMinterStrategy.MintToken",
+            "name": "mintToken",
             "type": "tuple"
           },
           {
@@ -267,11 +248,30 @@
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "hash",
-        "type": "bytes32"
+        "indexed": true,
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32[]",
+        "name": "redeemInstructionsHashes",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "RedeemsCleared",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "hashes",
+        "type": "bytes32[]"
       }
     ],
     "name": "clearRedeem",
@@ -320,7 +320,7 @@
   },
   {
     "inputs": [],
-    "name": "dropContract",
+    "name": "creatorContract",
     "outputs": [
       {
         "internalType": "address",
@@ -329,6 +329,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creatorContract",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -358,8 +371,8 @@
                 "type": "uint8"
               }
             ],
-            "internalType": "struct ZoraCreatorRedeemMinterStrategy.RedeemToken",
-            "name": "redeemToken",
+            "internalType": "struct ZoraCreatorRedeemMinterStrategy.MintToken",
+            "name": "mintToken",
             "type": "tuple"
           },
           {
@@ -430,7 +443,7 @@
         "type": "tuple"
       }
     ],
-    "name": "hashRedeemInstructions",
+    "name": "redeemInstructionsHash",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -444,25 +457,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_dropContract",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes32",
-        "name": "hash",
+        "name": "",
         "type": "bytes32"
       }
     ],
-    "name": "redeemIsSet",
+    "name": "redeemInstructionsHashIsAllowed",
     "outputs": [
       {
         "internalType": "bool",
@@ -576,8 +576,8 @@
                 "type": "uint8"
               }
             ],
-            "internalType": "struct ZoraCreatorRedeemMinterStrategy.RedeemToken",
-            "name": "redeemToken",
+            "internalType": "struct ZoraCreatorRedeemMinterStrategy.MintToken",
+            "name": "mintToken",
             "type": "tuple"
           },
           {
@@ -699,8 +699,8 @@
                 "type": "uint8"
               }
             ],
-            "internalType": "struct ZoraCreatorRedeemMinterStrategy.RedeemToken",
-            "name": "redeemToken",
+            "internalType": "struct ZoraCreatorRedeemMinterStrategy.MintToken",
+            "name": "mintToken",
             "type": "tuple"
           },
           {

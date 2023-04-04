@@ -272,7 +272,7 @@ templates:
         - name: ZoraCreatorRedeemMinterStrategy
           file: ./abis/ZoraCreatorRedeemMinterStrategy.json
       eventHandlers:
-        - event: RedeemCleared(indexed address,indexed bytes32)
+        - event: RedeemsCleared(indexed address,indexed bytes32[])
           handler: handleRedeemCleared
         - event: RedeemProcessed(indexed address,indexed bytes32)
           handler: handleRedeemProcessed

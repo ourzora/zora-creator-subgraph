@@ -2,7 +2,9 @@ import { RedeemMinterDeployed } from "../../../generated/templates/ZoraCreatorRe
 import { ZoraCreatorRedeemConfig } from "../../../generated/schema";
 
 export function handleRedeemMinterDeployed(event: RedeemMinterDeployed): void {
-  let config = new ZoraCreatorRedeemConfig(event.transaction.hash.toHex());
+  let config = new ZoraCreatorRedeemConfig(
+    `${event.address.toHex()}-${event.params.minterContract.toHex()}`
+  );
   config.creatorAddress = event.params.creatorContract;
   config.minterAddress = event.params.minterContract;
 

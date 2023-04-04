@@ -268,7 +268,7 @@ type ZoraCreatorRedeemConfig @entity {
   minterAddress: Bytes!
 }
 
-type RedeemToken @entity {
+type RedeemMintToken @entity {
   id: ID!
   tokenContract: Bytes!
   tokenId: BigInt!
@@ -276,8 +276,14 @@ type RedeemToken @entity {
   tokenType: Int!
 }
 
+type RedeemInstructionHash @entity{
+  id: ID!
+  hash: Int!
+}
+
 type RedeemInstructions @entity {
   id: ID!
+  redeemMinter: SalesConfigRedeemMinterStrategy!
   tokenType: Int!
   amount: BigInt!
   tokenIdStart: BigInt!
@@ -292,14 +298,11 @@ type SalesConfigRedeemMinterStrategy @entity {
   txn: TransactionInfo!
 
   configAddress: Bytes!
-
-  # tokenId: BigInt!
-  # contract: ZoraCreateContract!
-
   target: Bytes!
+  isActive: Boolean!
   redeemsInstructionsHash: Bytes!
-  redeemToken: RedeemToken!
-  redeemInstructions: [RedeemInstructions!]
+  redeemMintToken: RedeemMintToken!
+  redeemInstructions: [RedeemInstructions!]! @derivedFrom(field: "redeemMinter")
   saleStart: BigInt!
   saleEnd: BigInt!
   ethAmount: BigInt!
