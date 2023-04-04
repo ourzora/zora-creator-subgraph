@@ -268,7 +268,7 @@ type ZoraCreatorRedeemConfig @entity {
   minterAddress: Bytes!
 }
 
-type RedeemMintToken @entity {
+type RedeemMintToken @entity(immutable: true) {
   id: ID!
   tokenContract: Bytes!
   tokenId: BigInt!
@@ -276,7 +276,7 @@ type RedeemMintToken @entity {
   tokenType: Int!
 }
 
-type RedeemInstructions @entity {
+type RedeemInstructions @entity(immutable: true) {
   id: ID!
   redeemMinter: SalesConfigRedeemMinterStrategy!
   tokenType: Int!
@@ -294,6 +294,7 @@ type SalesConfigRedeemMinterStrategy @entity {
 
   configAddress: Bytes!
   target: Bytes!
+  # isActive tells if the redeem has been cleared or not
   isActive: Boolean!
   redeemsInstructionsHash: Bytes!
   redeemMintToken: RedeemMintToken!
