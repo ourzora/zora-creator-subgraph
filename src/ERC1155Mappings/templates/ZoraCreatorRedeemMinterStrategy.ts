@@ -2,7 +2,6 @@ import {
   RedeemInstructions,
   RedeemMintToken,
   SalesConfigRedeemMinterStrategy,
-  RedeemInstructionHash,
 } from "../../../generated/schema";
 import {
   RedeemProcessed,
@@ -12,27 +11,18 @@ import {
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleRedeemCleared(event: RedeemsCleared): void {
-  const redeem = SalesConfigRedeemMinterStrategy.load(
-    `${event.address.toHexString()}`
-  );
-  if (!redeem) {
-    return;
-  }
-
-  redeem.target = event.params.target;
-
-//   not totally sure on this
   for (let i = 0; i < event.params.redeemInstructionsHashes.length; i++) {
-    let j = new RedeemInstructionHash(
-      event.params.redeemInstructionsHashes[i].toString()
+    let redeem = SalesConfigRedeemMinterStrategy.load(
+      `${event.params.redeemInstructionsHashes[i]}`
     );
-    j.hash = event.params.redeemInstructionsHashes[i];
-    j.redeemMinter = redeem.id;
-    j.save();
-  }
 
-  redeem.isActive = false;
-  redeem.save();
+    if (!redeem) {
+      return;
+    }
+
+    redeem.isActive = false;
+    redeem.save();
+  }
 }
 
 export function handleRedeemProcessed(event: RedeemProcessed): void {
@@ -49,7 +39,7 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
 
 export function handleRedeemSet(event: RedeemSet): void {
   let strategy = new SalesConfigRedeemMinterStrategy(
-    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
+    `${event.params.redeemsInstructionsHash}`
   );
   strategy.txn = makeTransaction(event);
   strategy.configAddress = event.address;

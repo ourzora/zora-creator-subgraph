@@ -276,11 +276,6 @@ type RedeemMintToken @entity {
   tokenType: Int!
 }
 
-type RedeemInstructionHash @entity{
-  id: ID!
-  hash: Int!
-}
-
 type RedeemInstructions @entity {
   id: ID!
   redeemMinter: SalesConfigRedeemMinterStrategy!
