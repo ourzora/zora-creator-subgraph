@@ -288,6 +288,14 @@ type RedeemInstructions @entity(immutable: true) {
   burnFunction: Bytes!
 }
 
+type RedeemMinterProcessed @entity {
+  id: ID!
+  txn: TransactionInfo!
+  redeemMinter: SalesConfigRedeemMinterStrategy!
+  target: Bytes!
+  redeemsInstructionsHash: Bytes!
+}
+
 type SalesConfigRedeemMinterStrategy @entity {
   id: ID!
   txn: TransactionInfo!

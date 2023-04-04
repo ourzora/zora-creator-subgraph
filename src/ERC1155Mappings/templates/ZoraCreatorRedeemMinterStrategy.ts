@@ -1,5 +1,6 @@
 import {
   RedeemInstructions,
+  RedeemMinterProcessed,
   RedeemMintToken,
   SalesConfigRedeemMinterStrategy,
 } from "../../../generated/schema";
@@ -26,15 +27,15 @@ export function handleRedeemCleared(event: RedeemsCleared): void {
 }
 
 export function handleRedeemProcessed(event: RedeemProcessed): void {
-  //   const redeem = SalesConfigRedeemMinterStrategy.load(
-  //     `${event.address.toHexString()}`
-  //   );
-  //   if (!redeem) {
-  //     return;
-  //   }
-  //   redeem.target = event.params.target;
-  //   redeem.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
-  //   redeem.save();
+  const processed = new RedeemMinterProcessed(
+    `${event.transaction.hash.toHex()}`
+  );
+
+  processed.txn = makeTransaction(event);
+  processed.redeemMinter = event.params.redeemsInstructionsHash.toHex();
+  processed.target = event.params.target;
+  processed.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
+  processed.save();
 }
 
 export function handleRedeemSet(event: RedeemSet): void {
