@@ -816,10 +816,10 @@
     typechain "8.0.0"
     typescript "4.6.3"
 
-"@zoralabs/zora-1155-contracts@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.1.0.tgz#5dfb9b2021a1d03f1932c748768721a864bcddb5"
-  integrity sha512-g1vZqcy5tyQXTVuEX6gLDY28R7sEhrWMn2QjRnXPiB8aTV5uxvI4uUi7P5IDtBx0B5fqSWRv8Mx1X9FEx4euYQ==
+"@zoralabs/zora-1155-contracts@^1.2.0-pre2":
+  version "1.2.0-pre2"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.2.0-pre2.tgz#f184faa5d65ecec2a0c7bd97e16575345b17fc3f"
+  integrity sha512-+rBXRgZP39qfKlW/KAxGT3i2814RRIkj8nYm0D+DeLGMbi08wk22MsFx9SgziRoGfnYtw8ixmkcUVxVFzdbEng==
   dependencies:
     "@openzeppelin/contracts" "4.8.2"
     "@openzeppelin/contracts-upgradeable" "4.8.2"

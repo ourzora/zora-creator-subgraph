@@ -15,6 +15,11 @@
         "internalType": "contract IMinter1155",
         "name": "_fixedPriceMinter",
         "type": "address"
+      },
+      {
+        "internalType": "contract IMinter1155",
+        "name": "_redeemMinterFactory",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -515,6 +520,19 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "redeemMinterFactory",
+    "outputs": [
+      {
+        "internalType": "contract IMinter1155",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
