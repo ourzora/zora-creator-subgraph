@@ -35,6 +35,28 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
   processed.redeemMinter = event.params.redeemsInstructionsHash.toHex();
   processed.target = event.params.target;
   processed.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
+  processed.sender = event.params.sender;
+
+  let amounts: string[] = [];
+  for (let i = 0; i < event.params.amounts.length; i++) {
+    let a: string[] = [];
+    for (let j = 0; j < event.params.amounts[i].length; j++) {
+      a.push(`${event.params.amounts[i][j]}`);
+    }
+    amounts.push(a.join(", "));
+  }
+  processed.amounts = amounts;
+
+  let tokenIds: string[] = [];
+  for (let i = 0; i < event.params.tokenIds.length; i++) {
+    let t: string[] = [];
+    for (let j = 0; j < event.params.tokenIds[i].length; j++) {
+      t.push(`${event.params.tokenIds[i][j]}`);
+    }
+    tokenIds.push(t.join(", "));
+  }
+  processed.tokenIds = tokenIds;
+
   processed.save();
 }
 

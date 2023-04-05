@@ -1029,6 +1029,44 @@
   },
   {
     "inputs": [],
+    "name": "config",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint96",
+        "name": "__gap1",
+        "type": "uint96"
+      },
+      {
+        "internalType": "address payable",
+        "name": "fundsRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint96",
+        "name": "__gap2",
+        "type": "uint96"
+      },
+      {
+        "internalType": "contract ITransferHookReceiver",
+        "name": "transferHook",
+        "type": "address"
+      },
+      {
+        "internalType": "uint96",
+        "name": "__gap3",
+        "type": "uint96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "contractURI",
     "outputs": [
       {

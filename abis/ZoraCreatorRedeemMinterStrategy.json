@@ -126,6 +126,24 @@
         "internalType": "bytes32",
         "name": "redeemsInstructionsHash",
         "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[][]",
+        "name": "tokenIds",
+        "type": "uint256[][]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[][]",
+        "name": "amounts",
+        "type": "uint256[][]"
       }
     ],
     "name": "RedeemProcessed",
@@ -477,7 +495,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "sender",
         "type": "address"
       },
       {

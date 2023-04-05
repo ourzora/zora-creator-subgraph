@@ -274,7 +274,7 @@ templates:
       eventHandlers:
         - event: RedeemsCleared(indexed address,indexed bytes32[])
           handler: handleRedeemCleared
-        - event: RedeemProcessed(indexed address,indexed bytes32)
+        - event: RedeemProcessed(indexed address,indexed bytes32,address,uint256[][],uint256[][])
           handler: handleRedeemProcessed
         - event: RedeemSet(indexed address,indexed bytes32,((address,uint256,uint256,uint8),(uint8,uint256,uint256,uint256,address,address,bytes4)[],uint64,uint64,uint256,address))
           handler: handleRedeemSet

@@ -1,5 +1,6 @@
 import { RedeemMinterDeployed } from "../../../generated/templates/ZoraCreatorRedeemMinterFactory/ZoraCreatorRedeemMinterFactory";
 import { ZoraCreatorRedeemConfig } from "../../../generated/schema";
+import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleRedeemMinterDeployed(event: RedeemMinterDeployed): void {
   let config = new ZoraCreatorRedeemConfig(
@@ -7,6 +8,7 @@ export function handleRedeemMinterDeployed(event: RedeemMinterDeployed): void {
   );
   config.creatorAddress = event.params.creatorContract;
   config.minterAddress = event.params.minterContract;
+  config.txn = makeTransaction(event)
 
   config.save();
 }

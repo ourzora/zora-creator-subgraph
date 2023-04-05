@@ -67,6 +67,7 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   const redeemFactory = creator.try_redeemMinterFactory();
   if (!redeemFactory.reverted) {
     ZoraCreatorRedeemMinterFactory.create(redeemFactory.value);
+    factory.redeemMinterStrategyAddress = redeemFactory.value;
   }
 
   factory.txn = makeTransaction(event);

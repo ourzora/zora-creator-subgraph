@@ -137,6 +137,7 @@ type ZoraCreate1155Factory @entity {
   txn: TransactionInfo!
 
   fixedPriceSaleStrategyAddress: Bytes!
+  redeemMinterStrategyAddress: Bytes!
   implementation: Bytes!
   merkleSaleStrategyAddress: Bytes!
   version: String!
@@ -292,8 +293,12 @@ type RedeemMinterProcessed @entity {
   id: ID!
   txn: TransactionInfo!
   redeemMinter: SalesConfigRedeemMinterStrategy!
+
   target: Bytes!
   redeemsInstructionsHash: Bytes!
+  sender: Bytes!
+  amounts: [String!]!
+  tokenIds: [String!]!
 }
 
 type SalesConfigRedeemMinterStrategy @entity {
