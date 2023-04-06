@@ -265,7 +265,10 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - ZoraCreatorRedeemConfig
+        - RedeemInstructions
+        - RedeemMinterProcessed
+        - RedeemMintToken
+        - SalesConfigRedeemMinterStrategy
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterStrategy.ts
       abis:
