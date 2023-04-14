@@ -14,9 +14,8 @@ import {
   MetadataInfo as MetadataInfoTemplate,
   ZoraCreatorFixedPriceSaleStrategy,
   ZoraCreatorMerkleMinterStrategy,
-  ZoraCreatorRedeemMinterStrategy,
+  ZoraCreatorRedeemMinterFactory as ZoraCreatorRedeemMinterFactoryTemplate
 } from "../../generated/templates";
-import {ZoraCreatorRedeemMinterFactory} from "../../generated/ZoraCreatorRedeemMinterFactory/ZoraCreatorRedeemMinterFactory"
 import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import { BigInt } from "@graphprotocol/graph-ts";
@@ -67,8 +66,8 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   ZoraCreatorMerkleMinterStrategy.create(creator.merkleMinter());
   const redeemFactory = creator.try_redeemMinterFactory();
   if (!redeemFactory.reverted) {
-    ZoraCreatorRedeemMinterFactory.bind(redeemFactory.value);
     factory.redeemMinterStrategyAddress = redeemFactory.value;
+    ZoraCreatorRedeemMinterFactoryTemplate.create(redeemFactory.value);
   }
 
   factory.txn = makeTransaction(event);

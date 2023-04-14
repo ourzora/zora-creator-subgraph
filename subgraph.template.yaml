@@ -45,6 +45,8 @@ dataSources:
           file: ./abis/ZoraCreator1155FactoryImpl.json
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
+        - name: ZoraCreatorRedeemMinterFactory
+          file: ./abis/ZoraCreatorRedeemMinterFactory.json
       eventHandlers:
         - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated
@@ -76,26 +78,26 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
       file: ./src/ERC721NewMappings/ERC721FactoryMappings.ts
-  - kind: ethereum/contract
-    name: ZoraCreatorRedeemMinterFactory
-    network: {{network}}
-    source:
-      address: "{{redeemFactoryAddress}}"
-      abi: ZoraCreatorRedeemMinterFactory
-      startBlock: {{redeemStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      entities:
-        - ZoraCreatorRedeemConfig
-      language: wasm/assemblyscript
-      file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterFactory.ts
-      abis:
-        - name: ZoraCreatorRedeemMinterFactory
-          file: ./abis/ZoraCreatorRedeemMinterFactory.json
-      eventHandlers:
-        - event: RedeemMinterDeployed(indexed address,indexed address)
-          handler: handleRedeemMinterDeployed
+  # - kind: ethereum/contract
+  #   name: ZoraCreatorRedeemMinterFactory
+  #   network: {{network}}
+  #   source:
+  #     address: "{{redeemFactoryAddress}}"
+  #     abi: ZoraCreatorRedeemMinterFactory
+  #     startBlock: {{redeemStartBlock}}
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.7
+  #     entities:
+  #       - ZoraCreatorRedeemConfig
+  #     language: wasm/assemblyscript
+  #     file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterFactory.ts
+  #     abis:
+  #       - name: ZoraCreatorRedeemMinterFactory
+  #         file: ./abis/ZoraCreatorRedeemMinterFactory.json
+  #     eventHandlers:
+  #       - event: RedeemMinterDeployed(indexed address,indexed address)
+  #         handler: handleRedeemMinterDeployed
 templates:
   - name: MetadataInfo
     kind: file/ipfs
@@ -258,24 +260,24 @@ templates:
       eventHandlers:
         - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,uint64,uint96,address))
           handler: handleFixedPriceStrategySaleSet
-  # - name: ZoraCreatorRedeemMinterFactory
-  #   kind: ethereum/contract
-  #   network: {{network}}
-  #   source:
-  #     abi: ZoraCreatorRedeemMinterFactory
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.7
-  #     entities:
-  #       - ZoraCreatorRedeemConfig
-  #     language: wasm/assemblyscript
-  #     file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterFactory.ts
-  #     abis:
-  #       - name: ZoraCreatorRedeemMinterFactory
-  #         file: ./abis/ZoraCreatorRedeemMinterFactory.json
-  #     eventHandlers:
-  #       - event: RedeemMinterDeployed(indexed address,indexed address)
-  #         handler: handleRedeemMinterDeployed
+  - name: ZoraCreatorRedeemMinterFactory
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ZoraCreatorRedeemMinterFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - ZoraCreatorRedeemConfig
+      language: wasm/assemblyscript
+      file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterFactory.ts
+      abis:
+        - name: ZoraCreatorRedeemMinterFactory
+          file: ./abis/ZoraCreatorRedeemMinterFactory.json
+      eventHandlers:
+        - event: RedeemMinterDeployed(indexed address,indexed address)
+          handler: handleRedeemMinterDeployed
   - name: ZoraCreatorRedeemMinterStrategy
     kind: ethereum/contract
     network: {{network}}
