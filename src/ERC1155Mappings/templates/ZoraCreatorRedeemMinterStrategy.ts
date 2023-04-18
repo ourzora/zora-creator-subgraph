@@ -3,18 +3,22 @@ import {
   RedeemMinterProcessed,
   RedeemMintToken,
   SalesConfigRedeemMinterStrategy,
+  SalesStrategyConfig,
 } from "../../../generated/schema";
 import {
   RedeemProcessed,
   RedeemsCleared,
   RedeemSet,
 } from "../../../generated/templates/ZoraCreatorRedeemMinterStrategy/ZoraCreatorRedeemMinterStrategy";
+import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleRedeemCleared(event: RedeemsCleared): void {
   for (let i = 0; i < event.params.redeemInstructionsHashes.length; i++) {
     let redeem = SalesConfigRedeemMinterStrategy.load(
-      `${event.params.redeemInstructionsHashes[i]}`
+      `${event.params.target.toHex()}-${event.params.redeemInstructionsHashes[
+        i
+      ].toString()}`
     );
 
     if (!redeem) {
@@ -61,16 +65,16 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
 }
 
 export function handleRedeemSet(event: RedeemSet): void {
-  let strategy = new SalesConfigRedeemMinterStrategy(
-    `${event.params.redeemsInstructionsHash}`
-  );
+  const redeemMintStrategyId = `${event.address.toHex()}-${event.params.redeemsInstructionsHash.toHex()}`;
+
+  let strategy = new SalesConfigRedeemMinterStrategy(redeemMintStrategyId);
   strategy.txn = makeTransaction(event);
   strategy.configAddress = event.address;
   strategy.target = event.params.target;
   strategy.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
 
   let token = new RedeemMintToken(
-    `${event.address.toHexString()}-${event.params.data.mintToken.tokenId}`
+    `${event.address.toHex()}-${event.params.data.mintToken.tokenId.toString()}`
   );
   token.tokenContract = event.params.data.mintToken.tokenContract;
   token.tokenId = event.params.data.mintToken.tokenId;
@@ -82,7 +86,13 @@ export function handleRedeemSet(event: RedeemSet): void {
 
   for (let i = 0; i < event.params.data.instructions.length; i++) {
     let j = new RedeemInstructions(
-      `${event.params.data.instructions[i].tokenContract}-${event.params.data.instructions[i].tokenIdStart}-${event.params.data.instructions[i].tokenIdEnd}`
+      `${event.params.data.instructions[
+        i
+      ].tokenContract.toHex()}-${event.params.data.instructions[
+        i
+      ].tokenIdStart.toString()}-${event.params.data.instructions[
+        i
+      ].tokenIdEnd.toString()}`
     );
     j.tokenType = event.params.data.instructions[i].tokenType;
     j.amount = event.params.data.instructions[i].amount;
@@ -101,4 +111,15 @@ export function handleRedeemSet(event: RedeemSet): void {
   strategy.ethRecipient = event.params.data.ethRecipient;
   strategy.isActive = true;
   strategy.save();
+
+  // add join
+  const saleJoin = new SalesStrategyConfig(redeemMintStrategyId);
+  saleJoin.tokenAndContract = getTokenId(
+    event.params.data.mintToken.tokenContract,
+    event.params.data.mintToken.tokenId
+  );
+  saleJoin.redeemMinter = redeemMintStrategyId;
+  saleJoin.type = "redeemMinter";
+  saleJoin.txn = strategy.txn;
+  saleJoin.save();
 }
