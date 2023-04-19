@@ -7,6 +7,7 @@ import { SaleSet } from "../../../generated/templates/ZoraCreatorMerkleMinterStr
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
+import { SALE_CONFIG_PRESALE } from "../../constants/salesConfigTypes";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
@@ -29,7 +30,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
     saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }
   saleJoin.presale = id;
-  saleJoin.type = "presale";
+  saleJoin.type = SALE_CONFIG_PRESALE;
   saleJoin.txn = txn;
   saleJoin.save();
 }

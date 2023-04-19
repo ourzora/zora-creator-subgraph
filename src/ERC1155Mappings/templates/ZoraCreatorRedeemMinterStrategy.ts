@@ -12,6 +12,7 @@ import {
 } from "../../../generated/templates/ZoraCreatorRedeemMinterStrategy/ZoraCreatorRedeemMinterStrategy";
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
+import { SALE_CONFIG_REDEEM } from "../../constants/salesConfigTypes";
 
 export function handleRedeemCleared(event: RedeemsCleared): void {
   for (let i = 0; i < event.params.redeemInstructionsHashes.length; i++) {
@@ -119,7 +120,7 @@ export function handleRedeemSet(event: RedeemSet): void {
     event.params.data.mintToken.tokenId
   );
   saleJoin.redeemMinter = redeemMintStrategyId;
-  saleJoin.type = "redeemMinter";
+  saleJoin.type = SALE_CONFIG_REDEEM;
   saleJoin.txn = strategy.txn;
   saleJoin.save();
 }
