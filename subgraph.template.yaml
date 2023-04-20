@@ -220,6 +220,8 @@ templates:
           handler: handleContractMetadataUpdated
         - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
           handler: handleSetupNewToken
+        - event: OwnershipTransferred(address,address)
+          handler: handleOwnershipTransferred
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: {{network}}
@@ -312,8 +314,8 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-# features:
-#   - grafting
-# graft:
-#   base: QmPbpNj3qZEAhfSTshC7ZV6Qq9ytsGgbGcE94zd9pTzyfA # subgraph ID of base subgraph
-#   block: 8666854 # block number
+features:
+  - grafting
+graft:
+  base: Qme9HYkw21Xv8noVMvFeVxAr6wUBpR6XQLeNUuVgqqfsko # subgraph ID of base subgraph
+  block: 17078101 # block number
