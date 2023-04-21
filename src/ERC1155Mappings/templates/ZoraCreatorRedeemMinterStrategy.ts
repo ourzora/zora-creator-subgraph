@@ -19,7 +19,7 @@ export function handleRedeemCleared(event: RedeemsCleared): void {
     let redeem = SalesConfigRedeemMinterStrategy.load(
       `${event.params.target.toHex()}-${event.params.redeemInstructionsHashes[
         i
-      ].toString()}`
+      ].toString()}-${event.params.target.toHex()}`
     );
 
     if (!redeem) {
@@ -66,7 +66,7 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
 }
 
 export function handleRedeemSet(event: RedeemSet): void {
-  const redeemMintStrategyId = `${event.address.toHex()}-${event.params.redeemsInstructionsHash.toHex()}`;
+  const redeemMintStrategyId = `${event.address.toHex()}-${event.params.redeemsInstructionsHash.toHex()}-${event.params.target.toHex()}`;
 
   let strategy = new SalesConfigRedeemMinterStrategy(redeemMintStrategyId);
   strategy.txn = makeTransaction(event);
