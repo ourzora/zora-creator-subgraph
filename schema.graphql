@@ -277,7 +277,7 @@ type RedeemMintToken @entity(immutable: true) {
   tokenType: Int!
 }
 
-type RedeemInstructions @entity(immutable: true) {
+type RedeemInstructions @entity {
   id: ID!
   redeemMinter: SalesConfigRedeemMinterStrategy!
   tokenType: Int!
@@ -289,7 +289,7 @@ type RedeemInstructions @entity(immutable: true) {
   burnFunction: Bytes!
 }
 
-type RedeemMinterProcessed @entity {
+type RedeemMinterProcessed @entity(immutable: true) {
   id: ID!
   txn: TransactionInfo!
   redeemMinter: SalesConfigRedeemMinterStrategy!
@@ -342,6 +342,8 @@ type SalesStrategyConfig @entity {
 
   presale: SalesConfigMerkleMinterStrategy
   fixedPrice: SalesConfigFixedPriceSaleStrategy
+  redeemMinter: SalesConfigRedeemMinterStrategy
+
   type: String!
 }
 

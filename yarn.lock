@@ -816,10 +816,10 @@
     typechain "8.0.0"
     typescript "4.6.3"
 
-"@zoralabs/zora-1155-contracts@^1.2.0-pre4":
-  version "1.2.0-pre4"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.2.0-pre4.tgz#6c52ceb2bc46a903ebbba6ca4d94de9cadf150a5"
-  integrity sha512-1QtQbJ9YCe1we0TCFL5r4aCGmNbgBMvJ5/atvDkvGQShQnRXjzqngqoQIH27SIlXtea08UQjiCBK7jjnS/a3/w==
+"@zoralabs/zora-1155-contracts@^1.2.2-deploy2":
+  version "1.2.2-deploy2"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.2.2-deploy2.tgz#8b074ac1b1acc43461852157c11b9068983a2c10"
+  integrity sha512-frJGEOl4ULadhxxAMzYPvEEg3LXT4oxu0MzFGbOL2M4Ae6MRfvhZfY23Gx1MHrEn8DhdZ/aVZ3bLvbNCq9v99Q==
   dependencies:
     "@openzeppelin/contracts" "4.8.2"
     "@openzeppelin/contracts-upgradeable" "4.8.2"
@@ -1842,9 +1842,9 @@ drbg.js@^1.0.1:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
 
-"ds-test@git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b":
+"ds-test@https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b":
   version "1.0.0"
-  resolved "git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b"
+  resolved "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b"
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -2177,9 +2177,9 @@ forever-agent@~0.6.1:
   resolved "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-"forge-std@git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
+"forge-std@https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
   version "1.1.1"
-  resolved "git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
+  resolved "https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
 
 form-data-encoder@^2.1.2:
   version "2.1.4"

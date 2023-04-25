@@ -1,2 +1,3 @@
 export const SALE_CONFIG_PRESALE = 'PRESALE'
 export const SALE_CONFIG_FIXED_PRICE = 'FIXED_PRICE'
+export const SALE_CONFIG_REDEEM = 'REDEEM'
