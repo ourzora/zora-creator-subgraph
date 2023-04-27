@@ -282,6 +282,31 @@ templates:
       eventHandlers:
         - event: RedeemMinterDeployed(indexed address,indexed address)
           handler: handleRedeemMinterDeployed
+  - name: ZoraCreatorRedeemMinterStrategy
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ZoraCreatorRedeemMinterStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - RedeemInstructions
+        - RedeemMinterProcessed
+        - RedeemMintToken
+        - SalesConfigRedeemMinterStrategy
+      language: wasm/assemblyscript
+      file: ./src/ERC1155Mappings/templates/ZoraCreatorRedeemMinterStrategy.ts
+      abis:
+        - name: ZoraCreatorRedeemMinterStrategy
+          file: ./abis/ZoraCreatorRedeemMinterStrategy.json
+      eventHandlers:
+        - event: RedeemsCleared(indexed address,indexed bytes32[])
+          handler: handleRedeemCleared
+        - event: RedeemProcessed(indexed address,indexed bytes32,address,uint256[][],uint256[][])
+          handler: handleRedeemProcessed
+        - event: RedeemSet(indexed address,indexed bytes32,((address,uint256,uint256,uint8),(uint8,uint256,uint256,uint256,address,address,bytes4)[],uint64,uint64,uint256,address))
+          handler: handleRedeemSet
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: {{network}}
@@ -340,8 +365,8 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-features:
-  - grafting
-graft:
-  base: QmZzUf9ZC2h2eyVHPa47rZ7E35JKBPXsdemqwtkcyoVdZz # subgraph ID of base subgraph
-  block: 17126306 # block number
+# features:
+#   - grafting
+# graft:
+#   base: QmbWd2cruAuwe9RgdLrmrKwqVZvDET185Cw2s6mLoGoB6X # subgraph ID of base subgraph
+#   block: 8666854 # block number

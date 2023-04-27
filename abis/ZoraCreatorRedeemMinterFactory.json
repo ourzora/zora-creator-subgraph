@@ -53,6 +53,32 @@
   },
   {
     "inputs": [],
+    "name": "contractName",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "contractURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "contractVersion",
     "outputs": [
       {
@@ -66,33 +92,9 @@
   },
   {
     "inputs": [],
-    "name": "createMinter",
+    "name": "createMinterIfNoneExists",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "deployedMinterContractForCreatorContract",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "deployedAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "version",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
