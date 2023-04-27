@@ -368,5 +368,5 @@ templates:
 # features:
 #   - grafting
 # graft:
-#   base: Qmb8JDHuiSqbrRoBkdHcJb1BtLMubFHMErxrYN7ejApTXr # subgraph ID of base subgraph
-#   block: 17126302 # block number
+#   base: QmbWd2cruAuwe9RgdLrmrKwqVZvDET185Cw2s6mLoGoB6X # subgraph ID of base subgraph
+#   block: 8666854 # block number
