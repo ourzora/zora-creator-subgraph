@@ -52,6 +52,30 @@ dataSources:
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
   - kind: ethereum/contract
+    name: ZoraNFTCreatorFactory1155V2
+    network: {{network}}
+    source:
+      address: "{{1155AddressV2}}"
+      abi: ZoraCreator1155FactoryImpl
+      startBlock: {{1155StartBlockV2}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ERC1155Drop
+      abis:
+        - name: ZoraCreator1155FactoryImpl
+          file: ./abis/ZoraCreator1155FactoryImpl.json
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
+      eventHandlers:
+        - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
+          handler: handleNewContractCreated
+        - event: Upgraded(indexed address)
+          handler: handle1155FactoryUpgraded
+      file: ./src/ERC1155Mappings/factoryMappings.ts
+  - kind: ethereum/contract
     name: NewZoraNFTCreatorV1
     network: {{network}}
     source:
@@ -220,6 +244,8 @@ templates:
           handler: handleContractMetadataUpdated
         - event: SetupNewToken(indexed uint256,indexed address,string,uint256)
           handler: handleSetupNewToken
+        - event: OwnershipTransferred(address,address)
+          handler: handleOwnershipTransferred
   - name: ZoraCreatorFixedPriceSaleStrategy
     kind: ethereum/contract
     network: {{network}}
@@ -329,6 +355,8 @@ templates:
           handler: handleNFTTransfer
         # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
         #   handler: handleSale
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
         - event: RoleGranted(indexed bytes32,indexed address,indexed address)
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
@@ -337,8 +365,8 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-# features:
-#   - grafting
-# graft:
-#   base: QmPbpNj3qZEAhfSTshC7ZV6Qq9ytsGgbGcE94zd9pTzyfA # subgraph ID of base subgraph
-#   block: 8666854 # block number
+features:
+  - grafting
+graft:
+  base: QmZzUf9ZC2h2eyVHPa47rZ7E35JKBPXsdemqwtkcyoVdZz # subgraph ID of base subgraph
+  block: 17126306 # block number

@@ -62,6 +62,10 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   const factory = new ZoraCreate1155Factory(event.address.toHex());
   const creator = ZoraCreator1155FactoryImpl.bind(event.address);
 
+  if (creator.try_fixedPriceMinter().reverted) {
+    return;
+  }
+
   ZoraCreatorFixedPriceSaleStrategy.create(creator.fixedPriceMinter());
   ZoraCreatorMerkleMinterStrategy.create(creator.merkleMinter());
   const redeemFactory = creator.try_redeemMinterFactory();
