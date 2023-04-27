@@ -62,22 +62,27 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   const factory = new ZoraCreate1155Factory(event.address.toHex());
   const creator = ZoraCreator1155FactoryImpl.bind(event.address);
 
+  // Handle bad upgrade, do not remove.
   if (creator.try_fixedPriceMinter().reverted) {
     return;
   }
 
+  // Create child factory listeners
   ZoraCreatorFixedPriceSaleStrategy.create(creator.fixedPriceMinter());
   ZoraCreatorMerkleMinterStrategy.create(creator.merkleMinter());
+
+  // Check if this version supports the redeem factory
   const redeemFactory = creator.try_redeemMinterFactory();
   if (!redeemFactory.reverted) {
     ZoraCreatorRedeemMinterFactory.create(redeemFactory.value);
     factory.redeemMinterStrategyAddress = redeemFactory.value;
   }
 
+  // Save required factories.
   factory.txn = makeTransaction(event);
-  factory.fixedPriceSaleStrategyAddress = creator.defaultMinters()[0];
+  factory.fixedPriceSaleStrategyAddress = creator.fixedPriceMinter();
+  factory.merkleSaleStrategyAddress = creator.merkleMinter();
   factory.implementation = event.params.implementation;
-  factory.merkleSaleStrategyAddress = creator.defaultMinters()[1];
   factory.version = creator.contractVersion();
 
   upgrade.save();

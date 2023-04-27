@@ -297,8 +297,8 @@ type RedeemMinterProcessed @entity {
   target: Bytes!
   redeemsInstructionsHash: Bytes!
   sender: Bytes!
-  amounts: [String!]!
-  tokenIds: [String!]!
+  amounts: [[BigInt!]!]!
+  tokenIds: [[BigInt!]!]!
 }
 
 type SalesConfigRedeemMinterStrategy @entity {

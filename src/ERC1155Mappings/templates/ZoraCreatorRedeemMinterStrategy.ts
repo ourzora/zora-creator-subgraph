@@ -13,16 +13,14 @@ import { makeTransaction } from "../../common/makeTransaction";
 
 export function handleRedeemCleared(event: RedeemsCleared): void {
   for (let i = 0; i < event.params.redeemInstructionsHashes.length; i++) {
-    let redeem = SalesConfigRedeemMinterStrategy.load(
+    const redeem = SalesConfigRedeemMinterStrategy.load(
       `${event.params.redeemInstructionsHashes[i]}`
     );
 
-    if (!redeem) {
-      return;
+    if (redeem) {
+      redeem.isActive = false;
+      redeem.save();
     }
-
-    redeem.isActive = false;
-    redeem.save();
   }
 }
 
@@ -36,42 +34,22 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
   processed.target = event.params.target;
   processed.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
   processed.sender = event.params.sender;
-
-  let amounts: string[] = [];
-  for (let i = 0; i < event.params.amounts.length; i++) {
-    let a: string[] = [];
-    for (let j = 0; j < event.params.amounts[i].length; j++) {
-      a.push(`${event.params.amounts[i][j]}`);
-    }
-    amounts.push(a.join(", "));
-  }
-  processed.amounts = amounts;
-
-  let tokenIds: string[] = [];
-  for (let i = 0; i < event.params.tokenIds.length; i++) {
-    let t: string[] = [];
-    for (let j = 0; j < event.params.tokenIds[i].length; j++) {
-      t.push(`${event.params.tokenIds[i][j]}`);
-    }
-    tokenIds.push(t.join(", "));
-  }
-  processed.tokenIds = tokenIds;
+  processed.amounts = event.params.amounts;
+  processed.tokenIds = event.params.tokenIds;
 
   processed.save();
 }
 
 export function handleRedeemSet(event: RedeemSet): void {
-  let strategy = new SalesConfigRedeemMinterStrategy(
-    `${event.params.redeemsInstructionsHash}`
-  );
+  const redemptionHash = event.params.redeemsInstructionsHash.toHex();
+
+  const strategy = new SalesConfigRedeemMinterStrategy(redemptionHash);
   strategy.txn = makeTransaction(event);
   strategy.configAddress = event.address;
   strategy.target = event.params.target;
   strategy.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
 
-  let token = new RedeemMintToken(
-    `${event.address.toHexString()}-${event.params.data.mintToken.tokenId}`
-  );
+  const token = new RedeemMintToken(redemptionHash);
   token.tokenContract = event.params.data.mintToken.tokenContract;
   token.tokenId = event.params.data.mintToken.tokenId;
   token.amount = event.params.data.mintToken.amount;
@@ -81,18 +59,22 @@ export function handleRedeemSet(event: RedeemSet): void {
   strategy.redeemMintToken = token.id;
 
   for (let i = 0; i < event.params.data.instructions.length; i++) {
-    let j = new RedeemInstructions(
-      `${event.params.data.instructions[i].tokenContract}-${event.params.data.instructions[i].tokenIdStart}-${event.params.data.instructions[i].tokenIdEnd}`
-    );
-    j.tokenType = event.params.data.instructions[i].tokenType;
-    j.amount = event.params.data.instructions[i].amount;
-    j.tokenIdStart = event.params.data.instructions[i].tokenIdStart;
-    j.tokenIdEnd = event.params.data.instructions[i].tokenIdEnd;
-    j.transferRecipient = event.params.data.instructions[i].transferRecipient;
-    j.tokenContract = event.params.data.instructions[i].tokenContract;
-    j.burnFunction = event.params.data.instructions[i].burnFunction;
-    j.redeemMinter = strategy.id;
-    j.save();
+    // This can fail for duplicate Redeem Instructions – while it doesn't make sense that the user can input this
+    // the safest way to index these is by array index.
+    const redeemInstruction = new RedeemInstructions(`${redemptionHash}-${i}`);
+    redeemInstruction.tokenType = event.params.data.instructions[i].tokenType;
+    redeemInstruction.amount = event.params.data.instructions[i].amount;
+    redeemInstruction.tokenIdStart =
+      event.params.data.instructions[i].tokenIdStart;
+    redeemInstruction.tokenIdEnd = event.params.data.instructions[i].tokenIdEnd;
+    redeemInstruction.transferRecipient =
+      event.params.data.instructions[i].transferRecipient;
+    redeemInstruction.tokenContract =
+      event.params.data.instructions[i].tokenContract;
+    redeemInstruction.burnFunction =
+      event.params.data.instructions[i].burnFunction;
+    redeemInstruction.redeemMinter = strategy.id;
+    redeemInstruction.save();
   }
 
   strategy.saleStart = event.params.data.saleStart;
