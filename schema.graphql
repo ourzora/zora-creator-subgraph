@@ -342,6 +342,7 @@ type SalesStrategyConfig @entity {
 
   presale: SalesConfigMerkleMinterStrategy
   fixedPrice: SalesConfigFixedPriceSaleStrategy
+  redeemMinter: SalesConfigRedeemMinterStrategy
   type: String!
 }
 
