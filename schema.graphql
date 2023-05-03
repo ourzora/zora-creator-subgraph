@@ -297,8 +297,16 @@ type RedeemMinterProcessed @entity {
   target: Bytes!
   redeemsInstructionsHash: Bytes!
   sender: Bytes!
-  amounts: [[BigInt!]!]!
-  tokenIds: [[BigInt!]!]!
+  tokenPairs: [RedeemProcessedTokenPair!]! @derivedFrom(field: "processed")
+}
+
+type RedeemProcessedTokenPair @entity(immutable: true) {
+  id: ID!
+  processed: RedeemMinterProcessed!
+
+  amounts: [BigInt!]!
+  tokenIds: [BigInt!]!
+  index: Int!
 }
 
 type SalesConfigRedeemMinterStrategy @entity {
