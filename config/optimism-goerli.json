@@ -1,0 +1,9 @@
+{
+  "network": "optimism-goerli",
+  "address": "0x3C1ebcF36Ca9DD9371c9aA99c274e4988906c6E3",
+  "1155Address": "0xb0C56317E9cEBc6E0f7A59458a83D0A9ccC3e955",
+  "startBlock": "9120230",
+  "1155StartBlock": "9127678",
+  "1155StartBlockV2": "9920126366",
+  "1155AddressV2": "0xb000000000000000000A59458a83D0A9ccC3e955"
+}

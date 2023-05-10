@@ -15,7 +15,7 @@
     "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
-    "@goldskycom/cli": "1.3.0",
+    "@goldskycom/cli": "^1.6.0-beta1-pipeline-create",
     "@graphprotocol/graph-cli": "^0.48.0",
     "@graphprotocol/graph-ts": "^0.29.3",
     "@zoralabs/nft-drop-contracts": "^1.11.1",
