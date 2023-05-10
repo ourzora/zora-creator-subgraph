@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@goldskycom/cli": "1.3.0",
-    "@graphprotocol/graph-cli": "^0.41.1",
+    "@graphprotocol/graph-cli": "^0.48.0",
     "@graphprotocol/graph-ts": "^0.29.3",
     "@zoralabs/nft-drop-contracts": "^1.11.1",
     "@zoralabs/zora-1155-contracts": "^1.2.0-pre4",

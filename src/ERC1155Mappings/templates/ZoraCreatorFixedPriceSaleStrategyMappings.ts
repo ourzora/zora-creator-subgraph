@@ -7,6 +7,7 @@ import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleS
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
+import { SALE_CONFIG_FIXED_PRICE } from "../../constants/salesConfigTypes";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
@@ -31,7 +32,7 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
     saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }
   saleJoin.fixedPrice = id;
-  saleJoin.type = "fixedPrice";
+  saleJoin.type = SALE_CONFIG_FIXED_PRICE;
   saleJoin.txn = txn;
   saleJoin.save();
 }
