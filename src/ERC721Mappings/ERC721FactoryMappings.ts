@@ -106,7 +106,6 @@ export function handleCreatedDrop(event: CreatedDrop): void {
     createdContract.mintFeePerQuantity = BigInt.zero();
   }
   createdContract.mintFeePerQuantity = feePerAmount.value.getFee();
-  createdContract.mintFeePerTxn = BigInt.zero();
 
   if (!contractURIResponse.reverted) {
     const ipfsHostPath = getIPFSHostFromURI(contractURIResponse.value);

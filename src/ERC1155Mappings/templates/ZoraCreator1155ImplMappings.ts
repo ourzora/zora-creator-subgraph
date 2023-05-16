@@ -38,11 +38,10 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  contract.mintFeePerTxn = impl.mintFee();
+  contract.mintFeePerQuantity = impl.mintFee();
   contract.contractVersion = impl.contractVersion();
   contract.contractStandard = TOKEN_STANDARD_ERC1155;
 
-  contract.mintFeePerQuantity = BigInt.zero();
   contract.save();
 }
 

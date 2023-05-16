@@ -51,7 +51,6 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.contractVersion = impl.contractVersion();
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
 
-  createdContract.mintFeePerTxn = BigInt.zero();
   createdContract.save();
 
   ZoraCreator1155ImplTemplate.create(event.params.newContract);

@@ -3,31 +3,6 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: ZoraNFTCreatorV1
-    network: {{network}}
-    source:
-      address: "{{address}}"
-      abi: ZoraNFTCreatorV1
-      startBlock: {{startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - ERC721Drop
-        - SalesConfig
-      abis:
-        - name: ZoraNFTCreatorV1
-          file: ./abis/ZoraNFTCreatorV1.json
-        - name: ERC721Drop
-          file: ./abis/ERC721Drop.json
-      eventHandlers:
-        - event: CreatedDrop(indexed address,indexed address,uint256)
-          handler: handleCreatedDrop
-        - event: Upgraded(indexed address)
-          handler: handleFactoryUpgraded
-      file: ./src/ERC721LegacyMappings/ERC721FactoryMappings.ts
-  - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155
     network: {{network}}
     source:
@@ -99,7 +74,7 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-      file: ./src/ERC721NewMappings/ERC721FactoryMappings.ts
+      file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
 templates:
   - name: MetadataInfo
     kind: file/ipfs
@@ -113,7 +88,6 @@ templates:
       abis:
         - name: ZoraCreator1155Impl
           file: ./abis/ZoraCreator1155Impl.json
-  # not legacy mapping – shared
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: {{network}}
@@ -140,8 +114,7 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/ERC721NewMappings/templates/EditionMetadataRendererMappings.ts
-  # not legacy mapping – shared
+      file: ./src/ERC721Mappings/templates/EditionMetadataRendererMappings.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: {{network}}
@@ -164,42 +137,7 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
-  - name: ERC721Drop
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: ERC721Drop
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      entities:
-        - Sale
-        - Transfer
-        - SalesConfig
-        - ERC721Drop
-      language: wasm/assemblyscript
-      file: ./src/ERC721LegacyMappings/templates/ERC721DropMappings.ts
-      abis:
-        - name: ERC721Drop
-          file: ./abis/ERC721Drop.json
-      eventHandlers:
-        - event: SalesConfigChanged(indexed address)
-          handler: handleSalesConfigChanged
-        - event: OpenMintFinalized(indexed address,uint256)
-          handler: handleOpenMintFinalized
-        - event: FundsRecipientChanged(indexed address,indexed address)
-          handler: handleFundsRecipientChanged
-        # - event: Transfer(indexed address,indexed address,indexed uint256)
-        #   handler: handleNFTTransfer
-        # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
-        #   handler: handleSale
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+      file: ./src/ERC721Mappings/templates/DropMetadataRendererMappings.ts
   - name: ZoraCreator1155Impl
     kind: ethereum/contract
     network: {{network}}
@@ -340,7 +278,7 @@ templates:
         - SalesConfig
         - ERC721Drop
       language: wasm/assemblyscript
-      file: ./src/ERC721NewMappings/templates/ERC721DropMappings.ts
+      file: ./src/ERC721Mappings/templates/ERC721DropMappings.ts
       abis:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
@@ -365,8 +303,8 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-features:
-  - grafting
-graft:
-  base: QmQrEQPPQvQC1Sjnaf8jQqXWYdQ5PA3CeE17U5QLpr4YPb # subgraph ID of base subgraph
-  block: 17175770 # block number
+# features:
+#   - grafting
+# graft:
+#   base: QmQrEQPPQvQC1Sjnaf8jQqXWYdQ5PA3CeE17U5QLpr4YPb # subgraph ID of base subgraph
+#   block: 17175770 # block number
