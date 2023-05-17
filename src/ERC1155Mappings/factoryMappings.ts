@@ -42,7 +42,13 @@ export function handleNewContractCreated(event: SetupNewContract): void {
     createdContract.metadata = ipfsHostPath;
     MetadataInfoTemplate.create(ipfsHostPath);
   }
-  createdContract.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  createdContract.txn = txn;
+  createdContract.block = event.block.number;
+  createdContract.address = event.address;
+  createdContract.timestamp = event.block.timestamp;
+
   createdContract.createdAtBlock = event.block.number;
 
   // query for more information about contract
@@ -77,8 +83,19 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
     factory.redeemMinterStrategyAddress = redeemFactory.value;
   }
 
+  const txn = makeTransaction(event);
+  upgrade.txn = txn;
+  upgrade.block = event.block.number;
+  upgrade.timestamp = event.block.timestamp;
+  upgrade.impl = event.params.implementation;
+  upgrade.address = event.address;
+  upgrade.type = "1155Factory";
+
   // Save required factories.
-  factory.txn = makeTransaction(event);
+  factory.txn = txn;
+  factory.block = event.block.number;
+  factory.timestamp = event.block.timestamp;
+
   factory.fixedPriceSaleStrategyAddress = creator.fixedPriceMinter();
   factory.merkleSaleStrategyAddress = creator.merkleMinter();
   factory.implementation = event.params.implementation;

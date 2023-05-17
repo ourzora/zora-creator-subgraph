@@ -35,7 +35,7 @@ import {
   KNOWN_TYPE_DEFAULT_ADMIN,
   KNOWN_TYPE_MINTER_ROLE,
   KNOWN_TYPE_SALES_MANAGER_ROLE,
-} from "../../ERC721LegacyMappings/utils/roleUtils";
+} from "../../constants/erc721RoleUtils";
 import { getDefaultTokenId, getTokenId } from "../../common/getTokenId";
 import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
@@ -65,13 +65,23 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     strategyPresale.presaleStart = salesConfigObject.getPresaleStart();
     strategyPresale.presaleEnd = salesConfigObject.getPresaleEnd();
     strategyPresale.merkleRoot = salesConfigObject.getPresaleMerkleRoot();
-    strategyPresale.txn = makeTransaction(event);
+
+    const txn = makeTransaction(event);
+    strategyPresale.address = event.address;
+    strategyPresale.block = event.block.number;
+    strategyPresale.timestamp = event.block.timestamp;
+    strategyPresale.txn = txn;
     strategyPresale.save();
 
     // make a join table
     const presaleJoin = new SalesStrategyConfig(presaleConfigId);
     presaleJoin.contract = event.address.toHexString();
-    presaleJoin.txn = makeTransaction(event);
+
+    presaleJoin.txn = txn;
+    presaleJoin.address = event.address;
+    presaleJoin.block = event.block.number;
+    presaleJoin.timestamp = event.block.timestamp;
+
     presaleJoin.presale = presaleConfigId;
     presaleJoin.type = SALE_CONFIG_PRESALE;
     presaleJoin.save();
@@ -88,6 +98,13 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     const fixedPriceSaleStrategy = new SalesConfigFixedPriceSaleStrategy(
       publicSaleConfigId
     );
+
+    const txn = makeTransaction(event);
+    fixedPriceSaleStrategy.txn = txn;
+    fixedPriceSaleStrategy.block = event.block.number;
+    fixedPriceSaleStrategy.timestamp = event.block.timestamp;
+    fixedPriceSaleStrategy.address = event.address;
+
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
     fixedPriceSaleStrategy.configAddress = event.address;
     fixedPriceSaleStrategy.contract = event.address.toHexString();
@@ -95,13 +112,17 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
     fixedPriceSaleStrategy.saleEnd = salesConfigObject.getPublicSaleEnd();
     fixedPriceSaleStrategy.pricePerToken = salesConfigObject.getPublicSalePrice();
-    fixedPriceSaleStrategy.txn = makeTransaction(event);
     fixedPriceSaleStrategy.save();
 
     // make a join table
     const fixedPriceSaleJoin = new SalesStrategyConfig(publicSaleConfigId);
     fixedPriceSaleJoin.contract = event.address.toHexString();
-    fixedPriceSaleJoin.txn = makeTransaction(event);
+
+    fixedPriceSaleJoin.txn = txn;
+    fixedPriceSaleJoin.address = event.address;
+    fixedPriceSaleJoin.block = event.block.number;
+    fixedPriceSaleJoin.timestamp = event.block.timestamp;
+
     fixedPriceSaleJoin.fixedPrice = publicSaleConfigId;
     fixedPriceSaleJoin.type = SALE_CONFIG_FIXED_PRICE;
     fixedPriceSaleJoin.save();
@@ -149,6 +170,9 @@ export function handleRoleGranted(event: RoleGranted): void {
     permissions.isSalesManager = false;
     permissions.isMinter = false;
   }
+  permissions.block = event.block.number;
+  permissions.timestamp = event.block.timestamp;
+
   permissions.user = event.params.account;
   permissions.tokenId = BigInt.zero();
 

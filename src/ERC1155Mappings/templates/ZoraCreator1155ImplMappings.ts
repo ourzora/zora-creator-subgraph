@@ -72,10 +72,13 @@ export function handleURI(event: URI): void {
   token.uri = event.params.value;
   token.save();
 
-  const history = new OnChainMetadataHistory(
-    getOnChainMetadataKey(event)
-  );
-  history.txn = makeTransaction(event);
+  const history = new OnChainMetadataHistory(getOnChainMetadataKey(event));
+
+  const txn = makeTransaction(event);
+  history.txn = txn;
+  history.block = event.block.number;
+  history.timestamp = event.block.timestamp;
+
   history.tokenAndContract = id;
   history.rendererAddress = Bytes.fromHexString(
     "0x0000000000000000000000000000000000000000"
@@ -201,7 +204,12 @@ export function handleUpdatedToken(event: UpdatedToken): void {
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
   }
-  token.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  token.txn = txn;
+  token.block = event.block.number;
+  token.timestamp = event.block.timestamp;
+
   token.contract = event.address.toHex();
   token.tokenId = event.params.tokenId;
   token.uri = event.params.tokenData.uri;
@@ -349,7 +357,13 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   token.tokenId = event.params.tokenId;
   token.uri = event.params.newURI;
   token.maxSupply = event.params.maxSupply;
-  token.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  token.txn = txn;
+  token.block = event.block.number;
+  token.address = event.address;
+  token.timestamp = event.block.timestamp;
+
   token.contract = event.address.toHex();
   token.tokenStandard = TOKEN_STANDARD_ERC1155;
 

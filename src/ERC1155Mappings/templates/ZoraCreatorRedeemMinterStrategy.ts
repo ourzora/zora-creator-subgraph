@@ -33,7 +33,12 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
   const id = `${event.transaction.hash.toHex()}`;
   const processed = new RedeemMinterProcessed(id);
 
-  processed.txn = makeTransaction(event);
+  const txn = makeTransaction(event);
+  processed.txn = txn;
+  processed.block = event.block.number;
+  processed.timestamp = event.block.timestamp;
+  processed.address = event.address;
+
   processed.redeemMinter = event.params.redeemsInstructionsHash.toHex();
   processed.target = event.params.target;
   processed.redeemsInstructionsHash = event.params.redeemsInstructionsHash;

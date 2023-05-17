@@ -45,19 +45,47 @@ export function handleFactoryUpgraded(event: Upgraded): void {
 
   if (!KnownRenderer.load(dropRendererAddress.toHex())) {
     const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
-    knownDropRenderer.txn = makeTransaction(event);
+    const txn = makeTransaction(event);
+    knownDropRenderer.txn = txn;
     knownDropRenderer.address = dropRendererAddress;
+    knownDropRenderer.block = event.block.number;
+    knownDropRenderer.timestamp = event.block.timestamp;
+    knownDropRenderer.isEdition = false;
+
     knownDropRenderer.save();
   }
 
   if (!KnownRenderer.load(editionRendererAddress.toHex())) {
-    const knownEditionRenderer = new KnownRenderer(editionRendererAddress.toHex());
-    knownEditionRenderer.txn = makeTransaction(event);
+    const knownEditionRenderer = new KnownRenderer(
+      editionRendererAddress.toHex()
+    );
+    const txn = makeTransaction(event);
+
+    knownEditionRenderer.txn = txn;
+    knownEditionRenderer.address = dropRendererAddress;
+    knownEditionRenderer.block = event.block.number;
+    knownEditionRenderer.timestamp = event.block.timestamp;
+    knownEditionRenderer.isEdition = false;
     knownEditionRenderer.address = editionRendererAddress;
+
+    knownEditionRenderer.isEdition = true;
     knownEditionRenderer.save();
   }
 
-  factory.txn = makeTransaction(event);
+  const txn = makeTransaction(event);
+
+  upgrade.txn = txn;
+  upgrade.block = event.block.number;
+  upgrade.timestamp = event.block.timestamp;
+  upgrade.impl = event.params.implementation;
+  upgrade.address = event.address;
+  upgrade.type = "721Factory";
+
+  factory.txn = txn;
+  factory.block = event.block.number;
+  factory.timestamp = event.block.timestamp;
+  factory.address = event.address;
+
   factory.dropMetadataRendererFactory = creator.dropMetadataRenderer();
   factory.editionMetadataRendererFactory = creator.editionMetadataRenderer();
   factory.implementation = event.params.implementation;
@@ -114,7 +142,10 @@ export function handleCreatedDrop(event: CreatedDrop): void {
       MetadataInfoTemplate.create(ipfsHostPath);
     }
   }
-  createdContract.txn = makeTransaction(event);
+  const txn = makeTransaction(event);
+  createdContract.timestamp = event.block.timestamp;
+  createdContract.address = event.address;
+  createdContract.txn = txn;
   createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
@@ -131,7 +162,12 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.totalMinted = BigInt.zero();
   newToken.contract = contractId;
   newToken.tokenId = BigInt.zero();
-  newToken.txn = makeTransaction(event);
+
+  newToken.txn = txn;
+  newToken.timestamp = event.block.timestamp;
+  newToken.address = event.address;
+  newToken.block = event.block.number;
+
   newToken.createdAtBlock = event.block.number;
   newToken.tokenStandard = TOKEN_STANDARD_ERC721;
   newToken.save();

@@ -17,20 +17,15 @@ import { METADATA_ERC721_EDITION } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
-  const metadataRecord = new EditionMetadata(
-    getOnChainMetadataKey(event)
-  );
+  const metadataRecord = new EditionMetadata(getOnChainMetadataKey(event));
   metadataRecord.animationURI = event.params.animationURI;
   metadataRecord.description = event.params.description;
   metadataRecord.imageURI = event.params.imageURI;
   metadataRecord.save();
 
-  const metadataRecordCompat = new EditionMetadata(
-    event.params.target.toHex()
-  );
+  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
   metadataRecordCompat.animationURI = event.params.animationURI;
   metadataRecordCompat.description = event.params.description;
-  metadataRecordCompat.drop = event.params.target.toHexString();
   metadataRecordCompat.imageURI = event.params.imageURI;
   metadataRecordCompat.save();
 
@@ -41,7 +36,13 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = metadataRecord.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
-  metadataLinkHistory.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  metadataLinkHistory.txn = txn;
+  metadataLinkHistory.block = event.block.number;
+  metadataLinkHistory.address = event.address;
+  metadataLinkHistory.timestamp = event.block.timestamp;
+
   metadataLinkHistory.knownType = METADATA_ERC721_EDITION;
   metadataLinkHistory.save();
 
@@ -58,12 +59,9 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   newMetadata.imageURI = event.params.imageURI;
   newMetadata.save();
 
-  const metadataRecordCompat = new EditionMetadata(
-    event.params.target.toHex()
-  );
+  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
   metadataRecordCompat.animationURI = event.params.animationURI;
   metadataRecordCompat.description = tokenInfo.getDescription();
-  metadataRecordCompat.drop = event.params.target.toHexString();
   metadataRecordCompat.imageURI = event.params.imageURI;
   metadataRecordCompat.save();
 
@@ -92,11 +90,8 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   newMetadata.animationURI = tokenInfo.getAnimationURI();
   newMetadata.save();
 
-  const metadataRecordCompat = new EditionMetadata(
-    event.params.target.toHex()
-  );
+  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
   metadataRecordCompat.description = event.params.newDescription;
-  metadataRecordCompat.drop = event.params.target.toHexString();
   metadataRecordCompat.imageURI = tokenInfo.getImageURI();
   metadataRecordCompat.animationURI = tokenInfo.getAnimationURI();
   metadataRecordCompat.save();
@@ -108,7 +103,13 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = newMetadata.id;
   metadataLinkHistory.tokenAndContract = getDefaultTokenId(event.params.target);
-  metadataLinkHistory.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  metadataLinkHistory.txn = txn;
+  metadataLinkHistory.address = event.address;
+  metadataLinkHistory.block = event.block.number;
+  metadataLinkHistory.timestamp = event.block.timestamp;
+
   metadataLinkHistory.knownType = METADATA_ERC721_EDITION;
   metadataLinkHistory.save();
 
@@ -116,13 +117,13 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
 }
 
 function updateContractURI(target: Address): void {
-    // update contract uri from drop string
-    const contract = ZoraCreateContract.load(target.toHex());
-    if (contract) {
-      const erc721Drop = ERC721DropFactory.bind(target);
-      if (erc721Drop) {
-        contract.contractURI = erc721Drop.contractURI();
-        contract.save();
-      }
+  // update contract uri from drop string
+  const contract = ZoraCreateContract.load(target.toHex());
+  if (contract) {
+    const erc721Drop = ERC721DropFactory.bind(target);
+    if (erc721Drop) {
+      contract.contractURI = erc721Drop.contractURI();
+      contract.save();
     }
+  }
 }

@@ -21,7 +21,6 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadataCompat.contractURI = event.params.contractURI;
   metadataCompat.extension = event.params.metadataExtension;
   metadataCompat.base = event.params.metadataBase;
-  metadataCompat.drop = event.params.target.toHex();
   metadataCompat.freezeAt = event.params.freezeAt;
   metadataCompat.save();
 
@@ -34,7 +33,14 @@ export function handleMetadataUpdated(event: MetadataUpdated): void {
   metadataLinkHistorical.tokenAndContract = getDefaultTokenId(
     event.params.target
   );
-  metadataLinkHistorical.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  metadataLinkHistorical.txn = txn;
+  metadataLinkHistorical.block = event.block.number;
+  metadataLinkHistorical.timestamp = event.block.timestamp;
+  metadataLinkHistorical.address = event.address
+
+
   metadataLinkHistorical.knownType = METADATA_ERC721_DROP;
   metadataLinkHistorical.save();
 

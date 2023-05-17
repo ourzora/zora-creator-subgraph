@@ -19,8 +19,13 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   sale.saleStart = event.params.salesConfig.saleStart;
   sale.saleEnd = event.params.salesConfig.saleEnd;
   sale.maxTokensPerAddress = event.params.salesConfig.maxTokensPerAddress;
+
   const txn = makeTransaction(event);
   sale.txn = txn;
+  sale.block = event.block.number;
+  sale.timestamp = event.block.timestamp;
+  sale.address = event.address;
+
   sale.tokenId = event.params.tokenId;
   sale.save();
 
@@ -34,5 +39,6 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   saleJoin.fixedPrice = id;
   saleJoin.type = SALE_CONFIG_FIXED_PRICE;
   saleJoin.txn = txn;
+  saleJoin.address = event.address;
   saleJoin.save();
 }
