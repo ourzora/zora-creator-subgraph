@@ -1,0 +1,9 @@
+{
+  "network": "optimism",
+  "address": "0x7d1a46c6e614A0091c39E102F2798C27c1fA8892",
+  "1155Address": "0x78b524931e9d847c40BcBf225c25e154a7B05fDA",
+  "startBlock": "97155864",
+  "1155StartBlock": "97158994",
+  "1155StartBlockV2": "9920126366",
+  "1155AddressV2": "0xb0C56317E9cEBc6E0f7A59458a83D0A9ccC3e955"
+}
