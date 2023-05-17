@@ -102,7 +102,6 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const contractId = event.params.editionContractAddress.toHex();
   const createdContract = new ZoraCreateContract(contractId);
 
-  createdContract.address = dropAddress;
   createdContract.contractVersion = dropContract.contractVersion().toString();
   const dropConfig = dropContract.config();
 
@@ -144,6 +143,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   }
   const txn = makeTransaction(event);
   createdContract.timestamp = event.block.timestamp;
+  createdContract.block = event.block.number;
   createdContract.address = event.address;
   createdContract.txn = txn;
   createdContract.createdAtBlock = event.block.number;

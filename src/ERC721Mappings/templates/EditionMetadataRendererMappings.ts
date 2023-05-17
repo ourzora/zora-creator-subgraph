@@ -68,6 +68,10 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   const metadataLinkHistory = new OnChainMetadataHistory(
     getOnChainMetadataKey(event)
   );
+  metadataLinkHistory.address = event.address;
+  metadataLinkHistory.block = event.block.number;
+  metadataLinkHistory.timestamp = event.block.timestamp;
+
   metadataLinkHistory.rendererAddress = event.address;
   metadataLinkHistory.createdAtBlock = event.block.number;
   metadataLinkHistory.editionMetadata = newMetadata.id;

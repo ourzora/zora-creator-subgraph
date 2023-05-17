@@ -286,7 +286,12 @@ export function handleUpdatedMetadataRenderer(
     history.knownType = METADATA_CUSTOM_RENDERER;
     history.createdAtBlock = event.block.timestamp;
     history.rendererAddress = event.params.renderer;
+
     history.txn = makeTransaction(event);
+    history.block = event.block.number;
+    history.address = event.address;
+    history.timestamp = event.block.timestamp;
+
     history.save();
   }
 }

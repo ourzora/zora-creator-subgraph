@@ -78,6 +78,7 @@ export function handleURI(event: URI): void {
   history.txn = txn;
   history.block = event.block.number;
   history.timestamp = event.block.timestamp;
+  history.address = event.address;
 
   history.tokenAndContract = id;
   history.rendererAddress = Bytes.fromHexString(
@@ -102,6 +103,9 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
   if (!permissions) {
     permissions = new ZoraCreatorPermission(id);
   }
+
+  permissions.block = event.block.number;
+  permissions.timestamp = event.block.timestamp;
 
   permissions.isAdmin = hasBit(1, event.params.permissions);
   permissions.isMinter = hasBit(2, event.params.permissions);
