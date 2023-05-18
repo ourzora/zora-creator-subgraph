@@ -3,15 +3,15 @@
   "network": "optimism",
   "factories1155": [
     {
-      "address": "0x8732b4bCa198509bB9c40f9a24638Be1eaB7D30c",
-      "startBlock": "8667388",
+      "address": "0x78b524931e9d847c40BcBf225c25e154a7B05fDA",
+      "startBlock": "97158995",
       "version": "1"
     }
   ],
   "factories721": [
     {
-      "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
-      "startBlock": "7412408",
+      "address": "0x7d1a46c6e614A0091c39E102F2798C27c1fA8892",
+      "startBlock": "97155865",
       "version": "1"
     }
   ]
