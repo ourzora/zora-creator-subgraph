@@ -1,5 +1,3 @@
-import { Address } from "@graphprotocol/graph-ts";
-
 import {
   DropMetadataRenderer as DropMetadataRendererFactory,
   EditionMetadataRenderer as EditionMetadataRendererFactory,
@@ -126,6 +124,11 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.symbol = dropContract.symbol();
   createdContract.contractVersion = dropContract.contractVersion().toString();
   createdContract.rendererContract = dropContract.metadataRenderer();
+
+  const knownRenderer = KnownRenderer.load(dropConfig.getMetadataRenderer().toHex());
+  if (knownRenderer) {
+    createdContract.likelyIsEdition = knownRenderer.isEdition;
+  }
 
   const feePerAmount = dropContract.try_zoraFeeForAmount(BigInt.fromI64(1));
   if (feePerAmount.reverted) {

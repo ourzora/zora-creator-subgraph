@@ -1,6 +1,7 @@
 type TransactionInfo @entity {
   id: ID!
   chainId: BigInt!
+  network: String!
   block: BigInt!
   logIndex: BigInt!
   address: Bytes!
@@ -8,11 +9,7 @@ type TransactionInfo @entity {
 }
 
 # TODO:
-# * add mint comments (nice to have)
-# * add 721 + 1155 sales
 # * add chainid & root parameters
-# * set likelyIsEdition
-# * maybe add 0 token ID index to 721 sales configs
 # * ensure contractVersion works
 
 

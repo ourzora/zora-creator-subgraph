@@ -1,6 +1,6 @@
 {
-  "chainid": "5",
-  "network": "goerli",
+  "chainid": "10",
+  "network": "optimism",
   "factories1155": [
     {
       "address": "0x8732b4bCa198509bB9c40f9a24638Be1eaB7D30c",

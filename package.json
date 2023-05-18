@@ -5,7 +5,7 @@
     "copy-abis": "bash abis/copy-abis.sh",
     "codegen": "yarn gen-yaml-config && graph codegen && echo 'import { Address } from \"@graphprotocol/graph-ts\";' >> generated/templates.ts",
     "build": "yarn run codegen && graph build",
-    "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml",
+    "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json src/constants/chainid.ts.template > src/constants/chainid.ts",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
     "postinstall": "yarn run copy-abis",
     "create-local": "graph create --node http://localhost:8020/ ${DEPLOYMENT_PATH}",

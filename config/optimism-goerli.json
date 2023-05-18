@@ -1,0 +1,18 @@
+{
+  "chainid": "420",
+  "network": "optimism-goerli",
+  "factories1155": [
+    {
+      "address": "0xb0C56317E9cEBc6E0f7A59458a83D0A9ccC3e955",
+      "startBlock": "9127679",
+      "version": "1"
+    }
+  ],
+  "factories721": [
+    {
+      "address": "0x3C1ebcF36Ca9DD9371c9aA99c274e4988906c6E3",
+      "startBlock": "9120231",
+      "version": "1"
+    }
+  ]
+}

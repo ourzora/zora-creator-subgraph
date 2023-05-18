@@ -357,6 +357,7 @@ export function handleSale(event: ERC721DropSale): void {
   sale.firstPurchasedTokenId = event.params.firstPurchasedTokenId;
   sale.pricePerToken = event.params.pricePerToken;
   sale.mintRecipient = event.params.to;
+  sale.quantity = event.params.quantity;
 
   sale.txn = makeTransaction(event);
   sale.block = event.block.number;
