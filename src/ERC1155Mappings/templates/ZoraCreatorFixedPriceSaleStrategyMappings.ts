@@ -41,6 +41,8 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   saleJoin.fixedPrice = id;
   saleJoin.type = SALE_CONFIG_FIXED_PRICE;
   saleJoin.txn = txn;
+  saleJoin.block = event.block.number;
+  saleJoin.timestamp = event.block.timestamp;
   saleJoin.address = event.address;
   saleJoin.save();
 }
