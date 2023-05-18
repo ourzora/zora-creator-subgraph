@@ -65,7 +65,6 @@ export function handleFactoryUpgraded(event: Upgraded): void {
     knownEditionRenderer.address = dropRendererAddress;
     knownEditionRenderer.block = event.block.number;
     knownEditionRenderer.timestamp = event.block.timestamp;
-    knownEditionRenderer.isEdition = false;
     knownEditionRenderer.address = editionRendererAddress;
 
     knownEditionRenderer.isEdition = true;

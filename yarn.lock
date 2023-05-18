@@ -970,10 +970,10 @@
     fast-url-parser "^1.1.3"
     tslib "^2.3.1"
 
-"@zoralabs/nft-drop-contracts@^1.11.1":
-  version "1.11.1"
-  resolved "https://registry.npmjs.org/@zoralabs/nft-drop-contracts/-/nft-drop-contracts-1.11.1.tgz"
-  integrity sha512-QmnzSO81I2GNUOGnwFwKDkw+MAt1tVPHDQazJc3hNHwnt8fRekuRWGdjNoGQJvDugds13DmSWn6WuW43POIzRA==
+"@zoralabs/nft-drop-contracts@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@zoralabs/nft-drop-contracts/-/nft-drop-contracts-1.12.0.tgz#ee2ef954c0ddb93aa3a9f5439604124ddad2dc28"
+  integrity sha512-zENOF4k+xdz1gvBaxHIs0rFz98+6AO1gYSn2XzIhxk8clmo0B80YZF4gUYzkIn5aHywiWYbw0v99fq6slfQkaw==
   dependencies:
     "@dotenv/cli" "^2.2.2"
     "@typechain/ethers-v5" "10.0.0"
@@ -981,10 +981,10 @@
     typechain "8.0.0"
     typescript "4.6.3"
 
-"@zoralabs/zora-1155-contracts@^1.2.0-pre4":
-  version "1.2.0-pre4"
-  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.2.0-pre4.tgz#6c52ceb2bc46a903ebbba6ca4d94de9cadf150a5"
-  integrity sha512-1QtQbJ9YCe1we0TCFL5r4aCGmNbgBMvJ5/atvDkvGQShQnRXjzqngqoQIH27SIlXtea08UQjiCBK7jjnS/a3/w==
+"@zoralabs/zora-1155-contracts@^1.2.3-pre1":
+  version "1.2.3-pre1"
+  resolved "https://registry.yarnpkg.com/@zoralabs/zora-1155-contracts/-/zora-1155-contracts-1.2.3-pre1.tgz#18c5a5147cc2fbfd0cb984a833c5eb1ab7c95355"
+  integrity sha512-2ZXnfXu/8Hsgvb7r8vRpehCsnO9g2E2+rhUL6/pWT5OQ/J579NUUYeaCvhcbeAKWkRPC1kOvFBBA42Cfy7mNSg==
   dependencies:
     "@openzeppelin/contracts" "4.8.2"
     "@openzeppelin/contracts-upgradeable" "4.8.2"
@@ -1953,9 +1953,9 @@ dotenv@^9.0.0:
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-9.0.2.tgz"
   integrity sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==
 
-"ds-test@https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b":
+"ds-test@git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b":
   version "1.0.0"
-  resolved "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b"
+  resolved "git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b"
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -2311,9 +2311,9 @@ forever-agent@~0.6.1:
   resolved "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-"forge-std@https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
+"forge-std@git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653":
   version "1.1.1"
-  resolved "https://github.com/foundry-rs/forge-std#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
+  resolved "git+https://github.com/foundry-rs/forge-std.git#cd7d533f9a0ee0ec02ad81e0a8f262bc4203c653"
 
 form-data-encoder@^2.1.2:
   version "2.1.4"

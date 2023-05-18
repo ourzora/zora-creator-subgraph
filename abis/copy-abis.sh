@@ -15,11 +15,11 @@ get_contract $ERC721_ARTIFACTS_PATH 'DropMetadataRenderer'
 
 # 1155 creator impl contracts
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155Impl'
-get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155Proxy'
+get_contract $ERC1155_ARTIFACTS_PATH 'Zora1155'
 
 # 1155 creator factory contracts
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155FactoryImpl'
-get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155FactoryProxy'
+get_contract $ERC1155_ARTIFACTS_PATH 'Zora1155Factory'
 
 # minters 1155
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorFixedPriceSaleStrategy'
