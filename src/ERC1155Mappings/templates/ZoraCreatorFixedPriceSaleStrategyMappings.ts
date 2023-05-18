@@ -2,12 +2,14 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import {
   SalesConfigFixedPriceSaleStrategy,
   SalesStrategyConfig,
+  MintComment
 } from "../../../generated/schema";
 import { SaleSet } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { SALE_CONFIG_FIXED_PRICE } from "../../constants/salesConfigTypes";
+import { MintComment as Zora1155MintComment } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
@@ -41,4 +43,20 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   saleJoin.txn = txn;
   saleJoin.address = event.address;
   saleJoin.save();
+}
+
+export function handleMintedWithComment(event: Zora1155MintComment): void {
+  const mintComment = new MintComment(event.transaction.hash.toString());
+  const tokenAndContract = getTokenId(event.params.tokenContract, event.params.tokenId);
+  mintComment.tokenAndContract = tokenAndContract;
+  mintComment.sender = event.params.sender;
+  mintComment.comment = event.params.comment;
+  mintComment.mintQuantity = event.params.quantity;
+  mintComment.tokenId = event.params.tokenId;
+
+  mintComment.block = event.block.number;
+  mintComment.timestamp = event.block.timestamp;
+  mintComment.address = event.address;
+
+  mintComment.save();
 }

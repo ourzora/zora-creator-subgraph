@@ -1,9 +1,17 @@
 {
   "network": "zora-testnet",
-  "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
-  "1155Address": "0x6a357139C1bcDcf0B3AB9bC447932dDdcb956703",
-  "startBlock": "1",
-  "1155StartBlock": "1",
-  "1155StartBlockV2": "9667388",
-  "1155AddressV2": "0x000000000000000000000000000000000000ffff"
+  "factories1155": [
+    {
+      "address": "0x6a357139C1bcDcf0B3AB9bC447932dDdcb956703",
+      "startBlock": "1",
+      "version": "1"
+    }
+  ],
+  "factories721": [
+    {
+      "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
+      "startBlock": "1",
+      "version": "1"
+    }
+  ]
 }

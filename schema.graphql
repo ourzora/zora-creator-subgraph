@@ -45,6 +45,41 @@ type ZoraCreate721Factory @entity {
   editionMetadataRendererFactory: Bytes!
 }
 
+type MintComment @entity @immutable {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  address: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
+  tokenAndContract: ZoraCreateToken!
+  sender: Bytes!
+  comment: String!
+  mintQuantity: BigInt!
+  tokenId: BigInt!
+}
+
+type TokenSale @entity {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  address: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
+  tokenAndContract: ZoraCreateToken!
+
+  quantity: BigInt!
+  pricePerToken: BigInt!
+  mintRecipient: Bytes!
+
+  # 721-specific data
+  firstPurchasedTokenId: BigInt! 
+}
+
 # type DropRole @entity {
 #   # user-role
 #   id: ID!
@@ -196,6 +231,9 @@ type ZoraCreateToken @entity {
 
   holders1155Number: BigInt!
   holders1155: [Token1155Holder!]! @derivedFrom(field: "tokenAndContract")
+
+  mintComments: [MintComment!]! @derivedFrom(field: "tokenAndContract")
+  sales: [TokenSale!]! @derivedFrom(field: "tokenAndContract")
 
   permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")

@@ -1,9 +1,17 @@
 {
   "network": "goerli",
-  "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
-  "1155Address": "0x8732b4bCa198509bB9c40f9a24638Be1eaB7D30c",
-  "startBlock": "7412408",
-  "1155StartBlock": "8667388",
-  "1155StartBlockV2": "20126366",
-  "1155AddressV2": "0xA6C5f2DE915240270DaC655152C3f6A91748cb85"
+  "factories1155": [
+    {
+      "address": "0x8732b4bCa198509bB9c40f9a24638Be1eaB7D30c",
+      "startBlock": "8667388",
+      "version": "1"
+    }
+  ],
+  "factories721": [
+    {
+      "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
+      "startBlock": "7412408",
+      "version": "1"
+    }
+  ]
 }

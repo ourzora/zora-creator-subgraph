@@ -26,7 +26,7 @@ import { ERC721Drop as ERC721DropContract } from "../../generated/templates/ERC7
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import {
   MetadataInfo as MetadataInfoTemplate,
-  NewERC721Drop as NewERC721DropTemplate,
+  ERC721Drop as ERC721DropTemplate,
 } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
@@ -171,5 +171,5 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.tokenStandard = TOKEN_STANDARD_ERC721;
   newToken.save();
 
-  NewERC721DropTemplate.create(dropAddress);
+  ERC721DropTemplate.create(dropAddress);
 }

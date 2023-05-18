@@ -1,9 +1,22 @@
 {
-    "network": "mainnet",
-    "address": "0xF74B146ce44CC162b601deC3BE331784DB111DC1",
-    "1155Address": "0x784A410B891EE92612102521281a3e222a6E326D",
-    "startBlock": "14758780",
-    "1155StartBlock": "16844200",
-    "1155StartBlockV2": "17126366",
-    "1155AddressV2": "0xA6C5f2DE915240270DaC655152C3f6A91748cb85"
-  }
+  "network": "mainnet",
+  "factories1155": [
+    {
+      "address": "0x784A410B891EE92612102521281a3e222a6E326D",
+      "startBlock": "16844200",
+      "version": "1"
+    },
+    {
+      "address": "0xA6C5f2DE915240270DaC655152C3f6A91748cb85",
+      "startBlock": "17126366",
+      "version": "2"
+    }
+  ],
+  "factories721": [
+    {
+      "address": "0xF74B146ce44CC162b601deC3BE331784DB111DC1",
+      "startBlock": "14758780",
+      "version": "1"
+    }
+  ]
+}

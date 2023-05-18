@@ -91,6 +91,11 @@
   },
   {
     "inputs": [],
+    "name": "SenderIsNotTokenOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "TokenIdOutOfRange",
     "type": "error"
   },

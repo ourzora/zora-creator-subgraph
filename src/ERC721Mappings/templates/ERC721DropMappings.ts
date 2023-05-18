@@ -1,4 +1,4 @@
-import { Address, bigInt, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, bigInt } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -11,11 +11,15 @@ import {
   RoyaltyConfig,
   OnChainMetadataHistory,
   KnownRenderer,
+  MintComment,
+  TokenSale,
 } from "../../../generated/schema";
 
 import {
   ERC721Drop as ERC721DropContract,
   FundsRecipientChanged,
+  MintComment as ERC721DropMintComment,
+  Sale as ERC721DropSale,
   OpenMintFinalized,
   OwnershipTransferred,
   RoleGranted,
@@ -39,6 +43,8 @@ import {
 import { getDefaultTokenId, getTokenId } from "../../common/getTokenId";
 import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
+import { getMintCommentId } from "../../common/getMintCommentId";
+import { getSaleId } from "../../common/getSaleId";
 
 /* sales config updated */
 
@@ -322,4 +328,40 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   }
   createContract.owner = event.params.newOwner;
   createContract.save();
+}
+
+export function handleMintComment(event: ERC721DropMintComment): void {
+  const mintComment = new MintComment(getMintCommentId(event));
+
+  mintComment.comment = event.params.comment;
+  mintComment.mintQuantity = event.params.quantity;
+  mintComment.sender = event.params.sender;
+  mintComment.tokenId = event.params.tokenId;
+  mintComment.tokenAndContract = getTokenId(
+    event.params.tokenContract,
+    BigInt.zero()
+  );
+
+  mintComment.address = event.address;
+  mintComment.block = event.block.number;
+  mintComment.txn = makeTransaction(event);
+  mintComment.timestamp = event.block.timestamp;
+
+  mintComment.save();
+}
+
+export function handleSale(event: ERC721DropSale): void {
+  const sale = new TokenSale(getSaleId(event));
+
+  sale.tokenAndContract = getTokenId(event.address, BigInt.zero());
+  sale.firstPurchasedTokenId = event.params.firstPurchasedTokenId;
+  sale.pricePerToken = event.params.pricePerToken;
+  sale.mintRecipient = event.params.to;
+
+  sale.txn = makeTransaction(event);
+  sale.block = event.block.number;
+  sale.timestamp = event.block.timestamp;
+  sale.address = event.address;
+
+  sale.save();
 }
