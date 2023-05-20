@@ -60,12 +60,6 @@ export function handleRedeemSet(event: RedeemSet): void {
   const redemptionHash = event.params.redeemsInstructionsHash.toHex();
   const txn = makeTransaction(event);
 
-  const strategy = new SalesConfigRedeemMinterStrategy(redemptionHash);
-  strategy.txn = txn;
-  strategy.configAddress = event.address;
-  strategy.target = event.params.target;
-  strategy.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
-
   const token = new RedeemMintToken(redemptionHash);
   token.tokenContract = event.params.data.mintToken.tokenContract;
   token.tokenId = event.params.data.mintToken.tokenId;
@@ -73,7 +67,21 @@ export function handleRedeemSet(event: RedeemSet): void {
   token.tokenType = event.params.data.mintToken.tokenType;
   token.save();
 
+  const strategy = new SalesConfigRedeemMinterStrategy(redemptionHash);
+  strategy.txn = txn;
+  strategy.block = event.block.number;
+  strategy.timestamp = event.block.timestamp;
+  strategy.address = event.address;
+  strategy.configAddress = event.address;
+  strategy.target = event.params.target;
+  strategy.redeemsInstructionsHash = event.params.redeemsInstructionsHash;
+  strategy.saleStart = event.params.data.saleStart;
+  strategy.saleEnd = event.params.data.saleEnd;
+  strategy.ethAmount = event.params.data.ethAmount;
+  strategy.ethRecipient = event.params.data.ethRecipient;
+  strategy.isActive = true;
   strategy.redeemMintToken = token.id;
+  strategy.save();
 
   for (let i = 0; i < event.params.data.instructions.length; i++) {
     // This can fail for duplicate Redeem Instructions – while it doesn't make sense that the user can input this
@@ -94,13 +102,6 @@ export function handleRedeemSet(event: RedeemSet): void {
     redeemInstruction.save();
   }
 
-  strategy.saleStart = event.params.data.saleStart;
-  strategy.saleEnd = event.params.data.saleEnd;
-  strategy.ethAmount = event.params.data.ethAmount;
-  strategy.ethRecipient = event.params.data.ethRecipient;
-  strategy.isActive = true;
-  strategy.save();
-
   // add join
   const saleJoin = new SalesStrategyConfig(redemptionHash);
   if (event.params.data.mintToken.tokenId.equals(BigInt.zero())) {
@@ -111,6 +112,9 @@ export function handleRedeemSet(event: RedeemSet): void {
       event.params.data.mintToken.tokenId
     );
   }
+  saleJoin.block = event.block.number;
+  saleJoin.address = event.address;
+  saleJoin.timestamp = event.block.timestamp;
   saleJoin.redeemMinter = strategy.id;
   saleJoin.type = SALE_CONFIG_REDEEM_STRATEGY;
   saleJoin.txn = txn;

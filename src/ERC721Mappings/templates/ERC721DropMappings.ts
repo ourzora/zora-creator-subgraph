@@ -342,9 +342,9 @@ export function handleMintComment(event: ERC721DropMintComment): void {
     BigInt.zero()
   );
 
+  mintComment.txn = makeTransaction(event);
   mintComment.address = event.address;
   mintComment.block = event.block.number;
-  mintComment.txn = makeTransaction(event);
   mintComment.timestamp = event.block.timestamp;
 
   mintComment.save();
