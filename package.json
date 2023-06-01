@@ -12,6 +12,7 @@
     "remove-local": "graph remove --node http://localhost:8020/ ${DEPLOYMENT_PATH}",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ${DEPLOYMENT_PATH}",
     "network-deploy": "./deploy.sh",
+    "deploy-goldsky": "echo $1",
     "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
