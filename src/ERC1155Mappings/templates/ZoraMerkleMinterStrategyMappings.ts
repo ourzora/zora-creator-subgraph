@@ -20,7 +20,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   const txn = makeTransaction(event);
   sale.txn = txn;
   sale.tokenId = event.params.tokenId
-  sale.contract = event.params.mediaContract.toHex();;
+  sale.contract = event.params.mediaContract.toHex()
 
   sale.save();
 
