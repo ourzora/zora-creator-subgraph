@@ -19,6 +19,7 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   sale.merkleRoot = event.params.merkleSaleSettings.merkleRoot;
   const txn = makeTransaction(event);
   sale.txn = txn;
+  sale.tokenId = event.params.tokenId
 
   sale.save();
 
