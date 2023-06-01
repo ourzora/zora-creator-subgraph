@@ -365,8 +365,8 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-features:
-  - grafting
-graft:
-  base: QmR5C1D1m5TggrquvR5nNAr4R6j1c28aoe5TJfHoMXszTT # subgraph ID of base subgraph
-  block: 9100000 # block number
+# features:
+#   - grafting
+# graft:
+#   base: QmdnQQe6oVKw2nsmF8w8esF62VwDYdW2tD7gFDQLsu6uvq # subgraph ID of base subgraph
+#   block: 9100000 # block number
