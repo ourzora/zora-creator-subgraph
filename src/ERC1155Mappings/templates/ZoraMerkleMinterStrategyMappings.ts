@@ -27,6 +27,8 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   sale.block = event.block.number;
   sale.timestamp = event.block.timestamp;
   sale.txn = txn;
+  sale.tokenId = event.params.tokenId;
+  sale.contract = event.params.mediaContract.toHex();
 
   sale.save();
 

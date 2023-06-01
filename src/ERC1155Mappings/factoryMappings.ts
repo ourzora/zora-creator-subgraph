@@ -18,7 +18,6 @@ import {
 } from "../../generated/templates";
 import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
-import { BigInt } from "@graphprotocol/graph-ts";
 import { TOKEN_STANDARD_ERC1155 } from "../constants/tokenStandard";
 import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 
