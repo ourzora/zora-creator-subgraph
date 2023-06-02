@@ -197,7 +197,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   permissions.txn = makeTransaction(event);
-  Permissions.contract = getContractId(event.address);
+  permissions.contract = getContractId(event.address);
 
   permissions.save();
 }

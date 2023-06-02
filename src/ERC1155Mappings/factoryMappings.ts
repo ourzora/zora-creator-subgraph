@@ -23,9 +23,7 @@ import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Im
 import { getContractId } from "../common/getContractId";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
-  const createdContract = new ZoraCreateContract(
-    getContractId(event.params.newContract)
-  );
+  const createdContract = new ZoraCreateContract(getContractId(event.params.newContract));
 
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
@@ -47,7 +45,7 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   const txn = makeTransaction(event);
   createdContract.txn = txn;
   createdContract.block = event.block.number;
-  createdContract.address = event.address;
+  createdContract.address = event.params.newContract;
   createdContract.timestamp = event.block.timestamp;
 
   createdContract.createdAtBlock = event.block.number;

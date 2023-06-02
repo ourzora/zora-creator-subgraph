@@ -14,14 +14,6 @@ fromversion=$3
 # production network tag
 prodtag=stable
 
-if [[ -eq $fromversion "no-graft" ]]
-then
-  fromversion=no-graft
-else if [[ -n $fromversion ]]
-then
-  fromversion=stable
-fi
-
 networkfiles=()
 if [[ -n $networks ]]
 then
@@ -30,7 +22,7 @@ then
   done
 else
   for file in ./config/*.json; do
-    networkfiles+=$file
+    networkfiles+=($file)
   done
 fi
 
@@ -50,18 +42,21 @@ function getDeploymentBase() {
   echo $response | jq '.data._meta.deployment' -r
 }
 
-echo $networkfiles
-for element in "${networkfiles[@]}"
+for element in ${networkfiles[@]}
 do
   filename=$(basename $element)
   network="${filename%.*}"
   base=$(getSubgraphQueryPath $network)
-  if [[ -ne fromversion "no-graft" ]]; then
+  newjson=""
+  if [[ -z $fromversion ]]; then
+    echo 'skipping grafting'
+    newjson="$(jq 'del(.grafting)' ./config/$network.json)"
+  else
     newjson="$(jq '. + {"grafting": {"base": "'$(getDeploymentBase $base)'", "block": '$(($(getDeploymentBlock $base) - 10))'}}' ./config/$network.json)"
-    echo $newjson
-    echo "$newjson" > ./config/$network.json
-    cat ./config/$network.json
   fi
+  echo $newjson
+  echo "$newjson" > ./config/$network.json
+  cat ./config/$network.json
   NETWORK=$network yarn run build
   goldsky subgraph deploy zora-create-$network/$version
 done

@@ -347,6 +347,8 @@ export function handleContractMetadataUpdated(
     if (ipfsHostPath !== null) {
       createContract.metadata = ipfsHostPath;
       MetadataInfoTemplate.create(ipfsHostPath);
+    } else {
+      createContract.metadata = null;
     }
     createContract.save();
   }
