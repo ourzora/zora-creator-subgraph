@@ -125,7 +125,9 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.contractVersion = dropContract.contractVersion().toString();
   createdContract.rendererContract = dropContract.metadataRenderer();
 
-  const knownRenderer = KnownRenderer.load(dropConfig.getMetadataRenderer().toHex());
+  const knownRenderer = KnownRenderer.load(
+    dropConfig.getMetadataRenderer().toHex()
+  );
   if (knownRenderer) {
     createdContract.likelyIsEdition = knownRenderer.isEdition;
   }
@@ -146,7 +148,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const txn = makeTransaction(event);
   createdContract.timestamp = event.block.timestamp;
   createdContract.block = event.block.number;
-  createdContract.address = event.address;
+  createdContract.address = event.params.editionContractAddress;
   createdContract.txn = txn;
   createdContract.createdAtBlock = event.block.number;
 

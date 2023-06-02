@@ -42,8 +42,11 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
       event.params.tokenId
     );
   }
+
   saleJoin.block = event.block.number;
+  saleJoin.address = event.address;
   saleJoin.timestamp = event.block.timestamp;
+
   saleJoin.presale = id;
   saleJoin.type = SALE_CONFIG_PRESALE;
   saleJoin.txn = txn;
