@@ -11,12 +11,13 @@ import { makeTransaction } from "../../common/makeTransaction";
 import { SALE_CONFIG_FIXED_PRICE } from "../../constants/salesConfigTypes";
 import { MintComment as Zora1155MintComment } from "../../../generated/templates/ZoraCreatorFixedPriceSaleStrategy/ZoraCreatorFixedPriceSaleStrategy";
 import { getMintCommentId } from "../../common/getMintCommentId";
+import { getContractId } from "../../common/getContractId";
 
 export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(event.address, event.params.mediaContract, event.params.tokenId)
   const sale = new SalesConfigFixedPriceSaleStrategy(id);
   sale.configAddress = event.address;
-  sale.contract = event.params.mediaContract.toHex();
+  sale.contract = getContractId(event.params.mediaContract);
   sale.fundsRecipient = event.params.salesConfig.fundsRecipient;
   sale.pricePerToken = event.params.salesConfig.pricePerToken;
   sale.saleStart = event.params.salesConfig.saleStart;
@@ -35,7 +36,7 @@ export function handleFixedPriceStrategySaleSet(event: SaleSet): void {
   // add join
   const saleJoin = new SalesStrategyConfig(id);
   if (event.params.tokenId.equals(BigInt.zero())) {
-    saleJoin.contract = event.params.mediaContract.toHex();
+    saleJoin.contract = getContractId(event.params.mediaContract);
   } else {
     saleJoin.tokenAndContract = getTokenId(event.params.mediaContract, event.params.tokenId);
   }

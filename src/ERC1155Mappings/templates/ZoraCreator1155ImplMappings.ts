@@ -30,6 +30,7 @@ import { getTokenId } from "../../common/getTokenId";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 import { TOKEN_STANDARD_ERC1155 } from "../../constants/tokenStandard";
+import { getContractId } from "../../common/getContractId";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
@@ -119,7 +120,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 
   permissions.tokenId = event.params.tokenId;
   if (event.params.tokenId.equals(BigInt.zero())) {
-    permissions.contract = event.address.toHexString();
+    permissions.contract = getContractId(event.address);
   } else {
     permissions.tokenAndContract = getTokenId(
       event.address,
@@ -147,7 +148,7 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
     event.params.configuration.royaltyMintSchedule;
 
   if (event.params.tokenId.equals(BigInt.zero())) {
-    royalties.contract = event.address.toHexString();
+    royalties.contract = getContractId(event.address);
   } else {
     royalties.tokenAndContract = getTokenId(
       event.address,
@@ -214,7 +215,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   token.block = event.block.number;
   token.timestamp = event.block.timestamp;
 
-  token.contract = event.address.toHex();
+  token.contract = getContractId(event.address);
   token.tokenId = event.params.tokenId;
   token.uri = event.params.tokenData.uri;
   token.maxSupply = event.params.tokenData.maxSupply;
@@ -368,7 +369,7 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   token.address = event.address;
   token.timestamp = event.block.timestamp;
 
-  token.contract = event.address.toHex();
+  token.contract = getContractId(event.address);
   token.tokenStandard = TOKEN_STANDARD_ERC1155;
 
   const ipfsHostPath = getIPFSHostFromURI(event.params.newURI);

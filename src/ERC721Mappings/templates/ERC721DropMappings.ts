@@ -45,6 +45,7 @@ import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 import { getMintCommentId } from "../../common/getMintCommentId";
 import { getSaleId } from "../../common/getSaleId";
+import { getContractId } from "../../common/getContractId";
 
 /* sales config updated */
 
@@ -67,7 +68,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     );
     strategyPresale.configAddress = event.address;
     strategyPresale.tokenId = BigInt.zero();
-    strategyPresale.contract = event.address.toHexString();
+    strategyPresale.contract = getContractId(event.address);
     strategyPresale.presaleStart = salesConfigObject.getPresaleStart();
     strategyPresale.presaleEnd = salesConfigObject.getPresaleEnd();
     strategyPresale.merkleRoot = salesConfigObject.getPresaleMerkleRoot();
@@ -81,7 +82,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 
     // make a join table
     const presaleJoin = new SalesStrategyConfig(presaleConfigId);
-    presaleJoin.contract = event.address.toHexString();
+    presaleJoin.contract = getContractId(event.address);
 
     presaleJoin.txn = txn;
     presaleJoin.address = event.address;
@@ -113,7 +114,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
     fixedPriceSaleStrategy.configAddress = event.address;
-    fixedPriceSaleStrategy.contract = event.address.toHexString();
+    fixedPriceSaleStrategy.contract = getContractId(event.address);
     fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
     fixedPriceSaleStrategy.saleEnd = salesConfigObject.getPublicSaleEnd();
@@ -122,7 +123,7 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
 
     // make a join table
     const fixedPriceSaleJoin = new SalesStrategyConfig(publicSaleConfigId);
-    fixedPriceSaleJoin.contract = event.address.toHexString();
+    fixedPriceSaleJoin.contract = getContractId(event.address);
 
     fixedPriceSaleJoin.txn = txn;
     fixedPriceSaleJoin.address = event.address;
@@ -141,14 +142,15 @@ export function handleUpgraded(event: Upgraded): void {
   const drop = ERC721DropContract.bind(event.address);
   if (drop) {
     const version = drop.contractVersion();
-    const savedContract = ZoraCreateContract.load(event.address.toHexString());
+    const contractId = getContractId(event.address);
+    const savedContract = ZoraCreateContract.load(contractId);
     if (savedContract) {
       savedContract.contractVersion = version.toString();
       const dropConfig = drop.config();
       const royalties = new RoyaltyConfig(event.address.toHexString());
       royalties.royaltyRecipient = dropConfig.getFundsRecipient();
       royalties.royaltyMintSchedule = BigInt.zero();
-      royalties.contract = savedContract.id;
+      royalties.contract = contractId;
       royalties.tokenId = BigInt.zero();
       royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
       royalties.save();
@@ -195,7 +197,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   permissions.txn = makeTransaction(event);
-  permissions.contract = event.address.toHexString();
+  Permissions.contract = getContractId(event.address);
 
   permissions.save();
 }
@@ -224,7 +226,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   }
 
   permissions.txn = makeTransaction(event);
-  permissions.contract = event.address.toHexString();
+  permissions.contract = getContractId(event.address);
   permissions.user = event.params.account;
 
   permissions.save();

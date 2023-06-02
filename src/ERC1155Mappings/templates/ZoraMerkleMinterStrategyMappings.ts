@@ -8,6 +8,7 @@ import { getSalesConfigKey } from "../../common/getSalesConfigKey";
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { SALE_CONFIG_PRESALE } from "../../constants/salesConfigTypes";
+import { getContractId } from "../../common/getContractId";
 
 export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   const id = getSalesConfigKey(
@@ -28,14 +29,14 @@ export function handleMerkleMinterStrategySaleSet(event: SaleSet): void {
   sale.timestamp = event.block.timestamp;
   sale.txn = txn;
   sale.tokenId = event.params.tokenId;
-  sale.contract = event.params.mediaContract.toHex();
+  sale.contract = getContractId(event.params.mediaContract);
 
   sale.save();
 
   // add join
   const saleJoin = new SalesStrategyConfig(id);
   if (event.params.tokenId.equals(BigInt.zero())) {
-    saleJoin.contract = event.params.mediaContract.toHex();
+    saleJoin.contract = getContractId(event.params.mediaContract);
   } else {
     saleJoin.tokenAndContract = getTokenId(
       event.params.mediaContract,

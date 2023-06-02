@@ -29,6 +29,7 @@ import {
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
 import { TOKEN_STANDARD_ERC721 } from "../constants/tokenStandard";
+import { getContractId } from "../common/getContractId";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
@@ -96,8 +97,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const dropAddress = event.params.editionContractAddress;
   const dropContract = ERC721DropContract.bind(dropAddress);
 
-  const contractId = event.params.editionContractAddress.toHex();
-  const createdContract = new ZoraCreateContract(contractId);
+  const createdContract = new ZoraCreateContract(getContractId(dropAddress));
 
   createdContract.contractVersion = dropContract.contractVersion().toString();
   const dropConfig = dropContract.config();
@@ -106,7 +106,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const royalties = new RoyaltyConfig(dropAddress.toHex());
   royalties.royaltyRecipient = dropConfig.getFundsRecipient();
   royalties.royaltyMintSchedule = BigInt.zero();
-  royalties.contract = createdContract.id;
+  royalties.contract = getContractId(dropAddress);
   royalties.tokenId = BigInt.zero();
   royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
   royalties.user = event.params.creator;
@@ -148,7 +148,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const txn = makeTransaction(event);
   createdContract.timestamp = event.block.timestamp;
   createdContract.block = event.block.number;
-  createdContract.address = event.params.editionContractAddress;
+  createdContract.address = dropAddress;
   createdContract.txn = txn;
   createdContract.createdAtBlock = event.block.number;
 
@@ -164,7 +164,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.totalSupply = BigInt.zero();
   newToken.maxSupply = event.params.editionSize;
   newToken.totalMinted = BigInt.zero();
-  newToken.contract = contractId;
+  newToken.contract = getContractId(dropAddress);
   newToken.tokenId = BigInt.zero();
 
   newToken.txn = txn;

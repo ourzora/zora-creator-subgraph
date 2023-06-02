@@ -20,10 +20,12 @@ import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import { TOKEN_STANDARD_ERC1155 } from "../constants/tokenStandard";
 import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
+import { getContractId } from "../common/getContractId";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
-  const contractId = event.params.newContract.toHex();
-  const createdContract = new ZoraCreateContract(contractId);
+  const createdContract = new ZoraCreateContract(
+    getContractId(event.params.newContract)
+  );
 
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;

@@ -15,6 +15,7 @@ import {
 import { getTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { SALE_CONFIG_REDEEM_STRATEGY } from "../../constants/salesConfigTypes";
+import { getContractId } from "../../common/getContractId";
 
 export function handleRedeemCleared(event: RedeemsCleared): void {
   for (let i = 0; i < event.params.redeemInstructionsHashes.length; i++) {
@@ -105,7 +106,7 @@ export function handleRedeemSet(event: RedeemSet): void {
   // add join
   const saleJoin = new SalesStrategyConfig(redemptionHash);
   if (event.params.data.mintToken.tokenId.equals(BigInt.zero())) {
-    saleJoin.contract = event.params.data.mintToken.tokenContract.toHex();
+    saleJoin.contract = getContractId(event.params.data.mintToken.tokenContract);
   } else {
     saleJoin.tokenAndContract = getTokenId(
       event.params.data.mintToken.tokenContract,
