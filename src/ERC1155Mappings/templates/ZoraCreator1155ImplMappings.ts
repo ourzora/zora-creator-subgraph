@@ -31,6 +31,10 @@ import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 import { TOKEN_STANDARD_ERC1155 } from "../../constants/tokenStandard";
 import { getContractId } from "../../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../../common/metadata";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
@@ -65,12 +69,14 @@ export function handleURI(event: URI): void {
     return;
   }
 
-  const ipfsHostPath = getIPFSHostFromURI(event.params.value);
-  if (ipfsHostPath !== null) {
-    token.metadata = ipfsHostPath;
-    MetadataInfoTemplate.create(ipfsHostPath);
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  const uri = impl.try_uri(event.params.id);
+  token.metadataIPFSID = extractIPFSIDFromContract(uri);
+  token.metadata = loadMetadataInfoFromID(token.metadataIPFSID);
+  if (!uri.reverted) {
+    token.uri = uri.value;
   }
-  token.uri = event.params.value;
+
   token.save();
 
   const history = new OnChainMetadataHistory(getOnChainMetadataKey(event));
@@ -87,9 +93,7 @@ export function handleURI(event: URI): void {
   );
   history.createdAtBlock = event.block.number;
   history.directURI = event.params.value;
-  if (ipfsHostPath !== null) {
-    history.directURIMetadata = ipfsHostPath;
-  }
+  history.directURIMetadata = token.metadataIPFSID;
   history.knownType = "DIRECT_URI";
   history.save();
 }
@@ -239,26 +243,23 @@ export function handleTransferSingle(event: TransferSingle): void {
   const token = ZoraCreateToken.load(
     getTokenId(event.address, event.params.id)
   );
-  if (event.params.from.equals(Address.zero())) {
-    if (token) {
-      token.totalSupply = token.totalSupply.plus(event.params.value);
-      token.totalMinted = token.totalMinted.plus(event.params.value);
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
-  } else if (event.params.to.equals(Address.zero())) {
-    if (token) {
-      token.totalSupply = token.totalSupply.minus(event.params.value);
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
-  } else if (newHolderNumber.gt(new BigInt(0))) {
-    if (token) {
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
+
+  if (!token) {
+    return;
   }
 
-  if (token) {
-    token.save();
+  if (event.params.from.equals(Address.zero())) {
+    token.totalSupply = token.totalSupply.plus(event.params.value);
+    token.totalMinted = token.totalMinted.plus(event.params.value);
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+  } else if (event.params.to.equals(Address.zero())) {
+    token.totalSupply = token.totalSupply.minus(event.params.value);
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+  } else if (newHolderNumber.gt(new BigInt(0))) {
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
   }
+
+  token.save();
 }
 
 // update the minted number and max number
@@ -343,13 +344,15 @@ export function handleContractMetadataUpdated(
   if (createContract) {
     createContract.contractURI = event.params.uri;
     createContract.name = event.params.name;
-    const ipfsHostPath = getIPFSHostFromURI(event.params.uri);
-    if (ipfsHostPath !== null) {
-      createContract.metadata = ipfsHostPath;
-      MetadataInfoTemplate.create(ipfsHostPath);
-    } else {
-      createContract.metadata = null;
-    }
+
+    const impl = ZoraCreator1155Impl.bind(event.address);
+    createContract.metadataIPFSID = extractIPFSIDFromContract(
+      impl.try_contractURI()
+    );
+    createContract.metadata = loadMetadataInfoFromID(
+      createContract.metadataIPFSID
+    );
+
     createContract.save();
   }
 }
@@ -374,11 +377,12 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   token.contract = getContractId(event.address);
   token.tokenStandard = TOKEN_STANDARD_ERC1155;
 
-  const ipfsHostPath = getIPFSHostFromURI(event.params.newURI);
-  if (ipfsHostPath !== null) {
-    token.metadata = ipfsHostPath;
-    MetadataInfoTemplate.create(ipfsHostPath);
-  }
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  token.metadataIPFSID = extractIPFSIDFromContract(
+    impl.try_uri(event.params.tokenId)
+  );
+
+  token.metadata = loadMetadataInfoFromID(token.metadataIPFSID);
   token.totalMinted = BigInt.zero();
   token.totalSupply = BigInt.zero();
   token.save();

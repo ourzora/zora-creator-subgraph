@@ -22,14 +22,15 @@ import { makeTransaction } from "../common/makeTransaction";
 
 import { ERC721Drop as ERC721DropContract } from "../../generated/templates/ERC721Drop/ERC721Drop";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
-import {
-  MetadataInfo as MetadataInfoTemplate,
-  ERC721Drop as ERC721DropTemplate,
-} from "../../generated/templates";
+import { ERC721Drop as ERC721DropTemplate } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
 import { TOKEN_STANDARD_ERC721 } from "../constants/tokenStandard";
 import { getContractId } from "../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../common/metadata";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
@@ -98,7 +99,6 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const dropContract = ERC721DropContract.bind(dropAddress);
 
   const createdContract = new ZoraCreateContract(getContractId(dropAddress));
-
   createdContract.contractVersion = dropContract.contractVersion().toString();
   const dropConfig = dropContract.config();
 
@@ -138,11 +138,17 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   }
   createdContract.mintFeePerQuantity = feePerAmount.value.getFee();
 
+  createdContract.metadataIPFSID = extractIPFSIDFromContract(
+    contractURIResponse
+  );
+  createdContract.metadata = loadMetadataInfoFromID(
+    createdContract.metadataIPFSID
+  );
+
   if (!contractURIResponse.reverted) {
     const ipfsHostPath = getIPFSHostFromURI(contractURIResponse.value);
     if (ipfsHostPath !== null) {
       createdContract.metadata = ipfsHostPath;
-      MetadataInfoTemplate.create(ipfsHostPath);
     }
   }
   const txn = makeTransaction(event);

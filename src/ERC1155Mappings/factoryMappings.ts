@@ -21,9 +21,15 @@ import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
 import { TOKEN_STANDARD_ERC1155 } from "../constants/tokenStandard";
 import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { getContractId } from "../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../common/metadata";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
-  const createdContract = new ZoraCreateContract(getContractId(event.params.newContract));
+  const createdContract = new ZoraCreateContract(
+    getContractId(event.params.newContract)
+  );
 
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
@@ -55,6 +61,13 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.mintFeePerQuantity = impl.mintFee();
   createdContract.contractVersion = impl.contractVersion();
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
+
+  createdContract.metadataIPFSID = extractIPFSIDFromContract(
+    impl.try_contractURI()
+  );
+  createdContract.metadata = loadMetadataInfoFromID(
+    createdContract.metadataIPFSID
+  );
 
   createdContract.save();
 

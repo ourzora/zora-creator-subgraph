@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, bigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -46,6 +46,10 @@ import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 import { getMintCommentId } from "../../common/getMintCommentId";
 import { getSaleId } from "../../common/getSaleId";
 import { getContractId } from "../../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../../common/metadata";
 
 /* sales config updated */
 
@@ -286,6 +290,11 @@ export function handleUpdatedMetadataRenderer(
   }
 
   createToken.rendererContract = event.params.renderer;
+  const drop = ERC721DropContract.bind(event.address);
+  createToken.metadataIPFSID = extractIPFSIDFromContract(
+    drop.try_contractURI()
+  );
+  createToken.metadata = loadMetadataInfoFromID(createToken.metadataIPFSID);
   createToken.save();
 
   if (!KnownRenderer.load(event.params.renderer.toHex())) {

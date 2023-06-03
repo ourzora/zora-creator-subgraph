@@ -161,6 +161,7 @@ type ZoraCreateContract @entity {
   contractStandard: String!
   contractVersion: String
   metadata: MetadataInfo
+  metadataIPFSID: String
 
   mintFeePerQuantity: BigInt!
 
@@ -222,6 +223,7 @@ type ZoraCreateToken @entity {
   tokenStandard: String!
 
   metadata: MetadataInfo
+  metadataIPFSID: String
 
   onChainMetadataHistory: [OnChainMetadataHistory!]!
     @derivedFrom(field: "tokenAndContract")

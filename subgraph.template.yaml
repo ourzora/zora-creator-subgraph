@@ -16,6 +16,9 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - ERC1155Drop
+        - MetadataInfo
+        - ZoraCreateToken
+        - ZoraCreateContract
       abis:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
@@ -43,6 +46,7 @@ dataSources:
       entities:
         - ZoraCreateContract
         - ZoraCreateToken
+        - MetadataInfo
       abis:
         - name: ZoraNFTCreatorV1
           file: ./abis/ZoraNFTCreatorV1.json
@@ -65,9 +69,6 @@ templates:
       handler: handleJSONMetadataFetched
       entities:
         - MetadataInfo
-      abis:
-        - name: ZoraCreator1155Impl
-          file: ./abis/ZoraCreator1155Impl.json
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: {{network}}
@@ -109,6 +110,7 @@ templates:
         - ZoraCreateToken
         - OnChainMetadata
         - TransactionInfo
+        - MetadataInfo
       abis:
         - name: DropMetadataRenderer
           file: ./abis/DropMetadataRenderer.json
@@ -133,6 +135,7 @@ templates:
         - Token1155Holder
         - OnChainMetadataHistory
         - RoyaltyConfig
+        - MetadataInfo
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
       abis:
@@ -254,10 +257,17 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - Sale
-        - Transfer
-        - SalesConfig
-        - ERC721Drop
+        - ZoraCreateContract
+        - SalesConfigMerkleMinterStrategy
+        - SalesStrategyConfig
+        - SalesConfigFixedPriceSaleStrategy
+        - ZoraCreatorPermission
+        - ZoraCreateToken
+        - RoyaltyConfig
+        - OnChainMetadataHistory
+        - KnownRenderer
+        - MintComment
+        - TokenSale
       language: wasm/assemblyscript
       file: ./src/ERC721Mappings/templates/ERC721DropMappings.ts
       abis:

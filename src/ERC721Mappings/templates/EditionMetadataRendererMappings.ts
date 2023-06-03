@@ -8,7 +8,6 @@ import {
   OnChainMetadataHistory,
   ZoraCreateContract,
 } from "../../../generated/schema";
-import { MetadataInfo as MetadataInfoTemplate } from "../../../generated/templates";
 import { getDefaultTokenId } from "../../common/getTokenId";
 import { makeTransaction } from "../../common/makeTransaction";
 import { EditionMetadataRenderer } from "../../../generated/templates/EditionMetadataRenderer/EditionMetadataRenderer";
@@ -16,7 +15,10 @@ import { ERC721Drop as ERC721DropFactory } from "../../../generated/templates/ER
 import { Address } from "@graphprotocol/graph-ts";
 import { METADATA_ERC721_EDITION } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
-import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../../common/metadata";
 
 export function handleCreatedEdition(event: EditionInitialized): void {
   const metadataRecord = new EditionMetadata(getOnChainMetadataKey(event));
@@ -128,15 +130,10 @@ function updateContractURI(target: Address): void {
   if (contract) {
     const erc721Drop = ERC721DropFactory.bind(target);
     if (erc721Drop) {
-      contract.contractURI = erc721Drop.contractURI();
-      // Update overall contract object uri from metadata path
-      if (contract.contractURI) {
-        const ipfsHostPath = getIPFSHostFromURI(contract.contractURI);
-        if (ipfsHostPath !== null) {
-          contract.metadata = ipfsHostPath;
-          MetadataInfoTemplate.create(ipfsHostPath);
-        }
-      }
+      contract.metadataIPFSID = extractIPFSIDFromContract(
+        erc721Drop.try_contractURI()
+      );
+      contract.metadata = loadMetadataInfoFromID(contract.metadataIPFSID);
       contract.save();
     }
   }
