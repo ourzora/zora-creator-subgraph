@@ -22,7 +22,6 @@ import {
   ZoraCreator1155Impl,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
-import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 import { getPermissionsKey } from "../../common/getPermissionsKey";
 import { getToken1155HolderId } from "../../common/getToken1155HolderId";

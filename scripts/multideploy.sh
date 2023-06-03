@@ -58,5 +58,5 @@ do
   echo "$newjson" > ./config/$network.json
   cat ./config/$network.json
   NETWORK=$network yarn run build
-  goldsky subgraph deploy zora-create-$network/$version
+  goldsky subgraph deploy zora-create-$network/$version --overwrite
 done
