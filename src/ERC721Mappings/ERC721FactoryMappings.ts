@@ -1,5 +1,3 @@
-import { Address } from "@graphprotocol/graph-ts";
-
 import {
   DropMetadataRenderer as DropMetadataRendererFactory,
   EditionMetadataRenderer as EditionMetadataRendererFactory,
@@ -24,13 +22,15 @@ import { makeTransaction } from "../common/makeTransaction";
 
 import { ERC721Drop as ERC721DropContract } from "../../generated/templates/ERC721Drop/ERC721Drop";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
-import {
-  MetadataInfo as MetadataInfoTemplate,
-  NewERC721Drop as NewERC721DropTemplate,
-} from "../../generated/templates";
+import { ERC721Drop as ERC721DropTemplate } from "../../generated/templates";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { getDefaultTokenId } from "../common/getTokenId";
 import { TOKEN_STANDARD_ERC721 } from "../constants/tokenStandard";
+import { getContractId } from "../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../common/metadata";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
   const upgrade = new Upgrade(event.transaction.hash.toHex());
@@ -45,19 +45,46 @@ export function handleFactoryUpgraded(event: Upgraded): void {
 
   if (!KnownRenderer.load(dropRendererAddress.toHex())) {
     const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
-    knownDropRenderer.txn = makeTransaction(event);
+    const txn = makeTransaction(event);
+    knownDropRenderer.txn = txn;
     knownDropRenderer.address = dropRendererAddress;
+    knownDropRenderer.block = event.block.number;
+    knownDropRenderer.timestamp = event.block.timestamp;
+    knownDropRenderer.isEdition = false;
+
     knownDropRenderer.save();
   }
 
   if (!KnownRenderer.load(editionRendererAddress.toHex())) {
-    const knownEditionRenderer = new KnownRenderer(editionRendererAddress.toHex());
-    knownEditionRenderer.txn = makeTransaction(event);
+    const knownEditionRenderer = new KnownRenderer(
+      editionRendererAddress.toHex()
+    );
+    const txn = makeTransaction(event);
+
+    knownEditionRenderer.txn = txn;
+    knownEditionRenderer.address = dropRendererAddress;
+    knownEditionRenderer.block = event.block.number;
+    knownEditionRenderer.timestamp = event.block.timestamp;
     knownEditionRenderer.address = editionRendererAddress;
+
+    knownEditionRenderer.isEdition = true;
     knownEditionRenderer.save();
   }
 
-  factory.txn = makeTransaction(event);
+  const txn = makeTransaction(event);
+
+  upgrade.txn = txn;
+  upgrade.block = event.block.number;
+  upgrade.timestamp = event.block.timestamp;
+  upgrade.impl = event.params.implementation;
+  upgrade.address = event.address;
+  upgrade.type = "721Factory";
+
+  factory.txn = txn;
+  factory.block = event.block.number;
+  factory.timestamp = event.block.timestamp;
+  factory.address = event.address;
+
   factory.dropMetadataRendererFactory = creator.dropMetadataRenderer();
   factory.editionMetadataRendererFactory = creator.editionMetadataRenderer();
   factory.implementation = event.params.implementation;
@@ -71,10 +98,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const dropAddress = event.params.editionContractAddress;
   const dropContract = ERC721DropContract.bind(dropAddress);
 
-  const contractId = event.params.editionContractAddress.toHex();
-  const createdContract = new ZoraCreateContract(contractId);
-
-  createdContract.address = dropAddress;
+  const createdContract = new ZoraCreateContract(getContractId(dropAddress));
   createdContract.contractVersion = dropContract.contractVersion().toString();
   const dropConfig = dropContract.config();
 
@@ -82,7 +106,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   const royalties = new RoyaltyConfig(dropAddress.toHex());
   royalties.royaltyRecipient = dropConfig.getFundsRecipient();
   royalties.royaltyMintSchedule = BigInt.zero();
-  royalties.contract = createdContract.id;
+  royalties.contract = getContractId(dropAddress);
   royalties.tokenId = BigInt.zero();
   royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
   royalties.user = event.params.creator;
@@ -101,21 +125,37 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   createdContract.contractVersion = dropContract.contractVersion().toString();
   createdContract.rendererContract = dropContract.metadataRenderer();
 
+  const knownRenderer = KnownRenderer.load(
+    dropConfig.getMetadataRenderer().toHex()
+  );
+  if (knownRenderer) {
+    createdContract.likelyIsEdition = knownRenderer.isEdition;
+  }
+
   const feePerAmount = dropContract.try_zoraFeeForAmount(BigInt.fromI64(1));
   if (feePerAmount.reverted) {
     createdContract.mintFeePerQuantity = BigInt.zero();
   }
   createdContract.mintFeePerQuantity = feePerAmount.value.getFee();
-  createdContract.mintFeePerTxn = BigInt.zero();
+
+  createdContract.metadataIPFSID = extractIPFSIDFromContract(
+    contractURIResponse
+  );
+  createdContract.metadata = loadMetadataInfoFromID(
+    createdContract.metadataIPFSID
+  );
 
   if (!contractURIResponse.reverted) {
     const ipfsHostPath = getIPFSHostFromURI(contractURIResponse.value);
     if (ipfsHostPath !== null) {
       createdContract.metadata = ipfsHostPath;
-      MetadataInfoTemplate.create(ipfsHostPath);
     }
   }
-  createdContract.txn = makeTransaction(event);
+  const txn = makeTransaction(event);
+  createdContract.timestamp = event.block.timestamp;
+  createdContract.block = event.block.number;
+  createdContract.address = dropAddress;
+  createdContract.txn = txn;
   createdContract.createdAtBlock = event.block.number;
 
   createdContract.save();
@@ -130,12 +170,17 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.totalSupply = BigInt.zero();
   newToken.maxSupply = event.params.editionSize;
   newToken.totalMinted = BigInt.zero();
-  newToken.contract = contractId;
+  newToken.contract = getContractId(dropAddress);
   newToken.tokenId = BigInt.zero();
-  newToken.txn = makeTransaction(event);
+
+  newToken.txn = txn;
+  newToken.timestamp = event.block.timestamp;
+  newToken.address = event.address;
+  newToken.block = event.block.number;
+
   newToken.createdAtBlock = event.block.number;
   newToken.tokenStandard = TOKEN_STANDARD_ERC721;
   newToken.save();
 
-  NewERC721DropTemplate.create(dropAddress);
+  ERC721DropTemplate.create(dropAddress);
 }

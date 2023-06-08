@@ -9,7 +9,11 @@ export function handleRedeemMinterDeployed(event: RedeemMinterDeployed): void {
   );
   config.creatorAddress = event.params.creatorContract;
   config.minterAddress = event.params.minterContract;
-  config.txn = makeTransaction(event)
+
+  const txn = makeTransaction(event);
+  config.txn = txn;
+  config.block = event.block.number;
+  config.timestamp = event.block.timestamp;
 
   ZoraCreatorRedeemMinterStrategy.create(event.params.minterContract);
 

@@ -1,10 +1,19 @@
 type TransactionInfo @entity {
   id: ID!
+  chainId: BigInt!
+  network: String!
   block: BigInt!
   logIndex: BigInt!
   address: Bytes!
   timestamp: BigInt!
 }
+
+# TODO:
+# * add chainid & root parameters
+# * ensure contractVersion works
+
+
+# **ERC721**
 
 type SalesConfig @entity(immutable: true) {
   id: ID!
@@ -16,103 +25,87 @@ type SalesConfig @entity(immutable: true) {
   presaleStart: BigInt!
   presaleEnd: BigInt!
   presaleMerkleRoot: Bytes!
-
-  drop: ERC721Drop!
-}
-
-type ContractConfig @entity {
-  id: ID!
-
-  metadataRenderer: Bytes!
-  editionSize: BigInt!
-  royaltyBPS: BigInt!
-  fundsRecipient: Bytes!
-
-  drop: ERC721Drop!
-}
-
-type ERC721Drop @entity {
-  id: ID!
-
-  created: TransactionInfo!
-  createdAt: BigInt!
-
-  version: BigInt!
-
-  contractURI: String
-
-  creator: Bytes!
-  owner: Bytes!
-  address: Bytes!
-  network: String!
-  name: String!
-  symbol: String!
-
-  contractConfig: ContractConfig!
-
-  salesConfig: SalesConfig!
-
-  salesConfigHistory: [SalesConfig!]! @derivedFrom(field: "drop")
-
-  sales: [NFTEditionSale!]! @derivedFrom(field: "drop")
-
-  editionMetadata: EditionMetadata @derivedFrom(field: "drop")
-  dropMetadata: DropMetadata @derivedFrom(field: "drop")
-
-  roles: [DropRole!]! @derivedFrom(field: "drop")
-
-  totalMinted: BigInt!
-  maxSupply: BigInt!
-
-  rendererAddress: Bytes!
-
-  txn: TransactionInfo!
 }
 
 type ZoraCreate721Factory @entity {
+  # Begin – default data block
   id: ID!
+  txn: TransactionInfo!
+  address: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
 
   implementation: Bytes!
   version: String!
-  txn: TransactionInfo!
   dropMetadataRendererFactory: Bytes!
   editionMetadataRendererFactory: Bytes!
 }
 
-type DropRole @entity {
-  # user-role
+type MintComment @entity @immutable {
+  # Begin – default data block
   id: ID!
-  account: Bytes!
-  sender: Bytes!
-  roleHash: Bytes!
-  role: String!
-  updated: BigInt!
-  granted: Boolean!
-
-  drop: ERC721Drop!
-}
-
-type NFTEditionSale @entity {
-  id: ID!
-  pricePerToken: BigInt!
-  priceTotal: BigInt!
-  count: BigInt!
-  purchaser: Bytes!
-  firstPurchasedTokenId: Int!
   txn: TransactionInfo!
-  mintedAt: BigInt!
+  address: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
 
-  drop: ERC721Drop!
+  tokenAndContract: ZoraCreateToken!
+  sender: Bytes!
+  comment: String!
+  mintQuantity: BigInt!
+  tokenId: BigInt!
 }
+
+type TokenSale @entity {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  address: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
+  tokenAndContract: ZoraCreateToken!
+
+  quantity: BigInt!
+  pricePerToken: BigInt!
+  mintRecipient: Bytes!
+
+  # 721-specific data
+  firstPurchasedTokenId: BigInt! 
+}
+
+# type DropRole @entity {
+#   # user-role
+#   id: ID!
+#   account: Bytes!
+#   sender: Bytes!
+#   roleHash: Bytes!
+#   role: String!
+#   updated: BigInt!
+#   granted: Boolean!
+
+#   drop: ERC721Drop!
+# }
 
 type Upgrade @entity {
+  # Begin – default data block
   id: ID!
+  txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
+  impl: Bytes
+  type: String
 }
 
 type EditionMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop
   description: String!
   imageURI: String!
   animationURI: String!
@@ -121,7 +114,6 @@ type EditionMetadata @entity {
 type DropMetadata @entity {
   id: ID!
 
-  drop: ERC721Drop
   base: String!
   extension: String!
   freezeAt: BigInt!
@@ -133,8 +125,13 @@ type DropMetadata @entity {
 # 1155 Records
 
 type ZoraCreate1155Factory @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
 
   fixedPriceSaleStrategyAddress: Bytes!
   redeemMinterStrategyAddress: Bytes
@@ -144,20 +141,28 @@ type ZoraCreate1155Factory @entity {
 }
 
 type ZoraCreateContract @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
 
   address: Bytes!
 
   name: String
   symbol: String
 
+  # Set if this contract likely is an edition
+  likelyIsEdition: Boolean
+
   contractURI: String
   contractStandard: String!
   contractVersion: String
   metadata: MetadataInfo
+  metadataIPFSID: String
 
-  mintFeePerTxn: BigInt
   mintFeePerQuantity: BigInt!
 
   rendererContract: Bytes
@@ -175,8 +180,12 @@ type ZoraCreateContract @entity {
 }
 
 type ZoraCreatorPermission @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
 
   user: Bytes!
   contract: ZoraCreateContract
@@ -192,8 +201,13 @@ type ZoraCreatorPermission @entity {
 }
 
 type ZoraCreateToken @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
 
   address: Bytes!
 
@@ -209,12 +223,16 @@ type ZoraCreateToken @entity {
   tokenStandard: String!
 
   metadata: MetadataInfo
+  metadataIPFSID: String
 
   onChainMetadataHistory: [OnChainMetadataHistory!]!
     @derivedFrom(field: "tokenAndContract")
 
   holders1155Number: BigInt!
   holders1155: [Token1155Holder!]! @derivedFrom(field: "tokenAndContract")
+
+  mintComments: [MintComment!]! @derivedFrom(field: "tokenAndContract")
+  sales: [TokenSale!]! @derivedFrom(field: "tokenAndContract")
 
   permissions: [ZoraCreatorPermission!]! @derivedFrom(field: "tokenAndContract")
   royalties: [RoyaltyConfig!]! @derivedFrom(field: "tokenAndContract")
@@ -224,14 +242,26 @@ type ZoraCreateToken @entity {
 }
 
 type KnownRenderer @entity(immutable: true) {
+  # Begin – default data block
   id: ID!
-  address: Bytes!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
+  isEdition: Boolean
 }
 
 type OnChainMetadataHistory @entity(immutable: true) {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
   tokenAndContract: ZoraCreateToken!
 
   rendererAddress: Bytes!
@@ -247,8 +277,14 @@ type OnChainMetadataHistory @entity(immutable: true) {
 }
 
 type SalesConfigFixedPriceSaleStrategy @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
 
   configAddress: Bytes!
 
@@ -263,8 +299,13 @@ type SalesConfigFixedPriceSaleStrategy @entity {
 }
 
 type ZoraCreatorRedeemConfig @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  timestamp: BigInt!
+  # End – default data block
+
   creatorAddress: Bytes!
   minterAddress: Bytes!
 }
@@ -279,6 +320,7 @@ type RedeemMintToken @entity(immutable: true) {
 
 type RedeemInstructions @entity(immutable: true) {
   id: ID!
+
   redeemMinter: SalesConfigRedeemMinterStrategy!
   tokenType: Int!
   amount: BigInt!
@@ -290,8 +332,14 @@ type RedeemInstructions @entity(immutable: true) {
 }
 
 type RedeemMinterProcessed @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
   redeemMinter: SalesConfigRedeemMinterStrategy!
 
   target: Bytes!
@@ -310,8 +358,14 @@ type RedeemProcessedTokenPair @entity(immutable: true) {
 }
 
 type SalesConfigRedeemMinterStrategy @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
 
   configAddress: Bytes!
   target: Bytes!
@@ -327,8 +381,14 @@ type SalesConfigRedeemMinterStrategy @entity {
 }
 
 type SalesConfigMerkleMinterStrategy @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
 
   configAddress: Bytes!
 
@@ -342,8 +402,14 @@ type SalesConfigMerkleMinterStrategy @entity {
 }
 
 type SalesStrategyConfig @entity {
+  # Begin – default data block
   id: ID!
   txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
 
   tokenAndContract: ZoraCreateToken
   contract: ZoraCreateContract
@@ -367,6 +433,7 @@ type MetadataInfo @entity {
 
 type RoyaltyConfig @entity {
   id: ID!
+
   tokenId: BigInt!
   user: Bytes!
   royaltyBPS: BigInt!
@@ -379,6 +446,7 @@ type RoyaltyConfig @entity {
 type Token1155Holder @entity {
   # id is (contract, token, user)
   id: ID!
+
   user: Bytes!
   lastUpdatedBlock: BigInt!
   tokenAndContract: ZoraCreateToken!

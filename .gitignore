@@ -5,3 +5,4 @@ node_modules
 subgraph.yaml
 tests/.bin/
 yarn-error.log
+src/constants/chainid.ts

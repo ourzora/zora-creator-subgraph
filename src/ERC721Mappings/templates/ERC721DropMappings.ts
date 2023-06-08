@@ -1,4 +1,4 @@
-import { Address, bigInt, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -11,11 +11,15 @@ import {
   RoyaltyConfig,
   OnChainMetadataHistory,
   KnownRenderer,
+  MintComment,
+  TokenSale,
 } from "../../../generated/schema";
 
 import {
   ERC721Drop as ERC721DropContract,
   FundsRecipientChanged,
+  MintComment as ERC721DropMintComment,
+  Sale as ERC721DropSale,
   OpenMintFinalized,
   OwnershipTransferred,
   RoleGranted,
@@ -35,10 +39,17 @@ import {
   KNOWN_TYPE_DEFAULT_ADMIN,
   KNOWN_TYPE_MINTER_ROLE,
   KNOWN_TYPE_SALES_MANAGER_ROLE,
-} from "../../ERC721LegacyMappings/utils/roleUtils";
+} from "../../constants/erc721RoleUtils";
 import { getDefaultTokenId, getTokenId } from "../../common/getTokenId";
 import { METADATA_CUSTOM_RENDERER } from "../../constants/metadataHistoryTypes";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
+import { getMintCommentId } from "../../common/getMintCommentId";
+import { getSaleId } from "../../common/getSaleId";
+import { getContractId } from "../../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../../common/metadata";
 
 /* sales config updated */
 
@@ -61,17 +72,27 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     );
     strategyPresale.configAddress = event.address;
     strategyPresale.tokenId = BigInt.zero();
-    strategyPresale.contract = event.address.toHexString();
+    strategyPresale.contract = getContractId(event.address);
     strategyPresale.presaleStart = salesConfigObject.getPresaleStart();
     strategyPresale.presaleEnd = salesConfigObject.getPresaleEnd();
     strategyPresale.merkleRoot = salesConfigObject.getPresaleMerkleRoot();
-    strategyPresale.txn = makeTransaction(event);
+
+    const txn = makeTransaction(event);
+    strategyPresale.address = event.address;
+    strategyPresale.block = event.block.number;
+    strategyPresale.timestamp = event.block.timestamp;
+    strategyPresale.txn = txn;
     strategyPresale.save();
 
     // make a join table
     const presaleJoin = new SalesStrategyConfig(presaleConfigId);
-    presaleJoin.contract = event.address.toHexString();
-    presaleJoin.txn = makeTransaction(event);
+    presaleJoin.contract = getContractId(event.address);
+
+    presaleJoin.txn = txn;
+    presaleJoin.address = event.address;
+    presaleJoin.block = event.block.number;
+    presaleJoin.timestamp = event.block.timestamp;
+
     presaleJoin.presale = presaleConfigId;
     presaleJoin.type = SALE_CONFIG_PRESALE;
     presaleJoin.save();
@@ -88,20 +109,31 @@ export function handleSalesConfigChanged(event: SalesConfigChanged): void {
     const fixedPriceSaleStrategy = new SalesConfigFixedPriceSaleStrategy(
       publicSaleConfigId
     );
+
+    const txn = makeTransaction(event);
+    fixedPriceSaleStrategy.txn = txn;
+    fixedPriceSaleStrategy.block = event.block.number;
+    fixedPriceSaleStrategy.timestamp = event.block.timestamp;
+    fixedPriceSaleStrategy.address = event.address;
+
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
     fixedPriceSaleStrategy.configAddress = event.address;
-    fixedPriceSaleStrategy.contract = event.address.toHexString();
+    fixedPriceSaleStrategy.contract = getContractId(event.address);
     fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
     fixedPriceSaleStrategy.saleEnd = salesConfigObject.getPublicSaleEnd();
     fixedPriceSaleStrategy.pricePerToken = salesConfigObject.getPublicSalePrice();
-    fixedPriceSaleStrategy.txn = makeTransaction(event);
     fixedPriceSaleStrategy.save();
 
     // make a join table
     const fixedPriceSaleJoin = new SalesStrategyConfig(publicSaleConfigId);
-    fixedPriceSaleJoin.contract = event.address.toHexString();
-    fixedPriceSaleJoin.txn = makeTransaction(event);
+    fixedPriceSaleJoin.contract = getContractId(event.address);
+
+    fixedPriceSaleJoin.txn = txn;
+    fixedPriceSaleJoin.address = event.address;
+    fixedPriceSaleJoin.block = event.block.number;
+    fixedPriceSaleJoin.timestamp = event.block.timestamp;
+
     fixedPriceSaleJoin.fixedPrice = publicSaleConfigId;
     fixedPriceSaleJoin.type = SALE_CONFIG_FIXED_PRICE;
     fixedPriceSaleJoin.save();
@@ -114,14 +146,15 @@ export function handleUpgraded(event: Upgraded): void {
   const drop = ERC721DropContract.bind(event.address);
   if (drop) {
     const version = drop.contractVersion();
-    const savedContract = ZoraCreateContract.load(event.address.toHexString());
+    const contractId = getContractId(event.address);
+    const savedContract = ZoraCreateContract.load(contractId);
     if (savedContract) {
       savedContract.contractVersion = version.toString();
       const dropConfig = drop.config();
       const royalties = new RoyaltyConfig(event.address.toHexString());
       royalties.royaltyRecipient = dropConfig.getFundsRecipient();
       royalties.royaltyMintSchedule = BigInt.zero();
-      royalties.contract = savedContract.id;
+      royalties.contract = contractId;
       royalties.tokenId = BigInt.zero();
       royalties.royaltyBPS = BigInt.fromU64(dropConfig.getRoyaltyBPS());
       royalties.save();
@@ -149,6 +182,9 @@ export function handleRoleGranted(event: RoleGranted): void {
     permissions.isSalesManager = false;
     permissions.isMinter = false;
   }
+  permissions.block = event.block.number;
+  permissions.timestamp = event.block.timestamp;
+
   permissions.user = event.params.account;
   permissions.tokenId = BigInt.zero();
 
@@ -165,7 +201,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   permissions.txn = makeTransaction(event);
-  permissions.contract = event.address.toHexString();
+  permissions.contract = getContractId(event.address);
 
   permissions.save();
 }
@@ -194,7 +230,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   }
 
   permissions.txn = makeTransaction(event);
-  permissions.contract = event.address.toHexString();
+  permissions.contract = getContractId(event.address);
   permissions.user = event.params.account;
 
   permissions.save();
@@ -254,6 +290,11 @@ export function handleUpdatedMetadataRenderer(
   }
 
   createToken.rendererContract = event.params.renderer;
+  const drop = ERC721DropContract.bind(event.address);
+  createToken.metadataIPFSID = extractIPFSIDFromContract(
+    drop.try_contractURI()
+  );
+  createToken.metadata = loadMetadataInfoFromID(createToken.metadataIPFSID);
   createToken.save();
 
   if (!KnownRenderer.load(event.params.renderer.toHex())) {
@@ -262,7 +303,12 @@ export function handleUpdatedMetadataRenderer(
     history.knownType = METADATA_CUSTOM_RENDERER;
     history.createdAtBlock = event.block.timestamp;
     history.rendererAddress = event.params.renderer;
+
     history.txn = makeTransaction(event);
+    history.block = event.block.number;
+    history.address = event.address;
+    history.timestamp = event.block.timestamp;
+
     history.save();
   }
 }
@@ -293,4 +339,41 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   }
   createContract.owner = event.params.newOwner;
   createContract.save();
+}
+
+export function handleMintComment(event: ERC721DropMintComment): void {
+  const mintComment = new MintComment(getMintCommentId(event));
+
+  mintComment.comment = event.params.comment;
+  mintComment.mintQuantity = event.params.quantity;
+  mintComment.sender = event.params.sender;
+  mintComment.tokenId = event.params.tokenId;
+  mintComment.tokenAndContract = getTokenId(
+    event.params.tokenContract,
+    BigInt.zero()
+  );
+
+  mintComment.txn = makeTransaction(event);
+  mintComment.address = event.address;
+  mintComment.block = event.block.number;
+  mintComment.timestamp = event.block.timestamp;
+
+  mintComment.save();
+}
+
+export function handleSale(event: ERC721DropSale): void {
+  const sale = new TokenSale(getSaleId(event));
+
+  sale.tokenAndContract = getTokenId(event.address, BigInt.zero());
+  sale.firstPurchasedTokenId = event.params.firstPurchasedTokenId;
+  sale.pricePerToken = event.params.pricePerToken;
+  sale.mintRecipient = event.params.to;
+  sale.quantity = event.params.quantity;
+
+  sale.txn = makeTransaction(event);
+  sale.block = event.block.number;
+  sale.timestamp = event.block.timestamp;
+  sale.address = event.address;
+
+  sale.save();
 }

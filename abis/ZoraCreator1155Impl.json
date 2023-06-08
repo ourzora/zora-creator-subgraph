@@ -21,6 +21,16 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "ADDRESS_DELEGATECALL_TO_NON_CONTRACT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ADDRESS_LOW_LEVEL_CALL_FAILED",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -106,6 +116,81 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ERC1155_ACCOUNTS_AND_IDS_LENGTH_MISMATCH",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_ADDRESS_ZERO_IS_NOT_A_VALID_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_BURN_AMOUNT_EXCEEDS_BALANCE",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_BURN_FROM_ZERO_ADDRESS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_CALLER_IS_NOT_TOKEN_OWNER_OR_APPROVED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_ERC1155RECEIVER_REJECTED_TOKENS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_IDS_AND_AMOUNTS_LENGTH_MISMATCH",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_INSUFFICIENT_BALANCE_FOR_TRANSFER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_MINT_TO_ZERO_ADDRESS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_SETTING_APPROVAL_FOR_SELF",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_TRANSFER_TO_NON_ERC1155RECEIVER_IMPLEMENTER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1155_TRANSFER_TO_ZERO_ADDRESS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_NEW_IMPL_NOT_CONTRACT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_NEW_IMPL_NOT_UUPS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_UNSUPPORTED_PROXIABLEUUID",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -122,6 +207,16 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "FUNCTION_MUST_BE_CALLED_THROUGH_ACTIVE_PROXY",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FUNCTION_MUST_BE_CALLED_THROUGH_DELEGATECALL",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -135,6 +230,16 @@
       }
     ],
     "name": "FundsWithdrawInsolvent",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INITIALIZABLE_CONTRACT_ALREADY_INITIALIZED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INITIALIZABLE_CONTRACT_IS_NOT_INITIALIZING",
     "type": "error"
   },
   {
@@ -230,6 +335,11 @@
       }
     ],
     "name": "TokenIdMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPS_UPGRADEABLE_MUST_NOT_BE_CALLED_THROUGH_DELEGATECALL",
     "type": "error"
   },
   {
@@ -956,7 +1066,7 @@
     "outputs": [
       {
         "internalType": "uint256[]",
-        "name": "",
+        "name": "batchBalances",
         "type": "uint256[]"
       }
     ],

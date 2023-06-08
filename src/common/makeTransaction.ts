@@ -1,13 +1,17 @@
-import { ethereum } from "@graphprotocol/graph-ts";
+import { BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { TransactionInfo } from "../../generated/schema";
+import { chainid, network } from "../constants/chainid";
 
-export function makeTransaction(txn: ethereum.Event): string {
-  const txnInfo = new TransactionInfo(txn.transaction.hash.toHex());
-  txnInfo.block = txn.block.number;
-  txnInfo.timestamp = txn.block.timestamp;
-  txnInfo.logIndex = txn.logIndex;
-  txnInfo.address = txn.address;
-  txnInfo.save();
+export function makeTransaction(event: ethereum.Event): string {
+  const txn = new TransactionInfo(event.transaction.hash.toHex());
 
-  return txnInfo.id;
+  txn.block = event.block.number;
+  txn.timestamp = event.block.timestamp;
+  txn.logIndex = event.logIndex;
+  txn.chainId = chainid;
+  txn.address = event.address;
+  txn.network = network;
+  txn.save();
+
+  return txn.id;
 }

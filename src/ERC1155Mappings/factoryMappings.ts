@@ -18,13 +18,18 @@ import {
 } from "../../generated/templates";
 import { makeTransaction } from "../common/makeTransaction";
 import { getIPFSHostFromURI } from "../common/getIPFSHostFromURI";
-import { BigInt } from "@graphprotocol/graph-ts";
 import { TOKEN_STANDARD_ERC1155 } from "../constants/tokenStandard";
 import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
+import { getContractId } from "../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../common/metadata";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
-  const contractId = event.params.newContract.toHex();
-  const createdContract = new ZoraCreateContract(contractId);
+  const createdContract = new ZoraCreateContract(
+    getContractId(event.params.newContract)
+  );
 
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
@@ -42,7 +47,13 @@ export function handleNewContractCreated(event: SetupNewContract): void {
     createdContract.metadata = ipfsHostPath;
     MetadataInfoTemplate.create(ipfsHostPath);
   }
-  createdContract.txn = makeTransaction(event);
+
+  const txn = makeTransaction(event);
+  createdContract.txn = txn;
+  createdContract.block = event.block.number;
+  createdContract.address = event.params.newContract;
+  createdContract.timestamp = event.block.timestamp;
+
   createdContract.createdAtBlock = event.block.number;
 
   // query for more information about contract
@@ -51,7 +62,13 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.contractVersion = impl.contractVersion();
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
 
-  createdContract.mintFeePerTxn = BigInt.zero();
+  createdContract.metadataIPFSID = extractIPFSIDFromContract(
+    impl.try_contractURI()
+  );
+  createdContract.metadata = loadMetadataInfoFromID(
+    createdContract.metadataIPFSID
+  );
+
   createdContract.save();
 
   ZoraCreator1155ImplTemplate.create(event.params.newContract);
@@ -78,8 +95,19 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
     factory.redeemMinterStrategyAddress = redeemFactory.value;
   }
 
+  const txn = makeTransaction(event);
+  upgrade.txn = txn;
+  upgrade.block = event.block.number;
+  upgrade.timestamp = event.block.timestamp;
+  upgrade.impl = event.params.implementation;
+  upgrade.address = event.address;
+  upgrade.type = "1155Factory";
+
   // Save required factories.
-  factory.txn = makeTransaction(event);
+  factory.txn = txn;
+  factory.block = event.block.number;
+  factory.timestamp = event.block.timestamp;
+
   factory.fixedPriceSaleStrategyAddress = creator.fixedPriceMinter();
   factory.merkleSaleStrategyAddress = creator.merkleMinter();
   factory.implementation = event.params.implementation;

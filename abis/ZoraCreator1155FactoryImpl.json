@@ -27,7 +27,52 @@
   },
   {
     "inputs": [],
+    "name": "ADDRESS_DELEGATECALL_TO_NON_CONTRACT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ADDRESS_LOW_LEVEL_CALL_FAILED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "Constructor_ImplCannotBeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_NEW_IMPL_NOT_CONTRACT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_NEW_IMPL_NOT_UUPS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967_UNSUPPORTED_PROXIABLEUUID",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FUNCTION_MUST_BE_CALLED_THROUGH_ACTIVE_PROXY",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FUNCTION_MUST_BE_CALLED_THROUGH_DELEGATECALL",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INITIALIZABLE_CONTRACT_ALREADY_INITIALIZED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INITIALIZABLE_CONTRACT_IS_NOT_INITIALIZING",
     "type": "error"
   },
   {
@@ -43,6 +88,27 @@
   {
     "inputs": [],
     "name": "OWNER_CANNOT_BE_ZERO_ADDRESS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPS_UPGRADEABLE_MUST_NOT_BE_CALLED_THROUGH_DELEGATECALL",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "expected",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "actual",
+        "type": "string"
+      }
+    ],
+    "name": "UpgradeToMismatchedContractName",
     "type": "error"
   },
   {

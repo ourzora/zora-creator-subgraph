@@ -22,7 +22,6 @@ import {
   ZoraCreator1155Impl,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
-import { getIPFSHostFromURI } from "../../common/getIPFSHostFromURI";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
 import { getPermissionsKey } from "../../common/getPermissionsKey";
 import { getToken1155HolderId } from "../../common/getToken1155HolderId";
@@ -30,6 +29,11 @@ import { getTokenId } from "../../common/getTokenId";
 import { hasBit } from "../../common/hasBit";
 import { makeTransaction } from "../../common/makeTransaction";
 import { TOKEN_STANDARD_ERC1155 } from "../../constants/tokenStandard";
+import { getContractId } from "../../common/getContractId";
+import {
+  extractIPFSIDFromContract,
+  loadMetadataInfoFromID,
+} from "../../common/metadata";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
@@ -38,11 +42,10 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  contract.mintFeePerTxn = impl.mintFee();
+  contract.mintFeePerQuantity = impl.mintFee();
   contract.contractVersion = impl.contractVersion();
   contract.contractStandard = TOKEN_STANDARD_ERC1155;
 
-  contract.mintFeePerQuantity = BigInt.zero();
   contract.save();
 }
 
@@ -65,27 +68,31 @@ export function handleURI(event: URI): void {
     return;
   }
 
-  const ipfsHostPath = getIPFSHostFromURI(event.params.value);
-  if (ipfsHostPath !== null) {
-    token.metadata = ipfsHostPath;
-    MetadataInfoTemplate.create(ipfsHostPath);
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  const uri = impl.try_uri(event.params.id);
+  token.metadataIPFSID = extractIPFSIDFromContract(uri);
+  token.metadata = loadMetadataInfoFromID(token.metadataIPFSID);
+  if (!uri.reverted) {
+    token.uri = uri.value;
   }
-  token.uri = event.params.value;
+
   token.save();
 
-  const history = new OnChainMetadataHistory(
-    getOnChainMetadataKey(event)
-  );
-  history.txn = makeTransaction(event);
+  const history = new OnChainMetadataHistory(getOnChainMetadataKey(event));
+
+  const txn = makeTransaction(event);
+  history.txn = txn;
+  history.block = event.block.number;
+  history.timestamp = event.block.timestamp;
+  history.address = event.address;
+
   history.tokenAndContract = id;
   history.rendererAddress = Bytes.fromHexString(
     "0x0000000000000000000000000000000000000000"
   );
   history.createdAtBlock = event.block.number;
   history.directURI = event.params.value;
-  if (ipfsHostPath !== null) {
-    history.directURIMetadata = ipfsHostPath;
-  }
+  history.directURIMetadata = token.metadataIPFSID;
   history.knownType = "DIRECT_URI";
   history.save();
 }
@@ -101,6 +108,9 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
     permissions = new ZoraCreatorPermission(id);
   }
 
+  permissions.block = event.block.number;
+  permissions.timestamp = event.block.timestamp;
+
   permissions.isAdmin = hasBit(1, event.params.permissions);
   permissions.isMinter = hasBit(2, event.params.permissions);
   permissions.isSalesManager = hasBit(3, event.params.permissions);
@@ -113,7 +123,7 @@ export function handleUpdatedPermissions(event: UpdatedPermissions): void {
 
   permissions.tokenId = event.params.tokenId;
   if (event.params.tokenId.equals(BigInt.zero())) {
-    permissions.contract = event.address.toHexString();
+    permissions.contract = getContractId(event.address);
   } else {
     permissions.tokenAndContract = getTokenId(
       event.address,
@@ -141,7 +151,7 @@ export function handleUpdatedRoyalties(event: UpdatedRoyalties): void {
     event.params.configuration.royaltyMintSchedule;
 
   if (event.params.tokenId.equals(BigInt.zero())) {
-    royalties.contract = event.address.toHexString();
+    royalties.contract = getContractId(event.address);
   } else {
     royalties.tokenAndContract = getTokenId(
       event.address,
@@ -202,8 +212,13 @@ export function handleUpdatedToken(event: UpdatedToken): void {
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
   }
-  token.txn = makeTransaction(event);
-  token.contract = event.address.toHex();
+
+  const txn = makeTransaction(event);
+  token.txn = txn;
+  token.block = event.block.number;
+  token.timestamp = event.block.timestamp;
+
+  token.contract = getContractId(event.address);
   token.tokenId = event.params.tokenId;
   token.uri = event.params.tokenData.uri;
   token.maxSupply = event.params.tokenData.maxSupply;
@@ -227,26 +242,23 @@ export function handleTransferSingle(event: TransferSingle): void {
   const token = ZoraCreateToken.load(
     getTokenId(event.address, event.params.id)
   );
-  if (event.params.from.equals(Address.zero())) {
-    if (token) {
-      token.totalSupply = token.totalSupply.plus(event.params.value);
-      token.totalMinted = token.totalMinted.plus(event.params.value);
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
-  } else if (event.params.to.equals(Address.zero())) {
-    if (token) {
-      token.totalSupply = token.totalSupply.minus(event.params.value);
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
-  } else if (newHolderNumber.gt(new BigInt(0))) {
-    if (token) {
-      token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
-    }
+
+  if (!token) {
+    return;
   }
 
-  if (token) {
-    token.save();
+  if (event.params.from.equals(Address.zero())) {
+    token.totalSupply = token.totalSupply.plus(event.params.value);
+    token.totalMinted = token.totalMinted.plus(event.params.value);
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+  } else if (event.params.to.equals(Address.zero())) {
+    token.totalSupply = token.totalSupply.minus(event.params.value);
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
+  } else if (newHolderNumber.gt(new BigInt(0))) {
+    token.holders1155Number = token.holders1155Number.plus(newHolderNumber);
   }
+
+  token.save();
 }
 
 // update the minted number and max number
@@ -331,11 +343,15 @@ export function handleContractMetadataUpdated(
   if (createContract) {
     createContract.contractURI = event.params.uri;
     createContract.name = event.params.name;
-    const ipfsHostPath = getIPFSHostFromURI(event.params.uri);
-    if (ipfsHostPath !== null) {
-      createContract.metadata = ipfsHostPath;
-      MetadataInfoTemplate.create(ipfsHostPath);
-    }
+
+    const impl = ZoraCreator1155Impl.bind(event.address);
+    createContract.metadataIPFSID = extractIPFSIDFromContract(
+      impl.try_contractURI()
+    );
+    createContract.metadata = loadMetadataInfoFromID(
+      createContract.metadataIPFSID
+    );
+
     createContract.save();
   }
 }
@@ -350,15 +366,22 @@ export function handleSetupNewToken(event: SetupNewToken): void {
   token.tokenId = event.params.tokenId;
   token.uri = event.params.newURI;
   token.maxSupply = event.params.maxSupply;
-  token.txn = makeTransaction(event);
-  token.contract = event.address.toHex();
+
+  const txn = makeTransaction(event);
+  token.txn = txn;
+  token.block = event.block.number;
+  token.address = event.address;
+  token.timestamp = event.block.timestamp;
+
+  token.contract = getContractId(event.address);
   token.tokenStandard = TOKEN_STANDARD_ERC1155;
 
-  const ipfsHostPath = getIPFSHostFromURI(event.params.newURI);
-  if (ipfsHostPath !== null) {
-    token.metadata = ipfsHostPath;
-    MetadataInfoTemplate.create(ipfsHostPath);
-  }
+  const impl = ZoraCreator1155Impl.bind(event.address);
+  token.metadataIPFSID = extractIPFSIDFromContract(
+    impl.try_uri(event.params.tokenId)
+  );
+
+  token.metadata = loadMetadataInfoFromID(token.metadataIPFSID);
   token.totalMinted = BigInt.zero();
   token.totalSupply = BigInt.zero();
   token.save();

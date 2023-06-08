@@ -2,44 +2,23 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
+{{#factories1155}}
   - kind: ethereum/contract
-    name: ZoraNFTCreatorV1
+    name: ZoraNFTCreatorFactory1155V{{version}}
     network: {{network}}
     source:
       address: "{{address}}"
-      abi: ZoraNFTCreatorV1
+      abi: ZoraCreator1155FactoryImpl
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ERC721Drop
-        - SalesConfig
-      abis:
-        - name: ZoraNFTCreatorV1
-          file: ./abis/ZoraNFTCreatorV1.json
-        - name: ERC721Drop
-          file: ./abis/ERC721Drop.json
-      eventHandlers:
-        - event: CreatedDrop(indexed address,indexed address,uint256)
-          handler: handleCreatedDrop
-        - event: Upgraded(indexed address)
-          handler: handleFactoryUpgraded
-      file: ./src/ERC721LegacyMappings/ERC721FactoryMappings.ts
-  - kind: ethereum/contract
-    name: ZoraNFTCreatorFactory1155
-    network: {{network}}
-    source:
-      address: "{{1155Address}}"
-      abi: ZoraCreator1155FactoryImpl
-      startBlock: {{1155StartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
         - ERC1155Drop
+        - MetadataInfo
+        - ZoraCreateToken
+        - ZoraCreateContract
       abis:
         - name: ZoraCreator1155FactoryImpl
           file: ./abis/ZoraCreator1155FactoryImpl.json
@@ -51,32 +30,10 @@ dataSources:
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
+{{/factories1155}}
+{{#factories721}}
   - kind: ethereum/contract
-    name: ZoraNFTCreatorFactory1155V2
-    network: {{network}}
-    source:
-      address: "{{1155AddressV2}}"
-      abi: ZoraCreator1155FactoryImpl
-      startBlock: {{1155StartBlockV2}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - ERC1155Drop
-      abis:
-        - name: ZoraCreator1155FactoryImpl
-          file: ./abis/ZoraCreator1155FactoryImpl.json
-        - name: ZoraCreator1155Impl
-          file: ./abis/ZoraCreator1155Impl.json
-      eventHandlers:
-        - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
-          handler: handleNewContractCreated
-        - event: Upgraded(indexed address)
-          handler: handle1155FactoryUpgraded
-      file: ./src/ERC1155Mappings/factoryMappings.ts
-  - kind: ethereum/contract
-    name: NewZoraNFTCreatorV1
+    name: Zora721V{{version}}
     network: {{network}}
     source:
       address: "{{address}}"
@@ -89,6 +46,7 @@ dataSources:
       entities:
         - ZoraCreateContract
         - ZoraCreateToken
+        - MetadataInfo
       abis:
         - name: ZoraNFTCreatorV1
           file: ./abis/ZoraNFTCreatorV1.json
@@ -99,7 +57,8 @@ dataSources:
           handler: handleCreatedDrop
         - event: Upgraded(indexed address)
           handler: handleFactoryUpgraded
-      file: ./src/ERC721NewMappings/ERC721FactoryMappings.ts
+      file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
+{{/factories721}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
@@ -111,9 +70,8 @@ templates:
       entities:
         - MetadataInfo
       abis:
-        - name: ZoraCreator1155Impl
-          file: ./abis/ZoraCreator1155Impl.json
-  # not legacy mapping – shared
+       - name: ZoraCreator1155Impl
+         file: ./abis/ZoraCreator1155Impl.json
   - kind: ethereum/contract
     name: EditionMetadataRenderer
     network: {{network}}
@@ -140,8 +98,7 @@ templates:
           handler: handleUpdateMediaURIs
         - event: DescriptionUpdated(indexed address,address,string)
           handler: handleUpdateDescription
-      file: ./src/ERC721NewMappings/templates/EditionMetadataRendererMappings.ts
-  # not legacy mapping – shared
+      file: ./src/ERC721Mappings/templates/EditionMetadataRendererMappings.ts
   - kind: ethereum/contract
     name: DropMetadataRenderer
     network: {{network}}
@@ -156,6 +113,7 @@ templates:
         - ZoraCreateToken
         - OnChainMetadata
         - TransactionInfo
+        - MetadataInfo
       abis:
         - name: DropMetadataRenderer
           file: ./abis/DropMetadataRenderer.json
@@ -164,48 +122,12 @@ templates:
       eventHandlers:
         - event: MetadataUpdated(indexed address,string,string,string,uint256)
           handler: handleMetadataUpdated
-      file: ./src/ERC721NewMappings/templates/DropMetadataRendererMappings.ts
-  - name: ERC721Drop
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: ERC721Drop
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      entities:
-        - Sale
-        - Transfer
-        - SalesConfig
-        - ERC721Drop
-      language: wasm/assemblyscript
-      file: ./src/ERC721LegacyMappings/templates/ERC721DropMappings.ts
-      abis:
-        - name: ERC721Drop
-          file: ./abis/ERC721Drop.json
-      eventHandlers:
-        - event: SalesConfigChanged(indexed address)
-          handler: handleSalesConfigChanged
-        - event: OpenMintFinalized(indexed address,uint256)
-          handler: handleOpenMintFinalized
-        - event: FundsRecipientChanged(indexed address,indexed address)
-          handler: handleFundsRecipientChanged
-        # - event: Transfer(indexed address,indexed address,indexed uint256)
-        #   handler: handleNFTTransfer
-        # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
-        #   handler: handleSale
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+      file: ./src/ERC721Mappings/templates/DropMetadataRendererMappings.ts
   - name: ZoraCreator1155Impl
     kind: ethereum/contract
     network: {{network}}
     source:
       abi: ZoraCreator1155Impl
-      startBlock: {{1155StartBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -216,6 +138,7 @@ templates:
         - Token1155Holder
         - OnChainMetadataHistory
         - RoyaltyConfig
+        - MetadataInfo
       language: wasm/assemblyscript
       file: ./src/ERC1155Mappings/templates/ZoraCreator1155ImplMappings.ts
       abis:
@@ -264,6 +187,8 @@ templates:
       eventHandlers:
         - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,uint64,uint96,address))
           handler: handleFixedPriceStrategySaleSet
+        - event: MintComment(indexed address,indexed address,indexed uint256,uint256,string)
+          handler: handleMintedWithComment
   - name: ZoraCreatorRedeemMinterFactory
     kind: ethereum/contract
     network: {{network}}
@@ -326,7 +251,7 @@ templates:
         - event: SaleSet(indexed address,indexed uint256,(uint64,uint64,address,bytes32))
           handler: handleMerkleMinterStrategySaleSet
   # new mappings
-  - name: NewERC721Drop
+  - name: ERC721Drop
     kind: ethereum/contract
     network: {{network}}
     source:
@@ -335,12 +260,19 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.7
       entities:
-        - Sale
-        - Transfer
-        - SalesConfig
-        - ERC721Drop
+        - ZoraCreateContract
+        - SalesConfigMerkleMinterStrategy
+        - SalesStrategyConfig
+        - SalesConfigFixedPriceSaleStrategy
+        - ZoraCreatorPermission
+        - ZoraCreateToken
+        - RoyaltyConfig
+        - OnChainMetadataHistory
+        - KnownRenderer
+        - MintComment
+        - TokenSale
       language: wasm/assemblyscript
-      file: ./src/ERC721NewMappings/templates/ERC721DropMappings.ts
+      file: ./src/ERC721Mappings/templates/ERC721DropMappings.ts
       abis:
         - name: ERC721Drop
           file: ./abis/ERC721Drop.json
@@ -353,8 +285,10 @@ templates:
           handler: handleFundsRecipientChanged
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleNFTTransfer
-        # - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
-        #   handler: handleSale
+        - event: MintComment(indexed address,indexed address,indexed uint256,uint256,string)
+          handler: handleMintComment
+        - event: Sale(indexed address,indexed uint256,indexed uint256,uint256)
+          handler: handleSale
         - event: Upgraded(indexed address)
           handler: handleUpgraded
         - event: RoleGranted(indexed bytes32,indexed address,indexed address)
@@ -365,8 +299,10 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-# features:
-#   - grafting
-# graft:
-#   base: QmQSRigHECH5B769sBXdatVgMFEHnKsTzFZ6TsSJfqr3VM # subgraph ID of base subgraph
-#   block: 17383062 # block number
+{{#grafting}}
+features:
+  - grafting
+graft:
+  base: {{base}} # subgraph ID of base subgraph
+  block: {{block}} # block number
+{{/grafting}}
