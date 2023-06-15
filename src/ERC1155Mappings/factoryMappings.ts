@@ -2,7 +2,7 @@ import {
   SetupNewContract,
   Upgraded,
   ZoraCreator1155FactoryImpl,
-} from "../../generated/ZoraNFTCreatorFactory1155/ZoraCreator1155FactoryImpl";
+} from "../../generated/ZoraNFTCreatorFactory1155V1/ZoraCreator1155FactoryImpl";
 
 import {
   Upgrade,
