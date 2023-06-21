@@ -16,7 +16,7 @@ import {
   CreatedDrop,
   Upgraded,
   ZoraNFTCreatorV1,
-} from "../../generated/ZoraNFTCreatorV1/ZoraNFTCreatorV1";
+} from "../../generated/Zora721V1/ZoraNFTCreatorV1";
 
 import { makeTransaction } from "../common/makeTransaction";
 

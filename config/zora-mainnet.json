@@ -1,0 +1,19 @@
+{
+    "chainid": "7777777",
+    "network": "zora-mainnet",
+    "factories1155": [
+      {
+        "address": "0x35ca784918bf11692708c1D530691704AAcEA95E",
+        "startBlock": "45420",
+        "version": "1"
+      }
+    ],
+    "factories721": [
+      {
+        "address": "0xA2c2A96A232113Dd4993E8b048EEbc3371AE8d85",
+        "startBlock": "46799",
+        "version": "1"
+      }
+    ]
+  }
+  
