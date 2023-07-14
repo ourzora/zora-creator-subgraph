@@ -1,0 +1,19 @@
+{
+    "chainid": "84531",
+    "network": "base-goerli",
+    "factories1155": [
+      {
+        "address": "0x9168C5ba5a0a76db8A1BF5b2eE5557f2A0ECA4f4",
+        "startBlock": "6948614",
+        "version": "1"
+      }
+    ],
+    "factories721": [
+      {
+        "address": "0x87cfd516c5ea86e50b950678CA970a8a28de27ac",
+        "startBlock": "3597035",
+        "version": "1"
+      }
+    ]
+  }
+  

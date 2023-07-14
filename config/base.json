@@ -1,0 +1,19 @@
+{
+    "chainid": "8453",
+    "network": "base",
+    "factories1155": [
+      {
+        "address": "0xc652d4F4b41A9e1986a3D6134687eD0e5d4883a2",
+        "startBlock": "1133981",
+        "version": "1"
+      }
+    ],
+    "factories721": [
+      {
+        "address": "0x899ce31dF6C6Af81203AcAaD285bF539234eF4b8",
+        "startBlock": "1132851",
+        "version": "1"
+      }
+    ]
+  }
+  
