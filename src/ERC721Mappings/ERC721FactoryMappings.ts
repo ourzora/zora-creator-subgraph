@@ -37,20 +37,18 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   const factory = new ZoraCreate721Factory(event.address.toHex());
   const creator = ZoraNFTCreatorV1.bind(event.address);
 
-  const dropRendererAddressFetched = creator.try_dropMetadataRenderer();
-  if (dropRendererAddressFetched.reverted === true) {
+  if (creator.try_dropMetadataRenderer().reverted) {
     return;
   }
-  const dropRendererAddress = dropRendererAddressFetched.value;
+  const dropRendererAddress = creator.dropMetadataRenderer();
 
-  const editionRendererAddressFetched = creator.try_editionMetadataRenderer();
-  if (editionRendererAddressFetched.reverted === true) {
+  if (creator.try_editionMetadataRenderer()) {
     return;
   }
-  const editionRendererAddress = editionRendererAddressFetched.value;
+  const editionRendererAddress = creator.editionMetadataRenderer();
 
   DropMetadataRendererFactory.create(dropRendererAddress);
-  EditionMetadataRendererFactory.create(creator.editionMetadataRenderer());
+  EditionMetadataRendererFactory.create(editionRendererAddress);
 
   if (!KnownRenderer.load(dropRendererAddress.toHex())) {
     const knownDropRenderer = new KnownRenderer(dropRendererAddress.toHex());
