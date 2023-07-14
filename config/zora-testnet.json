@@ -13,6 +13,14 @@
       "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
       "startBlock": "1",
       "version": "1"
+    }, {
+      "address": "0xeB29A4e5b84fef428c072debA2444e93c080CE87",
+      "startBlock": "587491",
+      "version": "2"
     }
-  ]
+  ],
+  "grafting": {
+    "base": "QmfVSspSf7wYsibU2DJKpNiceUZwXZhEzx7Qc6P9MXHcKg",
+    "block": "578650"
+  }
 }
