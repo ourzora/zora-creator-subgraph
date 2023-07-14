@@ -42,7 +42,7 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   }
   const dropRendererAddress = creator.dropMetadataRenderer();
 
-  if (creator.try_editionMetadataRenderer()) {
+  if (creator.try_editionMetadataRenderer().reverted) {
     return;
   }
   const editionRendererAddress = creator.editionMetadataRenderer();
