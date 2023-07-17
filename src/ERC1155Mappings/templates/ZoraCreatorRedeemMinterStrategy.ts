@@ -88,7 +88,14 @@ export function handleRedeemSet(event: RedeemSet): void {
   for (let i = 0; i < event.params.data.instructions.length; i++) {
     // This can fail for duplicate Redeem Instructions – while it doesn't make sense that the user can input this
     // the safest way to index these is by array index. Transaction hash added for uniqueness.
-    const redeemInstruction = new RedeemInstructions(`${redemptionHash}-${i}-${transactionHash}`);
+    const id = `${redemptionHash}-${i}-${transactionHash}`
+
+    let redeemInstruction = RedeemInstructions.load(id);
+
+    if (redeemInstruction === null) {
+      redeemInstruction = new RedeemInstructions(id);
+    }
+
     redeemInstruction.tokenType = event.params.data.instructions[i].tokenType;
     redeemInstruction.amount = event.params.data.instructions[i].amount;
     redeemInstruction.tokenIdStart =
