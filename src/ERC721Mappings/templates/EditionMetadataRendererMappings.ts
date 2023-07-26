@@ -130,9 +130,11 @@ function updateContractURI(target: Address): void {
   if (contract) {
     const erc721Drop = ERC721DropFactory.bind(target);
     if (erc721Drop) {
-      contract.metadataIPFSID = extractIPFSIDFromContract(
-        erc721Drop.try_contractURI()
-      );
+      const attempt_contractURI = erc721Drop.try_contractURI();
+      if (!attempt_contractURI.reverted) {
+        contract.contractURI = attempt_contractURI.value;
+      }
+      contract.metadataIPFSID = extractIPFSIDFromContract(attempt_contractURI);
       contract.metadata = loadMetadataInfoFromID(contract.metadataIPFSID);
       contract.save();
     }
