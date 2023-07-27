@@ -27,12 +27,6 @@ export function handleCreatedEdition(event: EditionInitialized): void {
   metadataRecord.imageURI = event.params.imageURI;
   metadataRecord.save();
 
-  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
-  metadataRecordCompat.animationURI = event.params.animationURI;
-  metadataRecordCompat.description = event.params.description;
-  metadataRecordCompat.imageURI = event.params.imageURI;
-  metadataRecordCompat.save();
-
   const metadataLinkHistory = new OnChainMetadataHistory(
     getOnChainMetadataKey(event)
   );
@@ -63,12 +57,6 @@ export function handleUpdateMediaURIs(event: MediaURIsUpdated): void {
   newMetadata.imageURI = event.params.imageURI;
   newMetadata.save();
 
-  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
-  metadataRecordCompat.animationURI = event.params.animationURI;
-  metadataRecordCompat.description = tokenInfo.getDescription();
-  metadataRecordCompat.imageURI = event.params.imageURI;
-  metadataRecordCompat.save();
-
   const metadataLinkHistory = new OnChainMetadataHistory(
     getOnChainMetadataKey(event)
   );
@@ -97,12 +85,6 @@ export function handleUpdateDescription(event: DescriptionUpdated): void {
   newMetadata.imageURI = tokenInfo.getImageURI();
   newMetadata.animationURI = tokenInfo.getAnimationURI();
   newMetadata.save();
-
-  const metadataRecordCompat = new EditionMetadata(event.params.target.toHex());
-  metadataRecordCompat.description = event.params.newDescription;
-  metadataRecordCompat.imageURI = tokenInfo.getImageURI();
-  metadataRecordCompat.animationURI = tokenInfo.getAnimationURI();
-  metadataRecordCompat.save();
 
   const metadataLinkHistory = new OnChainMetadataHistory(
     getOnChainMetadataKey(event)
