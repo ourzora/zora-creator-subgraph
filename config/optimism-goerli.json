@@ -14,5 +14,12 @@
       "startBlock": "9120231",
       "version": "1"
     }
+  ],
+  "protocolRewards": [
+    {
+      "address": "0x421B6ad0CdD20bE3636F3511B6ae244d8F668dB1",
+      "startBlock": "12569362",
+      "version": "1"
+    }   
   ]
 }
