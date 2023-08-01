@@ -59,6 +59,34 @@ dataSources:
           handler: handleFactoryUpgraded
       file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
 {{/factories721}}
+{{#protocolRewards}}
+  - kind: ethereum/contract
+    name: ProtocolRewardsV{{version}}
+    network: {{network}}
+    source:
+      address: "{{address}}"
+      abi: ProtocolRewards
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - RewardsDeposit
+        - Deposit
+        - Withdraw
+      abis:
+        - name: ProtocolRewards
+          file: ./abis/ProtocolRewards.json
+      eventHandlers:
+        - event: RewardsDeposit(address,indexed address,uint256,indexed address,uint256,address,uint256,indexed address,uint256,address,uint256)
+          handler: handleRewardsDeposit
+        - event: Deposit(indexed address,indexed address,uint256,string)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,indexed uint256)
+          handler: handleWithdraw
+      file: ./src/ProtocolRewardsMappings/protocolRewardsMappings.ts
+{{/protocolRewards}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
