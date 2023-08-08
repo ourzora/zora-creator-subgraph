@@ -58,17 +58,26 @@ export function handleRedeemProcessed(event: RedeemProcessed): void {
 }
 
 export function handleRedeemSet(event: RedeemSet): void {
+  const transactionHash = event.transaction.hash.toHex();
   const redemptionHash = event.params.redeemsInstructionsHash.toHex();
   const txn = makeTransaction(event);
 
-  const token = new RedeemMintToken(redemptionHash);
+  let token = RedeemMintToken.load(redemptionHash);
+  if (token === null) {
+    token = new RedeemMintToken(redemptionHash);
+  }
+
   token.tokenContract = event.params.data.mintToken.tokenContract;
   token.tokenId = event.params.data.mintToken.tokenId;
   token.amount = event.params.data.mintToken.amount;
   token.tokenType = event.params.data.mintToken.tokenType;
   token.save();
 
-  const strategy = new SalesConfigRedeemMinterStrategy(redemptionHash);
+  let strategy = SalesConfigRedeemMinterStrategy.load(redemptionHash);
+  if (strategy === null) {
+    strategy = new SalesConfigRedeemMinterStrategy(redemptionHash);
+  }
+
   strategy.txn = txn;
   strategy.block = event.block.number;
   strategy.timestamp = event.block.timestamp;
@@ -86,8 +95,14 @@ export function handleRedeemSet(event: RedeemSet): void {
 
   for (let i = 0; i < event.params.data.instructions.length; i++) {
     // This can fail for duplicate Redeem Instructions – while it doesn't make sense that the user can input this
-    // the safest way to index these is by array index.
-    const redeemInstruction = new RedeemInstructions(`${redemptionHash}-${i}`);
+    // the safest way to index these is by array index. Transaction hash added for uniqueness.
+    const id = `${redemptionHash}-${i}-${transactionHash}`
+    
+    let redeemInstruction = RedeemInstructions.load(id);
+    if (redeemInstruction === null) {
+      redeemInstruction = new RedeemInstructions(id);
+    }
+
     redeemInstruction.tokenType = event.params.data.instructions[i].tokenType;
     redeemInstruction.amount = event.params.data.instructions[i].amount;
     redeemInstruction.tokenIdStart =
@@ -104,7 +119,11 @@ export function handleRedeemSet(event: RedeemSet): void {
   }
 
   // add join
-  const saleJoin = new SalesStrategyConfig(redemptionHash);
+  let saleJoin = SalesStrategyConfig.load(redemptionHash);
+  if (saleJoin === null) {
+    saleJoin = new SalesStrategyConfig(redemptionHash);
+  }
+
   if (event.params.data.mintToken.tokenId.equals(BigInt.zero())) {
     saleJoin.contract = getContractId(event.params.data.mintToken.tokenContract);
   } else {
