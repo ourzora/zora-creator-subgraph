@@ -67,8 +67,14 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "recipient",
+        "name": "to",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes4",
+        "name": "reason",
+        "type": "bytes4"
       },
       {
         "indexed": false,
@@ -96,22 +102,16 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
         "indexed": true,
         "internalType": "address",
         "name": "creator",
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "creatorReward",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "createReferral",
+        "type": "address"
       },
       {
         "indexed": true,
@@ -121,15 +121,27 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "mintReferralReward",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "firstMinter",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "createReferral",
+        "name": "zora",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "creatorReward",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -138,22 +150,16 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "firstMinter",
-        "type": "address"
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "mintReferralReward",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "firstMinterReward",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "zora",
-        "type": "address"
       },
       {
         "indexed": false,
@@ -171,11 +177,17 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "owner",
+        "name": "from",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -220,8 +232,13 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "recipient",
+        "name": "to",
         "type": "address"
+      },
+      {
+        "internalType": "bytes4",
+        "name": "reason",
+        "type": "bytes4"
       },
       {
         "internalType": "string",
@@ -245,6 +262,11 @@
         "internalType": "uint256[]",
         "name": "amounts",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes4[]",
+        "name": "reasons",
+        "type": "bytes4[]"
       },
       {
         "internalType": "string",
@@ -271,22 +293,22 @@
       },
       {
         "internalType": "address",
-        "name": "mintReferral",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "mintReferralReward",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
         "name": "createReferral",
         "type": "address"
       },
       {
         "internalType": "uint256",
         "name": "createReferralReward",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "mintReferral",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "mintReferralReward",
         "type": "uint256"
       },
       {
@@ -393,6 +415,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -407,7 +434,30 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "owner",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawFor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
         "type": "address"
       },
       {
