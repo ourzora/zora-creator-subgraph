@@ -487,7 +487,8 @@ type Deposit @entity {
   # End – default data block
 
   from: Bytes!
-  recipient: Bytes!
+  to: Bytes!
+  reason: Bytes!
   amount: BigInt!
   comment: String!
 }
@@ -497,9 +498,11 @@ type Withdraw @entity {
   id: ID!
   txn: TransactionInfo!
   block: BigInt!
+  address: Bytes!
   timestamp: BigInt!
   # End – default data block
 
-  owner: Bytes!
+  from: Bytes!
+  to: Bytes!
   amount: BigInt!
 }

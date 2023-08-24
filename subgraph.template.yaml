@@ -79,13 +79,13 @@ dataSources:
         - name: ProtocolRewards
           file: ./abis/ProtocolRewards.json
       eventHandlers:
-        - event: RewardsDeposit(address,indexed address,uint256,indexed address,uint256,address,uint256,indexed address,uint256,address,uint256)
+        - event: RewardsDeposit(indexed address,indexed address,indexed address,address,address,address,uint256,uint256,uint256,uint256,uint256)
           handler: handleRewardsDeposit
-        - event: Deposit(indexed address,indexed address,uint256,string)
+        - event: Deposit(indexed address,indexed address,indexed bytes4,uint256,string)
           handler: handleDeposit
-        - event: Withdraw(indexed address,indexed uint256)
+        - event: Withdraw(indexed address,indexed address,uint256)
           handler: handleWithdraw
-      file: ./src/ProtocolRewardsMappings/protocolRewardsMappings.ts
+      file: ./src/rewardsMappings/rewardsMappings.ts
 {{/protocolRewards}}
 templates:
   - name: MetadataInfo
