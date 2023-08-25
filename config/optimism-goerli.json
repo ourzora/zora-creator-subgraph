@@ -17,9 +17,17 @@
   ],
   "protocolRewards": [
     {
-      "address": "0x421B6ad0CdD20bE3636F3511B6ae244d8F668dB1",
-      "startBlock": "12569362",
+      "address": "0x7777777A456fF23D9b6851184472c08FBDa73e32",
+      "startBlock": "12803376",
       "version": "1"
-    }   
-  ]
+    }, {
+      "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
+      "startBlock": "13016586",
+      "version": "2"
+    }
+  ],
+  "grafting": {
+    "base": "QmU4Dka2eJKcHiFsJRkXSEzTEfsPhDqV5hFsbeQatdvWjn",
+    "block": "13283890"
+  }
 }
