@@ -18,5 +18,20 @@
       "startBlock": "587491",
       "version": "2"
     }
-  ]
+  ],
+  "protocolRewards": [
+    {
+      "address": "0x7777777A456fF23D9b6851184472c08FBDa73e32",
+      "startBlock": "780419",
+      "version": "1"
+    }, {
+      "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
+      "startBlock": "823043",
+      "version": "2"
+    }
+  ],
+  "grafting": {
+    "base": "QmPXPXkvsoZrujKq8jDVpN1sDfykPQqe9UU163D6yxp8nz",
+    "block": "961101"
+  }
 }

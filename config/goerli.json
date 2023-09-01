@@ -15,6 +15,13 @@
       "version": "1"
     }
   ],
+  "protocolRewards": [
+    {
+      "address": "0x8Ca5e648C5dFEfcdDa06d627F4b490B719ccFD98",
+      "startBlock": "9423660",
+      "version": "1"
+    }   
+  ],
   "grafting": {
     "base": "Qmbx8TdLBfFxLyvDNMwMFLwDegSJpcjMFnRC8H5BNb4Gd3",
     "block": "9326478"

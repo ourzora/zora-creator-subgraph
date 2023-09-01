@@ -452,3 +452,57 @@ type Token1155Holder @entity {
   tokenAndContract: ZoraCreateToken!
   balance: BigInt!
 }
+
+### Protocol Rewards
+
+type RewardsDeposit @entity {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
+  from: Bytes!
+  creator: Bytes!
+  creatorReward: BigInt!
+  mintReferral: Bytes!
+  mintReferralReward: BigInt!
+  createReferral: Bytes!
+  createReferralReward: BigInt!
+  firstMinter: Bytes!
+  firstMinterReward: BigInt!
+  zora: Bytes!
+  zoraReward: BigInt!
+}
+
+type Deposit @entity {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
+  from: Bytes!
+  to: Bytes!
+  reason: Bytes!
+  amount: BigInt!
+  comment: String!
+}
+
+type Withdraw @entity {
+  # Begin – default data block
+  id: ID!
+  txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  # End – default data block
+
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+}
