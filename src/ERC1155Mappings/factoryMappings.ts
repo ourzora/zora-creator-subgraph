@@ -75,7 +75,9 @@ export function handleNewContractCreated(event: SetupNewContract): void {
 }
 
 export function handle1155FactoryUpgraded(event: Upgraded): void {
-  const upgrade = new Upgrade(event.transaction.hash.toHex());
+  const upgrade = new Upgrade(
+    `${event.transaction.hash.toHex()}-${event.transactionLogIndex}`
+  );
   const factory = new ZoraCreate1155Factory(event.address.toHex());
   const creator = ZoraCreator1155FactoryImpl.bind(event.address);
 

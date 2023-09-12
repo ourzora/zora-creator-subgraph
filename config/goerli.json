@@ -8,6 +8,13 @@
       "version": "1"
     }
   ],
+  "rewards": [
+      {
+        "version": "1",
+        "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
+        "startBlock": "9480653"
+    }
+  ],
   "factories721": [
     {
       "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
@@ -16,7 +23,7 @@
     }
   ],
   "grafting": {
-    "base": "Qmbx8TdLBfFxLyvDNMwMFLwDegSJpcjMFnRC8H5BNb4Gd3",
-    "block": "9326478"
+    "base": "Qme8dxmWa6x6mTYSvyDM7nLtJfbdB3E4smZiFwjpUoHik3",
+    "block": "9480653"
   }
 }

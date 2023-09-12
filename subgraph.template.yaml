@@ -2,6 +2,36 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
+{{#rewards}}
+  - name: ProtocolRewardsV{{version}}
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ProtocolRewards
+      address: "{{address}}"
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - RewardsPerUserPerDay
+        - RewardsPerUser
+        - RewardsStandardDeposit
+        - RewardsCustomDeposit
+        - RewardsWithdraw
+      language: wasm/assemblyscript
+      file: ./src/RewardsMappings/rewardsMappings.ts
+      abis:
+        - name: ProtocolRewards
+          file: ./abis/ProtocolRewards.json  
+      eventHandlers:
+        - event: Deposit(indexed address,indexed address,indexed bytes4,uint256,string)
+          handler: handleDeposit
+        - event: RewardsDeposit(indexed address,indexed address,indexed address,address,address,address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleRewardsDeposit
+        - event: Withdraw(indexed address,indexed address,uint256)
+          handler: handleWithdraw
+{{/rewards}}
 {{#factories1155}}
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155V{{version}}
@@ -232,6 +262,7 @@ templates:
           handler: handleRedeemProcessed
         - event: RedeemSet(indexed address,indexed bytes32,((address,uint256,uint256,uint8),(uint8,uint256,uint256,uint256,address,address,bytes4)[],uint64,uint64,uint256,address))
           handler: handleRedeemSet
+
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: {{network}}

@@ -14,5 +14,9 @@
       "startBlock": "97155865",
       "version": "1"
     }
-  ]
+  ],
+  "grafting": {
+    "base": "QmSST8kT6JdaN8K2JGYCJDA3EAvexzQD4N7pa1LXDh1ZgT",
+    "block": "107969798"
+  }
 }
