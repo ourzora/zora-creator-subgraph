@@ -2,7 +2,7 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
-{{#rewards}}
+{{#protocolRewards}}
   - name: ProtocolRewardsV{{version}}
     kind: ethereum/contract
     network: {{network}}
@@ -31,7 +31,7 @@ dataSources:
           handler: handleRewardsDeposit
         - event: Withdraw(indexed address,indexed address,uint256)
           handler: handleWithdraw
-{{/rewards}}
+{{/protocolRewards}}
 {{#factories1155}}
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155V{{version}}

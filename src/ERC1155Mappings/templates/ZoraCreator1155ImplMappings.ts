@@ -20,6 +20,7 @@ import {
   ContractMetadataUpdated,
   SetupNewToken,
   ZoraCreator1155Impl,
+  RendererUpdated,
 } from "../../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 import { Upgraded } from "../../../generated/ZoraNFTCreatorFactory1155V1/ZoraCreator1155FactoryImpl";
 import { getOnChainMetadataKey } from "../../common/getOnChainMetadataKey";
@@ -52,7 +53,19 @@ export function handleUpgraded(event: Upgraded): void {
 export function handleContractRendererUpdated(
   event: ContractRendererUpdated
 ): void {
-  const token = ZoraCreateContract.load(event.address.toHex());
+  const contract = ZoraCreateContract.load(event.address.toHex());
+  if (!contract) {
+    return;
+  }
+
+  contract.rendererContract = event.params.renderer;
+  contract.save();
+}
+
+export function handleRendererUpdated(event: RendererUpdated): void {
+  const token = ZoraCreateToken.load(
+    getTokenId(event.address, event.params.tokenId)
+  );
   if (!token) {
     return;
   }

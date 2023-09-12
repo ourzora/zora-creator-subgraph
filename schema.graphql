@@ -476,7 +476,14 @@ type RewardsPerUser @entity {
 
   address: Bytes!
   amount: BigInt!
-  amountPending: BigInt!
+  amountToWithdraw: BigInt!
+}
+
+type RewardsAggregate @entity {
+  id: ID!
+
+  amount: BigInt!
+  amountToWithdraw: BigInt!
 }
 
 type RewardsDeposit @entity @immutable {
@@ -512,8 +519,9 @@ type RewardsSingleDeposit @entity @immutable {
 
   from: Bytes!
   to: Bytes!
+  reason: Bytes!
   amount: BigInt!
-  reason: String
+  comment: String
 }
 
 type RewardsWithdraw @entity @immutable {
@@ -521,10 +529,12 @@ type RewardsWithdraw @entity @immutable {
   id: ID!
   txn: TransactionInfo!
   block: BigInt!
+  address: Bytes!
   timestamp: BigInt!
   # End – default data block
 
-  owner: Bytes!
+  from: Bytes!
+  to: Bytes!
   amount: BigInt!
-  recipient: Bytes!
+  reason: String
 }

@@ -8,11 +8,11 @@
       "version": "1"
     }
   ],
-  "rewards": [
+  "protocolRewards": [
       {
         "version": "1",
         "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
-        "startBlock": "9480653"
+        "startBlock": "9423660"
     }
   ],
   "factories721": [
