@@ -7,6 +7,7 @@ import {
   RewardsWithdraw,
   RewardsPerUserPerSource,
   RewardsAggregate,
+  RewardsPerSource,
 } from "../../generated/schema";
 import {
   Deposit as DepositEvent,
@@ -27,9 +28,12 @@ function addRewardInfoToUser(
     creatorRewards.address = user;
     creatorRewards.amount = BigInt.zero();
     creatorRewards.amountToWithdraw = BigInt.zero();
+    creatorRewards.withdrawn = BigInt.zero();
   }
   creatorRewards.amount = creatorRewards.amount.plus(amount);
-  creatorRewards.amountToWithdraw = creatorRewards.amount.plus(amount);
+  creatorRewards.amountToWithdraw = creatorRewards.amountToWithdraw.plus(
+    amount
+  );
 
   creatorRewards.save();
 
@@ -46,28 +50,41 @@ function addRewardInfoToUser(
   rewardsPerUserPerDay.to = user;
   const date = new Date(timestamp.toU64() * 1000);
   rewardsPerUserPerDay.date = date.toISOString().substring(0, 10);
-  rewardsPerUserPerDay.timestamp = BigInt.fromU64(timestamp.toU64() % (24 * 60 * 60));
+  rewardsPerUserPerDay.timestamp = BigInt.fromU64(
+    timestamp.toU64() % (24 * 60 * 60)
+  );
   rewardsPerUserPerDay.save();
 
-  const rewardsPerSourceKey = `${from.toHex()}-${user.toHex()}`;
+  const rewardsPerUserPerSourceKey = `${from.toHex()}-${user.toHex()}`;
   let rewardsPerUserPerSource = RewardsPerUserPerSource.load(
-    rewardsPerSourceKey
+    rewardsPerUserPerSourceKey
   );
-  if (rewardsPerUserPerSource) {
+  if (!rewardsPerUserPerSource) {
     rewardsPerUserPerSource = new RewardsPerUserPerSource(
-      `${from.toHex()}-${user.toHex()}`
+      rewardsPerUserPerSourceKey
     );
-    rewardsPerUserPerSource.to = user;
+    rewardsPerUserPerSource.amount = BigInt.zero();
     rewardsPerUserPerSource.from = from;
-    rewardsPerUserPerSource.amount = amount;
-    rewardsPerUserPerSource.save();
+    rewardsPerUserPerSource.to = user;
   }
+  rewardsPerUserPerSource.amount = rewardsPerUserPerSource.amount.plus(amount);
+  rewardsPerUserPerSource.save();
+
+  let rewardsPerSource = RewardsPerSource.load(from);
+  if (!rewardsPerSource) {
+    rewardsPerSource = new RewardsPerSource(from);
+    rewardsPerSource.amount = BigInt.zero();
+    rewardsPerSource.from = from;
+  }
+  rewardsPerSource.amount = rewardsPerSource.amount.plus(amount);
+  rewardsPerSource.save();
 
   let rewardsTotal = RewardsAggregate.load("AGGREGATE");
   if (!rewardsTotal) {
     rewardsTotal = new RewardsAggregate("AGGREGATE");
     rewardsTotal.amount = BigInt.zero();
     rewardsTotal.amountToWithdraw = BigInt.zero();
+    rewardsTotal.withdrawn = BigInt.zero();
   }
   rewardsTotal.amount = rewardsTotal.amount.plus(amount);
   rewardsTotal.amountToWithdraw = rewardsTotal.amountToWithdraw.plus(amount);
@@ -187,14 +204,18 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   const rewards = RewardsPerUser.load(event.params.from);
   if (rewards) {
-    rewards.amountToWithdraw = rewards.amountToWithdraw.minus(event.params.amount);
+    rewards.amountToWithdraw = rewards.amountToWithdraw.minus(
+      event.params.amount
+    );
+    rewards.withdrawn = rewards.withdrawn.plus(event.params.amount);
     rewards.save();
   }
   const rewardsTotal = RewardsAggregate.load("AGGREGATE");
   if (rewardsTotal) {
-    rewardsTotal.amountToWithdraw = rewardsTotal.amount.minus(
+    rewardsTotal.amountToWithdraw = rewardsTotal.amountToWithdraw.minus(
       event.params.amount
     );
+    rewardsTotal.withdrawn = rewardsTotal.withdrawn.plus(event.params.amount);
     rewardsTotal.save();
   }
 }

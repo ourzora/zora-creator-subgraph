@@ -477,6 +477,7 @@ type RewardsPerUser @entity {
 
   address: Bytes!
   amount: BigInt!
+  withdrawn: BigInt!
   amountToWithdraw: BigInt!
 }
 
@@ -485,6 +486,14 @@ type RewardsAggregate @entity {
 
   amount: BigInt!
   amountToWithdraw: BigInt!
+  withdrawn: BigInt!
+}
+
+type RewardsPerSource @entity {
+  id: Bytes!
+
+  from: Bytes!
+  amount: BigInt!
 }
 
 type RewardsDeposit @entity @immutable {
