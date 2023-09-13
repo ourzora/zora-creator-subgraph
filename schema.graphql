@@ -459,7 +459,8 @@ type RewardsPerUserPerDay @entity {
   id: ID!
 
   to: Bytes!
-  date: BigInt!
+  date: String!
+  timestamp: BigInt!
   amount: BigInt!
 }
 

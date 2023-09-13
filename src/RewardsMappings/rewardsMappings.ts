@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import {
   RewardsPerUser,
   RewardsPerUserPerDay,
@@ -24,9 +24,15 @@ function addRewardInfoToUser(
   let creatorRewards = RewardsPerUser.load(user);
   if (!creatorRewards) {
     creatorRewards = new RewardsPerUser(user);
+    creatorRewards.address = user;
+    creatorRewards.amount = BigInt.zero();
+    creatorRewards.amountToWithdraw = BigInt.zero();
   }
   creatorRewards.amount = creatorRewards.amount.plus(amount);
   creatorRewards.amountToWithdraw = creatorRewards.amount.plus(amount);
+
+  creatorRewards.save();
+
   const isoString = new Date(timestamp.toI64() * 1000)
     .toISOString()
     .substring(0, 10);
@@ -34,9 +40,13 @@ function addRewardInfoToUser(
   let rewardsPerUserPerDay = RewardsPerUserPerDay.load(rewardsPerUserPerDayKey);
   if (!rewardsPerUserPerDay) {
     rewardsPerUserPerDay = new RewardsPerUserPerDay(rewardsPerUserPerDayKey);
+    rewardsPerUserPerDay.amount = BigInt.zero();
   }
   rewardsPerUserPerDay.amount = rewardsPerUserPerDay.amount.plus(amount);
   rewardsPerUserPerDay.to = user;
+  const date = new Date(timestamp.toU64() * 1000);
+  rewardsPerUserPerDay.date = date.toISOString().substring(0, 10);
+  rewardsPerUserPerDay.timestamp = BigInt.fromU64(timestamp.toU64() % (24 * 60 * 60));
   rewardsPerUserPerDay.save();
 
   const rewardsPerSourceKey = `${from.toHex()}-${user.toHex()}`;
@@ -53,11 +63,11 @@ function addRewardInfoToUser(
     rewardsPerUserPerSource.save();
   }
 
-  creatorRewards.save();
-
-  let rewardsTotal = RewardsAggregate.load('AGGREGATE');
+  let rewardsTotal = RewardsAggregate.load("AGGREGATE");
   if (!rewardsTotal) {
-    rewardsTotal = new RewardsAggregate('AGGREGATE');
+    rewardsTotal = new RewardsAggregate("AGGREGATE");
+    rewardsTotal.amount = BigInt.zero();
+    rewardsTotal.amountToWithdraw = BigInt.zero();
   }
   rewardsTotal.amount = rewardsTotal.amount.plus(amount);
   rewardsTotal.amountToWithdraw = rewardsTotal.amountToWithdraw.plus(amount);
@@ -74,10 +84,16 @@ function addSingleDeposit(
   const customDeposit = new RewardsSingleDeposit(
     `${event.transaction.hash.toHex()}-${event.transactionLogIndex}-${comment}`
   );
+  customDeposit.txn = makeTransaction(event);
+  customDeposit.block = event.block.number;
+  customDeposit.address = event.address;
+  customDeposit.timestamp = event.block.timestamp;
+
   customDeposit.from = from;
   customDeposit.to = to;
   customDeposit.amount = amount;
   customDeposit.comment = comment;
+  customDeposit.reason = Bytes.fromI32(0);
   customDeposit.save();
 
   addRewardInfoToUser(from, to, amount, event.block.timestamp);
@@ -169,11 +185,9 @@ export function handleWithdraw(event: WithdrawEvent): void {
   withdraw.txn = event.transaction.hash.toHex();
   withdraw.save();
 
-  const rewards = RewardsPerUser.load(event.params.to);
+  const rewards = RewardsPerUser.load(event.params.from);
   if (rewards) {
-    rewards.amountToWithdraw = rewards.amountToWithdraw.minus(
-      event.params.amount
-    );
+    rewards.amountToWithdraw = rewards.amountToWithdraw.minus(event.params.amount);
     rewards.save();
   }
   const rewardsTotal = RewardsAggregate.load("AGGREGATE");
@@ -199,7 +213,12 @@ export function handleDeposit(event: DepositEvent): void {
   deposit.reason = event.params.reason;
   deposit.comment = event.params.comment;
 
-  addRewardInfoToUser(event.params.from, event.params.to, event.params.amount, event.block.timestamp);
+  addRewardInfoToUser(
+    event.params.from,
+    event.params.to,
+    event.params.amount,
+    event.block.timestamp
+  );
 
   deposit.save();
 }
