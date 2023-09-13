@@ -26,11 +26,7 @@ get_contract $ERC1155_ARTIFACTS_PATH 'Zora1155Factory'
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorFixedPriceSaleStrategy'
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorMerkleMinterStrategy'
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterFactory'
-<<<<<<< HEAD
 get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterStrategy'
 
 # protocol rewards contract
 get_contract $PROTOCOL_REWARDS_ARTIFACTS_PATH 'ProtocolRewards'
-=======
-get_contract $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterStrategy'
->>>>>>> origin/main
