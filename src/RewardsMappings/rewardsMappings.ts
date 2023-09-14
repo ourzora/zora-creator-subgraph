@@ -146,7 +146,7 @@ export function handleRewardsDeposit(event: RewardsDepositEvent): void {
       event.params.from,
       event.params.createReferral,
       event.params.createReferralReward,
-      "referral_reward"
+      "create_referral"
     );
   }
 
@@ -174,7 +174,7 @@ export function handleRewardsDeposit(event: RewardsDepositEvent): void {
       event.params.from,
       event.params.mintReferral,
       event.params.mintReferralReward,
-      "first_minter"
+      "mint_referral"
     );
   }
 
