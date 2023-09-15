@@ -14,7 +14,7 @@ import {
   Deposit as DepositEvent,
   RewardsDeposit as RewardsDepositEvent,
   Withdraw as WithdrawEvent,
-} from "../../generated/templates/ProtocolRewards/ProtocolRewards";
+} from "../../generated/ProtocolRewardsV2/ProtocolRewards";
 import { makeTransaction } from "../common/makeTransaction";
 
 function addRewardInfoToUser(
@@ -155,7 +155,7 @@ export function handleRewardsDeposit(event: RewardsDepositEvent): void {
       event.params.from,
       event.params.createReferral,
       event.params.createReferralReward,
-      "referral_reward"
+      "create_referral"
     );
   }
 
