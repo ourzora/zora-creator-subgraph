@@ -2,6 +2,36 @@ specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
+{{#protocolRewards}}
+  - name: ProtocolRewardsV{{version}}
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ProtocolRewards
+      address: "{{address}}"
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - RewardsPerUserPerDay
+        - RewardsPerUser
+        - RewardsStandardDeposit
+        - RewardsCustomDeposit
+        - RewardsWithdraw
+      language: wasm/assemblyscript
+      file: ./src/RewardsMappings/rewardsMappings.ts
+      abis:
+        - name: ProtocolRewards
+          file: ./abis/ProtocolRewards.json  
+      eventHandlers:
+        - event: Deposit(indexed address,indexed address,indexed bytes4,uint256,string)
+          handler: handleDeposit
+        - event: RewardsDeposit(indexed address,indexed address,indexed address,address,address,address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleRewardsDeposit
+        - event: Withdraw(indexed address,indexed address,uint256)
+          handler: handleWithdraw
+{{/protocolRewards}}
 {{#factories1155}}
   - kind: ethereum/contract
     name: ZoraNFTCreatorFactory1155V{{version}}
@@ -59,34 +89,6 @@ dataSources:
           handler: handleFactoryUpgraded
       file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
 {{/factories721}}
-{{#protocolRewards}}
-  - kind: ethereum/contract
-    name: ProtocolRewardsV{{version}}
-    network: {{network}}
-    source:
-      address: "{{address}}"
-      abi: ProtocolRewards
-      startBlock: {{startBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - RewardsDeposit
-        - Deposit
-        - Withdraw
-      abis:
-        - name: ProtocolRewards
-          file: ./abis/ProtocolRewards.json
-      eventHandlers:
-        - event: RewardsDeposit(indexed address,indexed address,indexed address,address,address,address,uint256,uint256,uint256,uint256,uint256)
-          handler: handleRewardsDeposit
-        - event: Deposit(indexed address,indexed address,indexed bytes4,uint256,string)
-          handler: handleDeposit
-        - event: Withdraw(indexed address,indexed address,uint256)
-          handler: handleWithdraw
-      file: ./src/rewardsMappings/rewardsMappings.ts
-{{/protocolRewards}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
@@ -260,6 +262,7 @@ templates:
           handler: handleRedeemProcessed
         - event: RedeemSet(indexed address,indexed bytes32,((address,uint256,uint256,uint8),(uint8,uint256,uint256,uint256,address,address,bytes4)[],uint64,uint64,uint256,address))
           handler: handleRedeemSet
+
   - name: ZoraCreatorMerkleMinterStrategy
     kind: ethereum/contract
     network: {{network}}

@@ -8,22 +8,18 @@
       "version": "1"
     }
   ],
+  "protocolRewards": [
+    {
+      "version": "1",
+      "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
+      "startBlock": "9423660"
+    }
+  ],
   "factories721": [
     {
       "address": "0xb9583D05Ba9ba8f7F14CCEe3Da10D2bc0A72f519",
       "startBlock": "7412408",
       "version": "1"
     }
-  ],
-  "protocolRewards": [
-    {
-      "address": "0x8Ca5e648C5dFEfcdDa06d627F4b490B719ccFD98",
-      "startBlock": "9423660",
-      "version": "1"
-    }   
-  ],
-  "grafting": {
-    "base": "Qmbx8TdLBfFxLyvDNMwMFLwDegSJpcjMFnRC8H5BNb4Gd3",
-    "block": "9326478"
-  }
+  ]
 }

@@ -33,7 +33,7 @@ import {
 } from "../common/metadata";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
-  const upgrade = new Upgrade(event.transaction.hash.toHex());
+  const upgrade = new Upgrade(`${event.transaction.hash.toHex()}-${event.transactionLogIndex}`);
   const factory = new ZoraCreate721Factory(event.address.toHex());
   const creator = ZoraNFTCreatorV1.bind(event.address);
 

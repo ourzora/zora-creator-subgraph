@@ -9,6 +9,8 @@ version=$1
 networks=$2
 # arg 3 (optional) = fromversion
 fromversion=$3
+# arg 4 (optional) = fromcontract
+fromcontract=$4
 
 
 # production network tag
@@ -42,21 +44,33 @@ function getDeploymentBase() {
   echo $response | jq '.data._meta.deployment' -r
 }
 
+function getNetworkDeploymentBlock() {
+  startBlock=$(cat config/$1.json | jq "$fromcontract | map(.startBlock | tonumber) | min")
+  echo $startBlock
+}
+
+
 for element in ${networkfiles[@]}
 do
   filename=$(basename $element)
   network="${filename%.*}"
   base=$(getSubgraphQueryPath $network)
-  newjson=""
-  if [[ -z $fromversion ]]; then
+  # newjson=""
+  graft_flags=""
+  if [[ -n $fromcontract ]]; then
+    # newjson="$(jq '. + {"grafting": {"base": "'$(getDeploymentBase $base)'", "block": '$(($(getNetworkDeploymentBlock $network) - 10))'}}' ./config/$network.json)"
+    graft_flags="--graft-from zora-create-$network/$fromversion --start-block $(($(getNetworkDeploymentBlock $network) - 10))"
+  elif [[ -z $fromversion ]]; then
     echo 'skipping grafting'
-    newjson="$(jq 'del(.grafting)' ./config/$network.json)"
+    graft_flags="--remove-graft" 
+    # newjson="$(jq 'del(.grafting)' ./config/$network.json)"
   else
-    newjson="$(jq '. + {"grafting": {"base": "'$(getDeploymentBase $base)'", "block": '$(($(getDeploymentBlock $base) - 10))'}}' ./config/$network.json)"
+    # newjson="$(jq '. + {"grafting": {"base": "'$(getDeploymentBase $base)'", "block": '$(($(getDeploymentBlock $base) - 10))'}}' ./config/$network.json)"
+    graft_flags="--graft-from zora-create-$network/$fromversion --start-block $(($(getDeploymentBlock $base) - 10))"
   fi
-  echo $newjson
-  echo "$newjson" > ./config/$network.json
+  # echo $newjson
+  # echo "$newjson" > ./config/$network.json
   cat ./config/$network.json
   NETWORK=$network yarn run build
-  goldsky subgraph deploy zora-create-$network/$version --overwrite
+  goldsky subgraph deploy zora-create-$network/$version $graft_flags
 done

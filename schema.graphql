@@ -455,7 +455,55 @@ type Token1155Holder @entity {
 
 ### Protocol Rewards
 
-type RewardsDeposit @entity {
+type RewardsPerUserPerDay @entity {
+  id: ID!
+
+  to: Bytes!
+  date: String!
+  timestamp: BigInt!
+  amount: BigInt!
+}
+
+type RewardsPerUserPerSource @entity {
+  id: ID!
+
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+} 
+
+type RewardsPerUser @entity {
+  id: Bytes!
+
+  address: Bytes!
+  amount: BigInt!
+  withdrawn: BigInt!
+}
+
+type RewardsAggregate @entity {
+  id: ID!
+
+  amount: BigInt!
+  withdrawn: BigInt!
+}
+
+type RewardsPerSource @entity {
+  id: Bytes!
+
+  from: Bytes!
+  amount: BigInt!
+}
+
+type RewardsPerUserPerType @entity {
+  id: ID!
+
+  from: Bytes!
+  type: String
+  amount: BigInt!
+}
+
+
+type RewardsDeposit @entity @immutable {
   # Begin – default data block
   id: ID!
   txn: TransactionInfo!
@@ -477,7 +525,7 @@ type RewardsDeposit @entity {
   zoraReward: BigInt!
 }
 
-type Deposit @entity {
+type RewardsSingleDeposit @entity @immutable {
   # Begin – default data block
   id: ID!
   txn: TransactionInfo!
@@ -490,10 +538,10 @@ type Deposit @entity {
   to: Bytes!
   reason: Bytes!
   amount: BigInt!
-  comment: String!
+  comment: String
 }
 
-type Withdraw @entity {
+type RewardsWithdraw @entity @immutable {
   # Begin – default data block
   id: ID!
   txn: TransactionInfo!
@@ -505,4 +553,5 @@ type Withdraw @entity {
   from: Bytes!
   to: Bytes!
   amount: BigInt!
+  reason: String
 }
