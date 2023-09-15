@@ -26,9 +26,5 @@
       "startBlock": "8134033",
       "version": "2"
     }
-  ],
-  "grafting": {
-    "base": "QmbskDERtd12kBt6e4BEeSgaJCzfzuuR1GLHezvBBwp5Ah",
-    "block": 7920767
-  }
+  ]
 }
