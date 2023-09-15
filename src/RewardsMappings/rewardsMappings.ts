@@ -8,6 +8,7 @@ import {
   RewardsPerUserPerSource,
   RewardsAggregate,
   RewardsPerSource,
+  RewardsPerUserPerType,
 } from "../../generated/schema";
 import {
   Deposit as DepositEvent,
@@ -20,20 +21,17 @@ function addRewardInfoToUser(
   from: Address,
   user: Address,
   amount: BigInt,
-  timestamp: BigInt
+  timestamp: BigInt,
+  type: string | null
 ): void {
   let creatorRewards = RewardsPerUser.load(user);
   if (!creatorRewards) {
     creatorRewards = new RewardsPerUser(user);
     creatorRewards.address = user;
     creatorRewards.amount = BigInt.zero();
-    creatorRewards.amountToWithdraw = BigInt.zero();
     creatorRewards.withdrawn = BigInt.zero();
   }
   creatorRewards.amount = creatorRewards.amount.plus(amount);
-  creatorRewards.amountToWithdraw = creatorRewards.amountToWithdraw.plus(
-    amount
-  );
 
   creatorRewards.save();
 
@@ -79,15 +77,26 @@ function addRewardInfoToUser(
   rewardsPerSource.amount = rewardsPerSource.amount.plus(amount);
   rewardsPerSource.save();
 
+  let typeString = type === null ? 'null' : type.toString();
+
+  const rewardsPerUserPerTypeKey = `${user.toHex()}-${typeString}`;
+  let rewardsPerUserPerType = RewardsPerUserPerType.load(rewardsPerUserPerTypeKey);
+  if (!rewardsPerUserPerType) {
+    rewardsPerUserPerType = new RewardsPerUserPerType(rewardsPerUserPerTypeKey);
+    rewardsPerUserPerType.type = type;
+    rewardsPerUserPerType.amount = BigInt.zero();
+    rewardsPerUserPerType.from = user;
+  }
+  rewardsPerUserPerType.amount = rewardsPerUserPerType.amount.plus(amount);
+  rewardsPerUserPerType.save();
+
   let rewardsTotal = RewardsAggregate.load("AGGREGATE");
   if (!rewardsTotal) {
     rewardsTotal = new RewardsAggregate("AGGREGATE");
     rewardsTotal.amount = BigInt.zero();
-    rewardsTotal.amountToWithdraw = BigInt.zero();
     rewardsTotal.withdrawn = BigInt.zero();
   }
   rewardsTotal.amount = rewardsTotal.amount.plus(amount);
-  rewardsTotal.amountToWithdraw = rewardsTotal.amountToWithdraw.plus(amount);
   rewardsTotal.save();
 }
 
@@ -110,15 +119,15 @@ function addSingleDeposit(
   customDeposit.to = to;
   customDeposit.amount = amount;
   customDeposit.comment = comment;
-  customDeposit.reason = Bytes.fromI32(0);
+  customDeposit.reason = Bytes.empty();
   customDeposit.save();
 
-  addRewardInfoToUser(from, to, amount, event.block.timestamp);
+  addRewardInfoToUser(from, to, amount, event.block.timestamp, comment);
 }
 
 export function handleRewardsDeposit(event: RewardsDepositEvent): void {
   const rewardsDeposit = new RewardsDeposit(
-    `${event.transaction.hash}-${event.transactionLogIndex}`
+    `${event.transaction.hash.toHex()}-${event.transactionLogIndex}`
   );
   rewardsDeposit.address = event.address;
   rewardsDeposit.block = event.block.number;
@@ -140,7 +149,7 @@ export function handleRewardsDeposit(event: RewardsDepositEvent): void {
   rewardsDeposit.save();
 
   // create referral
-  if (event.params.createReferralReward.gt(BigInt.fromI32(0))) {
+  if (event.params.createReferralReward.gt(BigInt.zero())) {
     addSingleDeposit(
       event,
       event.params.from,
@@ -174,7 +183,7 @@ export function handleRewardsDeposit(event: RewardsDepositEvent): void {
       event.params.from,
       event.params.mintReferral,
       event.params.mintReferralReward,
-      "first_minter"
+      "mint_referral"
     );
   }
 
@@ -204,17 +213,11 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   const rewards = RewardsPerUser.load(event.params.from);
   if (rewards) {
-    rewards.amountToWithdraw = rewards.amountToWithdraw.minus(
-      event.params.amount
-    );
     rewards.withdrawn = rewards.withdrawn.plus(event.params.amount);
     rewards.save();
   }
   const rewardsTotal = RewardsAggregate.load("AGGREGATE");
   if (rewardsTotal) {
-    rewardsTotal.amountToWithdraw = rewardsTotal.amountToWithdraw.minus(
-      event.params.amount
-    );
     rewardsTotal.withdrawn = rewardsTotal.withdrawn.plus(event.params.amount);
     rewardsTotal.save();
   }
@@ -238,7 +241,8 @@ export function handleDeposit(event: DepositEvent): void {
     event.params.from,
     event.params.to,
     event.params.amount,
-    event.block.timestamp
+    event.block.timestamp,
+    null
   );
 
   deposit.save();

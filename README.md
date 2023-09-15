@@ -5,27 +5,34 @@
 The graph docs: https://thegraph.academy/developers/subgraph-development-guide/
 
 
-Steps to deploy:
+Steps to build:
 
 ```
-NETWORK=goerli yarn run codegen
 NETWORK=goerli yarn run build
-NETWORK=goerli DEPLOYMENT_PATH=kolber/zora-editions-goerli yarn run deploy
+
 ```
+
+NETWORK needs to be a name of a valid network configuration file in `addresses/`.
+
 
 Will need to update the deployment path from your project path given in the subgraph
 
 
-## Contracts & Deployed Apps
+## Deployment shortcust
 
-Backup main:
-https://thegraph.com/hosted-service/subgraph/iainnash/zora-drops-mainnet
+Does grafting from FROM_VERSION:
 
-Main subgraph:
-https://thegraph.com/hosted-service/subgraph/iainnash/zora-editions-mainnet
+./scripts/multideploy.sh NEW_VERSION NETWORKS FROM_VERSION
 
-Rinkeby:
-https://thegraph.com/hosted-service/subgraph/iainnash/erc721droprinkeby
+./scripts/multideploy.sh 1.10.0 zora-testnet,optimism-goerli,base-goerli 1.8.0
 
-Görli:
-https://thegraph.com/hosted-service/subgraph/iainnash/erc721drop-goerli
+Deploys without grafting:
+
+./scripts/multideploy.sh NEW_VERSION NETWORKS
+
+./scripts/multideploy.sh 1.10.0 zora-testnet,optimism-goerli,base-goerli
+
+Deploys a new version for _all_ networks without grafting: (not recommended)
+
+./scripts/multideploy.sh NEW_VERSION
+

@@ -478,14 +478,12 @@ type RewardsPerUser @entity {
   address: Bytes!
   amount: BigInt!
   withdrawn: BigInt!
-  amountToWithdraw: BigInt!
 }
 
 type RewardsAggregate @entity {
   id: ID!
 
   amount: BigInt!
-  amountToWithdraw: BigInt!
   withdrawn: BigInt!
 }
 
@@ -495,6 +493,15 @@ type RewardsPerSource @entity {
   from: Bytes!
   amount: BigInt!
 }
+
+type RewardsPerUserPerType @entity {
+  id: ID!
+
+  from: Bytes!
+  type: String
+  amount: BigInt!
+}
+
 
 type RewardsDeposit @entity @immutable {
   # Begin – default data block

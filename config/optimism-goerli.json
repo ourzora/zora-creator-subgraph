@@ -20,14 +20,15 @@
       "address": "0x7777777A456fF23D9b6851184472c08FBDa73e32",
       "startBlock": "12803376",
       "version": "1"
-    }, {
+    },
+    {
       "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
       "startBlock": "13016586",
       "version": "2"
     }
   ],
   "grafting": {
-    "base": "QmU4Dka2eJKcHiFsJRkXSEzTEfsPhDqV5hFsbeQatdvWjn",
-    "block": "13283890"
+    "base": "QmY8fSG2XggEWA4itLNH1ydZun6sV3q1i7D4msWHEDXGxR",
+    "block": 12803366
   }
 }

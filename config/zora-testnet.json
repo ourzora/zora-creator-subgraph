@@ -13,7 +13,8 @@
       "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
       "startBlock": "1",
       "version": "1"
-    }, {
+    },
+    {
       "address": "0xeB29A4e5b84fef428c072debA2444e93c080CE87",
       "startBlock": "587491",
       "version": "2"
@@ -24,14 +25,15 @@
       "address": "0x7777777A456fF23D9b6851184472c08FBDa73e32",
       "startBlock": "780419",
       "version": "1"
-    }, {
+    },
+    {
       "address": "0x7777777F279eba3d3Ad8F4E708545291A6fDBA8B",
       "startBlock": "823043",
       "version": "2"
     }
   ],
   "grafting": {
-    "base": "QmPXPXkvsoZrujKq8jDVpN1sDfykPQqe9UU163D6yxp8nz",
-    "block": "961101"
+    "base": "QmSPMUxFmSsug8BismmvzbDHkEWCjC5YrSej6frdGQaEPU",
+    "block": 780409
   }
 }
