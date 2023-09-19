@@ -35,6 +35,7 @@ import {
   extractIPFSIDFromContract,
   loadMetadataInfoFromID,
 } from "../../common/metadata";
+import MINT_FEE from "../../constants/mintFee";
 
 export function handleUpgraded(event: Upgraded): void {
   const impl = ZoraCreator1155Impl.bind(event.address);
@@ -43,9 +44,9 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  contract.mintFeePerQuantity = impl.mintFee();
-  contract.contractVersion = impl.contractVersion();
   contract.contractStandard = TOKEN_STANDARD_ERC1155;
+  contract.mintFeePerQuantity = MINT_FEE;
+  contract.contractVersion = impl.contractVersion();
 
   contract.save();
 }

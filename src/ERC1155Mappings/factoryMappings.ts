@@ -3,7 +3,6 @@ import {
   Upgraded,
   ZoraCreator1155FactoryImpl,
 } from "../../generated/ZoraNFTCreatorFactory1155V1/ZoraCreator1155FactoryImpl";
-
 import {
   Upgrade,
   ZoraCreate1155Factory,
@@ -25,6 +24,7 @@ import {
   extractIPFSIDFromContract,
   loadMetadataInfoFromID,
 } from "../common/metadata";
+import MINT_FEE from "../constants/mintFee";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const createdContract = new ZoraCreateContract(
@@ -58,10 +58,10 @@ export function handleNewContractCreated(event: SetupNewContract): void {
 
   // query for more information about contract
   const impl = ZoraCreator1155Impl.bind(event.params.newContract);
-  createdContract.mintFeePerQuantity = impl.mintFee();
-  createdContract.contractVersion = impl.contractVersion();
-  createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
 
+  createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
+  createdContract.mintFeePerQuantity = MINT_FEE;
+  createdContract.contractVersion = impl.contractVersion();
   createdContract.metadataIPFSID = extractIPFSIDFromContract(
     impl.try_contractURI()
   );
