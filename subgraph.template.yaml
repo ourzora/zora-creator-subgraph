@@ -330,9 +330,9 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-{{#grafting}}
 features:
   - grafting
+{{#grafting}}
 graft:
   base: {{base}} # subgraph ID of base subgraph
   block: {{block}} # block number
