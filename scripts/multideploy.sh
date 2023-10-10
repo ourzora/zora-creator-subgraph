@@ -45,7 +45,7 @@ function getDeploymentBase() {
 }
 
 function getNetworkDeploymentBlock() {
-  startBlock=$(cat config/$1.json | jq "$fromcontract | map(.startBlock | tonumber) | min")
+  startBlock=$(cat config/$1.json | jq "$fromcontract | map(.startBlock | tonumber) | max")
   echo $startBlock
 }
 
@@ -72,5 +72,6 @@ do
   # echo "$newjson" > ./config/$network.json
   cat ./config/$network.json
   NETWORK=$network yarn run build
+  echo goldsky subgraph deploy zora-create-$network/$version $graft_flags
   goldsky subgraph deploy zora-create-$network/$version $graft_flags
 done
