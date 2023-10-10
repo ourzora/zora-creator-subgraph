@@ -125,7 +125,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
     createdContract.contractURI = contractURIResponse.value;
   }
   createdContract.creator = event.params.creator;
-  createdContract.initialDefaultAdmin = event.params.creator;
+  createdContract.initialDefaultAdmin = dropContract.DEFAULT_ADMIN_ROLE();
   createdContract.owner = dropContract.owner();
   createdContract.name = dropContract.name();
   createdContract.symbol = dropContract.symbol();
