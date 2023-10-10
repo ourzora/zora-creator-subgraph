@@ -6,6 +6,11 @@
       "address": "0x35ca784918bf11692708c1D530691704AAcEA95E",
       "startBlock": "45420",
       "version": "1"
+    },
+    {
+      "address": "0x777777C338d93e2C7adf08D102d45CA7CC4Ed021",
+      "startBlock": "4664191",
+      "version": "2"
     }
   ],
   "factories721": [

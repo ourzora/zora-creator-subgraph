@@ -43,7 +43,12 @@ export function handleUpgraded(event: Upgraded): void {
     return;
   }
 
-  contract.mintFeePerQuantity = impl.mintFee();
+  const mintFeeAttempt = impl.try_mintFee();
+  if (mintFeeAttempt.reverted) {
+    contract.mintFeePerQuantity = BigInt.fromI64(777000000000000);
+  } else {
+    contract.mintFeePerQuantity = mintFeeAttempt.value;
+  }
   contract.contractVersion = impl.contractVersion();
   contract.contractStandard = TOKEN_STANDARD_ERC1155;
 
