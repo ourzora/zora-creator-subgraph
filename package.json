@@ -1,19 +1,16 @@
 {
-  "name": "nft-drop-subgraph",
+  "name": "nft-creator-subgraph",
   "license": "MIT",
+  "repository": "https://github.com/ourzora/zora-creator-subgraph",
   "scripts": {
     "copy-abis": "bash abis/copy-abis.sh",
     "codegen": "yarn gen-yaml-config && graph codegen && echo 'import { Address } from \"@graphprotocol/graph-ts\";' >> generated/templates.ts",
     "build": "yarn run codegen && graph build",
     "gen-yaml-config": "cat template_warning.md > subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json subgraph.template.yaml >> subgraph.yaml && mustache config/${NETWORK:-rinkeby}.json src/constants/chainid.ts.template > src/constants/chainid.ts",
-    "deploy-hosted": "graph deploy --node https://api.thegraph.com/deploy/ ${DEPLOYMENT_PATH}",
     "postinstall": "yarn run copy-abis",
-    "deploy-goldsky": "echo $1",
     "test": "graph test . -v 0.5.4"
   },
   "dependencies": {
-    "@goldskycom/cli": "1.3.0",
-    "@graphprotocol/graph-cli": "0.48.0",
     "@graphprotocol/graph-ts": "0.29.3",
     "@zoralabs/nft-drop-contracts": "1.12.0",
     "@zoralabs/zora-1155-contracts": "1.3.0",
@@ -21,6 +18,8 @@
     "mustache": "4.2.0"
   },
   "devDependencies": {
+    "@goldskycom/cli": "1.3.0",
+    "@graphprotocol/graph-cli": "0.48.0",
     "matchstick-as": "^0.5.1"
   }
 }
