@@ -14,7 +14,7 @@ import {
   Deposit as DepositEvent,
   RewardsDeposit as RewardsDepositEvent,
   Withdraw as WithdrawEvent,
-} from "../../generated/ProtocolRewardsV2/ProtocolRewards";
+} from "../../generated/ProtocolRewardsV1/ProtocolRewards";
 import { makeTransaction } from "../common/makeTransaction";
 
 function addRewardInfoToUser(

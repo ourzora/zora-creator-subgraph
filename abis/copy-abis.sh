@@ -9,7 +9,7 @@ get_contract () {
 }
 
 get_contract_abi () {
-  node -e 'var fs = require("fs");console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[1])).abi, null, 2))' $1/$2.json > $REL_BASE/$2.json
+  node -e 'var fs = require("fs");console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[1])), null, 2))' $1/$2.json > $REL_BASE/$2.json
 }
 
 # 721 drop contracts
@@ -31,6 +31,8 @@ get_contract_abi $ERC1155_ARTIFACTS_PATH 'ZoraCreatorFixedPriceSaleStrategy'
 get_contract_abi $ERC1155_ARTIFACTS_PATH 'ZoraCreatorMerkleMinterStrategy'
 get_contract_abi $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterFactory'
 get_contract_abi $ERC1155_ARTIFACTS_PATH 'ZoraCreatorRedeemMinterStrategy'
+get_contract_abi $ERC1155_ARTIFACTS_PATH 'Zora1155PremintExecutor'
+get_contract_abi $ERC1155_ARTIFACTS_PATH 'ZoraCreator1155PremintExecutorImpl'
 
 # protocol rewards contract
 get_contract $PROTOCOL_REWARDS_ARTIFACTS_PATH 'ProtocolRewards'
