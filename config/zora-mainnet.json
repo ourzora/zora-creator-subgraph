@@ -31,5 +31,12 @@
       "startBlock": "2384107",
       "version": "2"
     }
+  ],
+  "preminter": [
+    {
+      "address": "0x7777773606e7e46C8Ba8B98C08f5cD218e31d340",
+      "startBlock": "4664191",
+      "version": "1"
+    }
   ]
 }
