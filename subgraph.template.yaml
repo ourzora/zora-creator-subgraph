@@ -95,7 +95,7 @@ dataSources:
     network: {{network}}
     source:
       address: "{{address}}"
-      abi: ZoraCreator1155PremintExecutor
+      abi: ZoraCreator1155PremintExecutorImpl
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -103,13 +103,13 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Premint
+      file: ./src/ERC1155Mappings/templates/ZoraPremintMappings.ts
       abis:
-        - name: ZoraCreator1155PremintExecutor
-          file: ./abis/Zora1155PremintExecutor.json
+        - name: ZoraCreator1155PremintExecutorImpl
+          file: ./abis/ZoraCreator1155PremintExecutorImpl.json
       eventHandlers:
-        - event: Upgraded(indexed address)
-          handler: handle1155FactoryUpgraded
-      file: ./src/ERC1155Mappings/factoryMappings.ts
+        - event: Preminted(indexed address,indexed uint256,indexed bool,uint32,(address,string,string),(string,uint256,uint64,uint96,uint64,uint64,uint32,uint32,address,address),address,uint256)
+          handler: handlePreminted
 {{/preminter}}
 templates:
   - name: MetadataInfo
@@ -352,24 +352,6 @@ templates:
           handler: handleOwnershipTransferred
         - event: UpdatedMetadataRenderer(address,address)
           handler: handleUpdatedMetadataRenderer
-  - name: ZoraCreator1155PremintExecutorImpl
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: ZoraCreator1155PremintExecutorImpl
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      entities:
-        - Premint
-      language: wasm/assemblyscript
-      file: ./src/ERC1155Mappings/templates/ZoraPremintMappings.ts
-      abis:
-        - name: ZoraCreator1155PremintExecutorImpl
-          file: ./abis/ZoraCreator1155PremintExecutorImpl.json
-      eventHandlers:
-        - event: Preminted(indexed address,indexed uint256,indexed bool,uint32,(address,string,string),(string,uint256,uint64,uint96,uint64,uint64,uint32,uint32,address,address),address,uint256)
-          handler: handlePreminted
 features:
   - grafting
 {{#grafting}}
