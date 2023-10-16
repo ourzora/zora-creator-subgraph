@@ -89,6 +89,28 @@ dataSources:
           handler: handleFactoryUpgraded
       file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
 {{/factories721}}
+{{#preminter}}
+  - kind: ethereum/contract
+    name: ZoraCreator1155PremintExecutor{{version}}
+    network: {{network}}
+    source:
+      address: "{{address}}"
+      abi: ZoraCreator1155PremintExecutor
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Premint
+      abis:
+        - name: ZoraCreator1155PremintExecutor
+          file: ./abis/Zora1155PremintExecutor.json
+      eventHandlers:
+        - event: Upgraded(indexed address)
+          handler: handle1155FactoryUpgraded
+      file: ./src/ERC1155Mappings/factoryMappings.ts
+{{/preminter}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
