@@ -14,6 +14,7 @@ export function handlePreminted(event: Preminted): void {
     event.params.contractAddress,
     event.params.tokenId
   );
+  premint.createdNewContract = event.params.createdNewContract;
 
   premint.save();
 }
