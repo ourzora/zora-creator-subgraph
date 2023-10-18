@@ -239,6 +239,7 @@ type ZoraCreateToken @entity {
   salesStrategies: [SalesStrategyConfig!]!
     @derivedFrom(field: "tokenAndContract")
   createdAtBlock: BigInt!
+  premint: Premint @derivedFrom(field: "tokenAndContract")
 }
 
 type KnownRenderer @entity(immutable: true) {
@@ -554,4 +555,14 @@ type RewardsWithdraw @entity @immutable {
   to: Bytes!
   amount: BigInt!
   reason: String
+}
+
+type Premint @entity {
+  id: ID!
+  uid: BigInt!
+  contractAddress: Bytes!
+  tokenId: BigInt!
+  minter: Bytes!
+  createdNewContract: Boolean!
+  tokenAndContract: ZoraCreateToken
 }

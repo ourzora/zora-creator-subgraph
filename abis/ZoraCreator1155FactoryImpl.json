@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "contract IZoraCreator1155",
-        "name": "_implementation",
+        "name": "_zora1155Impl",
         "type": "address"
       },
       {
@@ -285,44 +285,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "baseImpl",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "upgradeImpl",
-        "type": "address"
-      }
-    ],
-    "name": "UpgradeRegistered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "baseImpl",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "upgradeImpl",
-        "type": "address"
-      }
-    ],
-    "name": "UpgradeRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "implementation",
         "type": "address"
       }
@@ -440,6 +402,62 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "newContractURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "royaltyMintSchedule",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "royaltyBPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "address",
+            "name": "royaltyRecipient",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ICreatorRoyaltiesControl.RoyaltyConfiguration",
+        "name": "defaultRoyaltyConfiguration",
+        "type": "tuple"
+      },
+      {
+        "internalType": "address payable",
+        "name": "defaultAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "setupActions",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "createContractDeterministic",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "defaultMinters",
     "outputs": [
@@ -447,6 +465,40 @@
         "internalType": "contract IMinter1155[]",
         "name": "minters",
         "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "msgSender",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "newContractURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "contractAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "deterministicContractAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -470,7 +522,7 @@
     "name": "implementation",
     "outputs": [
       {
-        "internalType": "contract IZoraCreator1155",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -489,54 +541,6 @@
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "isAllowedUpgrade",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "baseImpl",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "upgradeImpl",
-        "type": "address"
-      }
-    ],
-    "name": "isRegisteredUpgradePath",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -605,42 +609,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "baseImpls",
-        "type": "address[]"
-      },
-      {
-        "internalType": "address",
-        "name": "upgradeImpl",
-        "type": "address"
-      }
-    ],
-    "name": "registerUpgradePath",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "baseImpl",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "upgradeImpl",
-        "type": "address"
-      }
-    ],
-    "name": "removeUpgradePath",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "resignOwnership",
     "outputs": [],
@@ -702,6 +670,19 @@
     "name": "upgradeToAndCall",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "zora1155Impl",
+    "outputs": [
+      {
+        "internalType": "contract IZoraCreator1155",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

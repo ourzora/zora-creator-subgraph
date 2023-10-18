@@ -2,18 +2,18 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_mintFeeAmount",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_mintFeeRecipient",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_factory",
+        "name": "_upgradeGate",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_protocolRewards",
         "type": "address"
       }
     ],
@@ -47,6 +47,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "CREATOR_FUNDS_RECIPIENT_NOT_SET",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes",
@@ -55,6 +60,11 @@
       }
     ],
     "name": "CallFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "Call_TokenIdMismatch",
     "type": "error"
   },
   {
@@ -81,27 +91,6 @@
       }
     ],
     "name": "CannotMintMoreTokens",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "mintFeeRecipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "mintFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "CannotSendMintFee",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "CannotSetMintFeeToZeroAddress",
     "type": "error"
   },
   {
@@ -244,18 +233,22 @@
   },
   {
     "inputs": [],
+    "name": "INVALID_ADDRESS_ZERO",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_ETH_AMOUNT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidMintSchedule",
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "mintFeeBPS",
-        "type": "uint256"
-      }
-    ],
-    "name": "MintFeeCannotBeMoreThanZeroPointOneETH",
+    "inputs": [],
+    "name": "MintNotYetStarted",
     "type": "error"
   },
   {
@@ -292,6 +285,37 @@
       }
     ],
     "name": "NoRendererForToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_CREATE_REFERRAL",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PremintDeleted",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtocolRewardsWithdrawFailed",
     "type": "error"
   },
   {
@@ -513,6 +537,43 @@
       }
     ],
     "name": "ContractRendererUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "structHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "domainName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "version",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "CreatorAttribution",
     "type": "event"
   },
   {
@@ -1138,6 +1199,117 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "numTokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "computeFreeMintRewards",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "creatorReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createReferralReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "mintReferralReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "firstMinterReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "zoraReward",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RewardsSettings",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "numTokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "computePaidMintRewards",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "creatorReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createReferralReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "mintReferralReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "firstMinterReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "zoraReward",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RewardsSettings",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "numTokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "computeTotalReward",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "config",
     "outputs": [
@@ -1209,10 +1381,183 @@
         "type": "uint256"
       }
     ],
+    "name": "createReferrals",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "customRenderers",
     "outputs": [
       {
         "internalType": "contract IRenderer1155",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "tokenURI",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "maxSupply",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint64",
+                "name": "maxTokensPerAddress",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint96",
+                "name": "pricePerToken",
+                "type": "uint96"
+              },
+              {
+                "internalType": "uint64",
+                "name": "mintStart",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "mintDuration",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint32",
+                "name": "royaltyMintSchedule",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "royaltyBPS",
+                "type": "uint32"
+              },
+              {
+                "internalType": "address",
+                "name": "royaltyRecipient",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "fixedPriceMinter",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct TokenCreationConfig",
+            "name": "tokenConfig",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint32",
+            "name": "uid",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "version",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct PremintConfig",
+        "name": "premintConfig",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      },
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "delegateSetupNewToken",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTokenId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "name": "delegatedTokenId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "firstMinters",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCreatorRewardRecipient",
+    "outputs": [
+      {
+        "internalType": "address payable",
         "name": "",
         "type": "address"
       }
@@ -1234,30 +1579,6 @@
         "internalType": "contract IRenderer1155",
         "name": "customRenderer",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getPermissions",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1330,6 +1651,19 @@
         "internalType": "struct IZoraCreator1155TypesV1.TokenData",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1495,20 +1829,40 @@
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "mintFeeRecipient",
-    "outputs": [
+    "inputs": [
+      {
+        "internalType": "contract IMinter1155",
+        "name": "minter",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "minterArguments",
+        "type": "bytes"
+      },
       {
         "internalType": "address",
-        "name": "",
+        "name": "mintReferral",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "mintWithRewards",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1855,35 +2209,30 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "newURI",
+        "type": "string"
       },
       {
         "internalType": "uint256",
-        "name": "totalSupply",
+        "name": "maxSupply",
         "type": "uint256"
       },
-      {
-        "internalType": "uint256",
-        "name": "mintAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "supplyRoyaltyInfo",
-    "outputs": [
       {
         "internalType": "address",
-        "name": "receiver",
+        "name": "createReferral",
         "type": "address"
-      },
+      }
+    ],
+    "name": "setupNewTokenWithCreateReferral",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "royaltyAmount",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1932,6 +2281,24 @@
       }
     ],
     "name": "updateContractMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      }
+    ],
+    "name": "updateCreateReferral",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2042,6 +2409,24 @@
   {
     "inputs": [],
     "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
