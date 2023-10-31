@@ -354,6 +354,7 @@ templates:
           handler: handleUpdatedMetadataRenderer
 features:
   - grafting
+  - nonFatalErrors
 {{#grafting}}
 graft:
   base: {{base}} # subgraph ID of base subgraph
