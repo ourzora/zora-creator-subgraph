@@ -17,20 +17,29 @@ export function handleJSONMetadataFetched(content: Bytes): void {
   ) {
     const value = jsonType.value.toObject();
     if (value) {
-      if (value.get("name")) {
-        metadata.name = value.mustGet("name").toString();
+      const name = value.get("name");
+      if (name && name.kind === JSONValueKind.STRING) {
+        metadata.name = name.toString();
       }
-      if (value.get("description")) {
-        metadata.description = value.mustGet("description").toString();
+      const description = value.get("description");
+      if (description && description.kind === JSONValueKind.STRING) {
+        metadata.description = description.toString();
       }
-      if (value.get("image")) {
-        metadata.image = value.mustGet("image").toString();
+      const image = value.get("image");
+      if (image && image.kind === JSONValueKind.STRING) {
+        metadata.image = image.toString();
       }
-      if (value.get("decimals")) {
-        metadata.decimals = value.mustGet("decimals").toString();
+      const decimals = value.get("decimals");
+      if (
+        decimals &&
+        (decimals.kind === JSONValueKind.STRING ||
+          decimals.kind === JSONValueKind.NUMBER)
+      ) {
+        metadata.decimals = decimals.toString();
       }
-      if (value.get("animation_url")) {
-        metadata.animationUrl = value.mustGet("animation_url").toString();
+      const animation_url = value.get("animation_url");
+      if (animation_url && animation_url.kind === JSONValueKind.STRING) {
+        metadata.animationUrl = animation_url.toString();
       }
     }
   }
