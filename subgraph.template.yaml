@@ -91,7 +91,7 @@ dataSources:
 {{/factories721}}
 {{#preminter}}
   - kind: ethereum/contract
-    name: ZoraCreator1155PremintExecutor{{version}}
+    name: ZoraCreator1155PremintExecutorV{{version}}
     network: {{network}}
     source:
       address: "{{address}}"
@@ -103,7 +103,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Premint
-      file: ./src/ERC1155Mappings/templates/ZoraPremintMappings.ts
+      file: ./src/ERC1155Mappings/premintMappings.ts
       abis:
         - name: ZoraCreator1155PremintExecutorImpl
           file: ./abis/ZoraCreator1155PremintExecutorImpl.json
