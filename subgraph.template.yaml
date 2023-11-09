@@ -89,6 +89,28 @@ dataSources:
           handler: handleFactoryUpgraded
       file: ./src/ERC721Mappings/ERC721FactoryMappings.ts
 {{/factories721}}
+{{#preminter}}
+  - kind: ethereum/contract
+    name: ZoraCreator1155PremintExecutor{{version}}
+    network: {{network}}
+    source:
+      address: "{{address}}"
+      abi: ZoraCreator1155PremintExecutorImpl
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Premint
+      file: ./src/ERC1155Mappings/templates/ZoraPremintMappings.ts
+      abis:
+        - name: ZoraCreator1155PremintExecutorImpl
+          file: ./abis/ZoraCreator1155PremintExecutorImpl.json
+      eventHandlers:
+        - event: Preminted(indexed address,indexed uint256,indexed bool,uint32,(address,string,string),(string,uint256,uint64,uint96,uint64,uint64,uint32,uint32,address,address),address,uint256)
+          handler: handlePreminted
+{{/preminter}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
@@ -332,6 +354,7 @@ templates:
           handler: handleUpdatedMetadataRenderer
 features:
   - grafting
+  - nonFatalErrors
 {{#grafting}}
 graft:
   base: {{base}} # subgraph ID of base subgraph

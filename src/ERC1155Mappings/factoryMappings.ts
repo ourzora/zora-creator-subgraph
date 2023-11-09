@@ -25,6 +25,7 @@ import {
   extractIPFSIDFromContract,
   loadMetadataInfoFromID,
 } from "../common/metadata";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleNewContractCreated(event: SetupNewContract): void {
   const createdContract = new ZoraCreateContract(
@@ -34,7 +35,8 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
   createdContract.contractURI = event.params.contractURI;
-  createdContract.creator = event.params.creator;
+  // The creator being msg.sender cannot be guaranteed for premint 
+  createdContract.creator = event.params.defaultAdmin;
   createdContract.initialDefaultAdmin = event.params.defaultAdmin;
   createdContract.owner = event.params.defaultAdmin;
   createdContract.name = event.params.name;
@@ -58,7 +60,14 @@ export function handleNewContractCreated(event: SetupNewContract): void {
 
   // query for more information about contract
   const impl = ZoraCreator1155Impl.bind(event.params.newContract);
-  createdContract.mintFeePerQuantity = impl.mintFee();
+
+  // temporary fix: testnet deploy temporarily removed this function
+  const attemptMintFee = impl.try_mintFee();
+  if (attemptMintFee.reverted) {
+    createdContract.mintFeePerQuantity = BigInt.fromI64(777000000000000);
+  } else {
+    createdContract.mintFeePerQuantity = attemptMintFee.value;
+  }
   createdContract.contractVersion = impl.contractVersion();
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
 

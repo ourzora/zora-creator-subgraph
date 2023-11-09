@@ -292,6 +292,11 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
         "internalType": "bytes32[]",
         "name": "hashes",
         "type": "bytes32[]"
@@ -480,6 +485,11 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
@@ -574,6 +584,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
       {
         "components": [
           {
