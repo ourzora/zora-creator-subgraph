@@ -209,6 +209,7 @@ templates:
           handler: handleUpdatedRoyalties
         - event: UpdatedToken(indexed address,indexed uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
+          receipt: true
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
