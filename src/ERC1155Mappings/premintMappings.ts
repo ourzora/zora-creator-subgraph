@@ -1,6 +1,6 @@
-import { Premint } from "../../../generated/schema";
-import { Preminted } from "../../../generated/templates/ZoraCreator1155PremintExecutorImpl/ZoraCreator1155PremintExecutorImpl";
-import { getTokenId } from "../../common/getTokenId";
+import { Premint } from "../../generated/schema";
+import { Preminted } from "../../generated/ZoraCreator1155PremintExecutorV1/ZoraCreator1155PremintExecutorImpl";
+import { getTokenId } from "../common/getTokenId";
 
 export function handlePreminted(event: Preminted): void {
   const premint = new Premint(
