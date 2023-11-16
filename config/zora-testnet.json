@@ -2,7 +2,11 @@
   "chainid": "999",
   "network": "zora-testnet",
   "factories1155": [
-
+    {
+      "address": "0x6a357139C1bcDcf0B3AB9bC447932dDdcb956703",
+      "startBlock": "1",
+      "version": "1"
+    },
     {
       "address": "0x777777C338d93e2C7adf08D102d45CA7CC4Ed021",
       "startBlock": "1278602",
@@ -10,7 +14,16 @@
     }
   ],
   "factories721": [
-
+    {
+      "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
+      "startBlock": "1",
+      "version": "1"
+    },
+    {
+      "address": "0xeB29A4e5b84fef428c072debA2444e93c080CE87",
+      "startBlock": "587491",
+      "version": "2"
+    }
   ],
   "protocolRewards": [
     {

@@ -35,8 +35,10 @@ export function handleNewContractCreated(event: SetupNewContract): void {
   createdContract.address = event.params.newContract;
   createdContract.contractStandard = TOKEN_STANDARD_ERC1155;
   createdContract.contractURI = event.params.contractURI;
+
   // The creator being msg.sender cannot be guaranteed for premint 
   createdContract.creator = event.params.defaultAdmin;
+
   createdContract.initialDefaultAdmin = event.params.defaultAdmin;
   createdContract.owner = event.params.defaultAdmin;
   createdContract.name = event.params.name;

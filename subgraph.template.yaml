@@ -57,6 +57,7 @@ dataSources:
       eventHandlers:
         - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated
+          receipt: true
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
