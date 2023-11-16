@@ -211,6 +211,8 @@ type ZoraCreateToken @entity {
 
   address: Bytes!
 
+  creator: Bytes!
+
   uri: String
   totalSupply: BigInt!
   maxSupply: BigInt!

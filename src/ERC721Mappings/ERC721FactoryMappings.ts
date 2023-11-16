@@ -33,7 +33,9 @@ import {
 } from "../common/metadata";
 
 export function handleFactoryUpgraded(event: Upgraded): void {
-  const upgrade = new Upgrade(`${event.transaction.hash.toHex()}-${event.transactionLogIndex}`);
+  const upgrade = new Upgrade(
+    `${event.transaction.hash.toHex()}-${event.transactionLogIndex}`
+  );
   const factory = new ZoraCreate721Factory(event.address.toHex());
   const creator = ZoraNFTCreatorV1.bind(event.address);
 
@@ -145,9 +147,8 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   }
   createdContract.mintFeePerQuantity = feePerAmount.value.getFee();
 
-  createdContract.metadataIPFSID = extractIPFSIDFromContract(
-    contractURIResponse
-  );
+  createdContract.metadataIPFSID =
+    extractIPFSIDFromContract(contractURIResponse);
   createdContract.metadata = loadMetadataInfoFromID(
     createdContract.metadataIPFSID
   );
@@ -179,6 +180,7 @@ export function handleCreatedDrop(event: CreatedDrop): void {
   newToken.totalMinted = BigInt.zero();
   newToken.contract = getContractId(dropAddress);
   newToken.tokenId = BigInt.zero();
+  newToken.creator = event.params.creator;
 
   newToken.txn = txn;
   newToken.timestamp = event.block.timestamp;

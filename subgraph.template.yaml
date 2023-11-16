@@ -57,6 +57,7 @@ dataSources:
       eventHandlers:
         - event: SetupNewContract(indexed address,indexed address,indexed address,string,string,(uint32,uint32,address))
           handler: handleNewContractCreated
+          receipt: true
         - event: Upgraded(indexed address)
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
@@ -209,6 +210,7 @@ templates:
           handler: handleUpdatedRoyalties
         - event: UpdatedToken(indexed address,indexed uint256,(string,uint256,uint256))
           handler: handleUpdatedToken
+          receipt: true
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
