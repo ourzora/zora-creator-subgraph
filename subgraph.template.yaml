@@ -112,6 +112,37 @@ dataSources:
         - event: Preminted(indexed address,indexed uint256,indexed bool,uint32,(address,string,string),(string,uint256,uint64,uint96,uint64,uint64,uint32,uint32,address,address),address,uint256)
           handler: handlePreminted
 {{/preminter}}
+{{#reserveAuctionV3}}
+  - name: ReserveAuctionV3
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ReserveAuctionV3
+      address: "{{address}}"
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      entities:
+        - Auction
+        - AuctionBid
+      language: wasm/assemblyscript
+      file: ./src/ReserveAuctionV3Mappings/reserveAuctionV3Mappings.ts
+      abis:
+        - name: ReserveAuctionV3
+          file: ./abis/ReserveAuctionV3.json  
+      eventHandlers:
+        - event: AuctionCreated(indexed address,indexed uint256,(address,address,uint256,uint256,address,uint96,address,uint96,address,uint80,uint16))
+          handler: handleAuctionCreated
+        - event: AuctionBid(indexed address,indexed uint256,bool,bool,(address,address,uint256,uint256,address,uint96,address,uint96,address,uint80,uint16))
+          handler: handleAuctionBid
+        - event: AuctionCanceled(indexed address,indexed uint256,(address,address,uint256,uint256,address,uint96,address,uint96,address,uint80,uint16))
+          handler: handleAuctionCanceled
+        - event: AuctionEnded(indexed address,indexed uint256,(address,address,uint256,uint256,address,uint96,address,uint96,address,uint80,uint16))
+          handler: handleAuctionEnded
+        - event: AuctionReservePriceUpdated(indexed address,indexed uint256,(address,address,uint256,uint256,address,uint96,address,uint96,address,uint80,uint16))
+          handler: handleAuctionReservePriceUpdated
+{{/reserveAuctionV3}}
 templates:
   - name: MetadataInfo
     kind: file/ipfs
