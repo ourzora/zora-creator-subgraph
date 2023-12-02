@@ -38,5 +38,12 @@
       "startBlock": "4664191",
       "version": "1"
     }
+  ],
+  "reserveAuctionV3": [
+    {
+      "address": "0xA06262157905913f855573f53AD48DE2D4ba1F4A",
+      "startBlock": "6686902",
+      "version": "1"
+    }
   ]
 }

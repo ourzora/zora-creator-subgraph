@@ -568,3 +568,31 @@ type Premint @entity {
   createdNewContract: Boolean!
   tokenAndContract: ZoraCreateToken
 }
+
+### Reserve Auctions V3
+
+type Auction @entity {
+  id: ID!
+  txn: TransactionInfo!
+  block: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+
+  tokenContract: Bytes!
+  tokenId: BigInt!
+
+  seller: Bytes!
+  sellerFundsRecipient: Bytes!
+  reservePrice: BigInt!
+  highestBid: BigInt!
+  highestBidder: Bytes!
+  startTime: BigInt!
+  currency: Bytes!
+  firstBidTime: BigInt!
+  finder: Bytes!
+  duration: BigInt!
+  findersFeeBps: BigInt!
+  extended: Boolean!
+  canceled: Boolean!
+  ended: Boolean!
+}
