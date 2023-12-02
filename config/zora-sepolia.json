@@ -28,5 +28,12 @@
       "startBlock": "309965",
       "version": "1"
     }
+  ],
+  "reserveAuctionV3": [
+    {
+      "address": "0x0fbAB7302F9351dD1DB6674cc3bB855f0C55840B",
+      "startBlock": "992417",
+      "version": "1"
+    }
   ]
 }
