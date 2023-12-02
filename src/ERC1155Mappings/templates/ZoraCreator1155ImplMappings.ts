@@ -253,7 +253,7 @@ function getTokenCreator(event: UpdatedToken): Bytes {
     ) {
       const newAddress = event
         .receipt!.logs[i].topics[3].toHexString()
-        .slice(96 + 2, 96 + 40 + 2);
+        .slice(26);
 
       if (newAddress && newAddress.length === 40) {
         return Address.fromHexString(newAddress);
