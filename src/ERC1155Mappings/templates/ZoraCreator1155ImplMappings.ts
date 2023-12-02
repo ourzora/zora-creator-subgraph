@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   ZoraCreateContract,
   ZoraCreateToken,
@@ -219,6 +219,51 @@ function _updateHolderTransfer(
   return tokenHolderCountChange;
 }
 
+function getTokenCreator(event: UpdatedToken): Bytes {
+  const defaultFrom = event.params.from;
+  if (event.receipt === null) {
+    return defaultFrom;
+  }
+
+  for (let i = 0; i < event.receipt!.logs.length; i++) {
+    if (
+      event.receipt!.logs[i].topics[0].equals(
+        Bytes.fromHexString(
+          // Event CreatorAttribution
+          "0x06c5a80e592816bd4f60093568e69affa68b5e378a189b2f59a1121703de47de"
+        )
+      )
+    ) {
+      const newAddress = event
+        .receipt!.logs[i].data.toHex()
+        // Parse out the exact part of the event address since we didn't add topics for this event
+        .slice(218, 218 + 40);
+      if (newAddress && newAddress.length === 20) {
+        return Address.fromHexString(newAddress);
+      }
+    }
+
+    // SetupNewContract(address indexed newContract, address indexed creator, address indexed defaultAdmin, ...);
+    if (
+      event.receipt!.logs[i].topics[0].equals(
+        Bytes.fromHexString(
+          "0xa45800684f65ae010ceb4385eceaed88dec7f6a6bcbe11f7ffd8bd24dd2653f4"
+        )
+      )
+    ) {
+      const newAddress = event
+        .receipt!.logs[i].topics[3].toHexString()
+        .slice(26);
+
+      if (newAddress && newAddress.length === 40) {
+        return Address.fromHexString(newAddress);
+      }
+    }
+  }
+
+  return defaultFrom;
+}
+
 export function handleUpdatedToken(event: UpdatedToken): void {
   const id = getTokenId(event.address, event.params.tokenId);
   let token = ZoraCreateToken.load(id);
@@ -229,6 +274,7 @@ export function handleUpdatedToken(event: UpdatedToken): void {
     token.address = event.address;
     token.createdAtBlock = event.block.number;
     token.totalMinted = BigInt.zero();
+    token.creator = getTokenCreator(event);
   }
 
   const txn = makeTransaction(event);
@@ -242,32 +288,6 @@ export function handleUpdatedToken(event: UpdatedToken): void {
   token.maxSupply = event.params.tokenData.maxSupply;
   token.totalMinted = event.params.tokenData.totalMinted;
   token.totalSupply = event.params.tokenData.totalMinted;
-  token.creator = event.params.from;
-
-  if (event.receipt !== null) {
-    for (
-      let i = 0;
-      i < event.receipt!.logs.length;
-      i++
-    ) {
-      if (
-        event.receipt!.logs[i].topics[0].equals(
-          Bytes.fromHexString(
-            // Event CreatorAttribution
-            "0x06c5a80e592816bd4f60093568e69affa68b5e378a189b2f59a1121703de47de"
-          )
-        )
-      ) {
-        const newAddress = event
-          .receipt!.logs[i].data.toHex()
-          // Parse out the exact part of the event address since we didn't add topics for this event
-          .slice(218, 218 + 40);
-        if (token && newAddress && newAddress.length == 40) {
-          token.creator = Address.fromHexString(newAddress);
-        }
-      }
-    }
-  }
 
   token.save();
 }
