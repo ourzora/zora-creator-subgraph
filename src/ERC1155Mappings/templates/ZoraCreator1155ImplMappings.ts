@@ -238,7 +238,7 @@ function getTokenCreator(event: UpdatedToken): Bytes {
         .receipt!.logs[i].data.toHex()
         // Parse out the exact part of the event address since we didn't add topics for this event
         .slice(218, 218 + 40);
-      if (newAddress && newAddress.length === 20) {
+      if (newAddress && newAddress.length === 40) {
         return Address.fromHexString(newAddress);
       }
     }
