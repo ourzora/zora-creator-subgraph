@@ -35,6 +35,8 @@ function addRewardInfoToUser(
 
   creatorRewards.save();
 
+  /*
+
   const isoString = new Date(timestamp.toI64() * 1000)
     .toISOString()
     .substring(0, 10);
@@ -98,6 +100,8 @@ function addRewardInfoToUser(
   }
   rewardsTotal.amount = rewardsTotal.amount.plus(amount);
   rewardsTotal.save();
+
+  */
 }
 
 function addSingleDeposit(
