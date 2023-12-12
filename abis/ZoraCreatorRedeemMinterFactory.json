@@ -1,252 +1,288 @@
 [
   {
+    "type": "constructor",
     "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "stateMutability": "nonpayable"
   },
   {
-    "inputs": [],
-    "name": "CallerNotZoraCreator1155",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MinterContractAlreadyExists",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MinterContractDoesNotExist",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "creatorContract",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "minterContract",
-        "type": "address"
-      }
-    ],
-    "name": "RedeemMinterDeployed",
-    "type": "event"
-  },
-  {
-    "inputs": [],
+    "type": "function",
     "name": "CONTRACT_BASE_ID",
+    "inputs": [],
     "outputs": [
       {
-        "internalType": "uint256",
         "name": "",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
-    "inputs": [],
+    "type": "function",
     "name": "contractName",
+    "inputs": [],
     "outputs": [
       {
-        "internalType": "string",
         "name": "",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    "stateMutability": "pure"
   },
   {
-    "inputs": [],
+    "type": "function",
     "name": "contractURI",
+    "inputs": [],
     "outputs": [
       {
-        "internalType": "string",
         "name": "",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    "stateMutability": "pure"
   },
   {
-    "inputs": [],
+    "type": "function",
     "name": "contractVersion",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
     "name": "createMinterIfNoneExists",
+    "inputs": [],
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "nonpayable"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_creatorContract",
-        "type": "address"
-      }
-    ],
+    "type": "function",
     "name": "doesRedeemMinterExistForCreatorContract",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
         "name": "_creatorContract",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getDeployedRedeemMinterForCreatorContract",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
         "name": "_creatorContract",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "predictMinterAddress",
     "outputs": [
       {
-        "internalType": "address",
         "name": "",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
+    "type": "function",
+    "name": "predictMinterAddress",
     "inputs": [
       {
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "ethValueSent",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "minterArguments",
-        "type": "bytes"
+        "name": "_creatorContract",
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "requestMint",
     "outputs": [
       {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "requestMint",
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "quantity",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "ethValueSent",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minterArguments",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "commands",
+        "type": "tuple",
+        "internalType": "struct ICreatorCommands.CommandSet",
         "components": [
           {
+            "name": "commands",
+            "type": "tuple[]",
+            "internalType": "struct ICreatorCommands.Command[]",
             "components": [
               {
-                "internalType": "enum ICreatorCommands.CreatorActions",
                 "name": "method",
-                "type": "uint8"
+                "type": "uint8",
+                "internalType": "enum ICreatorCommands.CreatorActions"
               },
               {
-                "internalType": "bytes",
                 "name": "args",
-                "type": "bytes"
+                "type": "bytes",
+                "internalType": "bytes"
               }
-            ],
-            "internalType": "struct ICreatorCommands.Command[]",
-            "name": "commands",
-            "type": "tuple[]"
+            ]
           },
           {
-            "internalType": "uint256",
             "name": "at",
-            "type": "uint256"
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct ICreatorCommands.CommandSet",
-        "name": "commands",
-        "type": "tuple"
+        ]
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "nonpayable"
   },
   {
+    "type": "function",
+    "name": "supportsInterface",
     "inputs": [
       {
-        "internalType": "bytes4",
         "name": "interfaceId",
-        "type": "bytes4"
+        "type": "bytes4",
+        "internalType": "bytes4"
       }
     ],
-    "name": "supportsInterface",
     "outputs": [
       {
-        "internalType": "bool",
         "name": "",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    "stateMutability": "pure"
   },
   {
-    "inputs": [],
+    "type": "function",
     "name": "zoraRedeemMinterImplementation",
+    "inputs": [],
     "outputs": [
       {
-        "internalType": "address",
         "name": "",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "RedeemMinterDeployed",
+    "inputs": [
+      {
+        "name": "creatorContract",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "minterContract",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "CallerNotZoraCreator1155",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidMerkleProof",
+    "inputs": [
+      {
+        "name": "mintTo",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "merkleProof",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      },
+      {
+        "name": "merkleRoot",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MinterContractAlreadyExists",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MinterContractDoesNotExist",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SaleEnded",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SaleHasNotStarted",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "WrongValueSent",
+    "inputs": []
   }
 ]

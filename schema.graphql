@@ -566,6 +566,7 @@ type Premint @entity {
   tokenId: BigInt!
   minter: Bytes!
   createdNewContract: Boolean!
+  quantityMinted: BigInt
   tokenAndContract: ZoraCreateToken
 }
 
