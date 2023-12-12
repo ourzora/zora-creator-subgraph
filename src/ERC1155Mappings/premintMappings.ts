@@ -15,6 +15,7 @@ export function handlePreminted(event: Preminted): void {
     event.params.tokenId
   );
   premint.createdNewContract = event.params.createdNewContract;
+  premint.quantityMinted = event.params.quantityMinted;
 
   premint.save();
 }
