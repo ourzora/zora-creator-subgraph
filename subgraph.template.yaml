@@ -112,7 +112,7 @@ dataSources:
         - event: Preminted(indexed address,indexed uint256,indexed bool,uint32,(address,string,string),(string,uint256,uint64,uint96,uint64,uint64,uint32,uint32,address,address),address,uint256)
           handler: handlePreminted
         - event: PremintedV2(indexed address,indexed uint256,indexed bool,uint32,address,uint256)
-          handler: handlePreminted
+          handler: handlePremintedV2
 {{/preminter}}
 {{#reserveAuctionV3}}
   - name: ReserveAuctionV3
