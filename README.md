@@ -2,7 +2,7 @@
 
 This subgraph indexes all Zora creator contracts (both 721 and 1155) along with creator rewards.
 
-Main entites can be found in `schema.graphql`.
+Main entities can be found in `schema.graphql`.
 
 To add new chains, new configuration files can be added to the `config/` folder. The config chain name needs to match the network name in the graph indexer instance used.
 
