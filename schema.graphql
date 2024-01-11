@@ -105,6 +105,15 @@ type Upgrade @entity {
   type: String
 }
 
+type UpgradePath @entity {
+  id: ID!
+
+  fromImplementation: Bytes!
+  fromVersion: String!
+  toImplementation: Bytes!
+  toVersion: String!
+}
+
 type EditionMetadata @entity {
   id: ID!
 
