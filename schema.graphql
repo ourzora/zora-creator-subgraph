@@ -105,13 +105,17 @@ type Upgrade @entity {
   type: String
 }
 
+type ContractVersion @entity {
+  # id is implementation address
+  id: Bytes!
+  version: String!
+}
+
 type UpgradePath @entity {
   id: ID!
 
-  fromImplementation: Bytes!
-  fromVersion: String!
-  toImplementation: Bytes!
-  toVersion: String!
+  from: ContractVersion!
+  to: ContractVersion!
 }
 
 type EditionMetadata @entity {

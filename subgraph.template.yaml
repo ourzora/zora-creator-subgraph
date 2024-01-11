@@ -62,6 +62,34 @@ dataSources:
           handler: handle1155FactoryUpgraded
       file: ./src/ERC1155Mappings/factoryMappings.ts
 {{/factories1155}}
+{{#upgradeGate1155}}
+  - kind: ethereum/contract
+    name: UpgradePathsV{{version}}
+    network: {{network}}
+    source:
+      address: "{{address}}"
+      abi: UpgradeGate
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - UpgradePath
+        - ContractVersion
+      abis:
+        - name: UpgradeGate
+          file: ./abis/UpgradeGate.json
+        - name: ZoraCreator1155Impl
+          file: ./abis/ZoraCreator1155Impl.json
+      eventHandlers:
+        - event: UpgradeRegistered(indexed address,indexed address) 
+          handler: handleUpgradeRegistered 
+          receipt: true
+        - event: UpgradeRemoved(indexed address,indexed address)
+          handler: handleUpgradeRemoved
+      file: ./src/ERC1155Mappings/upgradeGateMappings.ts
+{{/upgradeGate1155}}
 {{#factories721}}
   - kind: ethereum/contract
     name: Zora721V{{version}}
