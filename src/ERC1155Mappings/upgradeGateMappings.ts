@@ -12,9 +12,10 @@ import { Bytes, store } from "@graphprotocol/graph-ts";
 function getContractVersion(address: Bytes): ContractVersion {
   const contractVersion = new ContractVersion(address);
 
-  const versionString = ZoraCreator1155Impl.bind(address).contractVersion();
+  const zoraCreator1155Impl = ZoraCreator1155Impl.bind(address);
 
-  contractVersion.version = versionString;
+  contractVersion.version = zoraCreator1155Impl.try_contractVersion().value;
+  contractVersion.name = zoraCreator1155Impl.try_name().value;
 
   return contractVersion;
 }

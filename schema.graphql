@@ -108,7 +108,8 @@ type Upgrade @entity {
 type ContractVersion @entity {
   # id is implementation address
   id: Bytes!
-  version: String!
+  version: String
+  name: String
 }
 
 type UpgradePath @entity {
