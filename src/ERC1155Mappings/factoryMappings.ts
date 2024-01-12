@@ -5,6 +5,8 @@ import {
 } from "../../generated/ZoraNFTCreatorFactory1155V1/ZoraCreator1155FactoryImpl";
 
 import {
+  ContractVersion,
+  FactoryVersion,
   Upgrade,
   ZoraCreate1155Factory,
   ZoraCreateContract,
@@ -108,15 +110,32 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
     factory.redeemMinterStrategyAddress = redeemFactory.value;
   }
 
+  const factoryVersion = new FactoryVersion(event.params.implementation);
+  factoryVersion.version = creator.contractVersion();
+  factoryVersion.type = '1155Factory';
+
+  const creatorContractImpl = creator.try_zora1155Impl().value;
+
+  if (creatorContractImpl) {
+    const contractVersion = new ContractVersion(creatorContractImpl);
+    contractVersion.version = factoryVersion.version;
+    contractVersion.name = ZoraCreator1155Impl.bind(creatorContractImpl).try_name().value;
+
+    contractVersion.save();
+
+    factoryVersion.creatorContract = contractVersion.id;
+  }
+
+  factoryVersion.save();
+
   const txn = makeTransaction(event);
   upgrade.txn = txn;
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
-  upgrade.version = creator.contractVersion();
+  upgrade.version = factoryVersion.id;
   // zora1155Impl didn't exist on all versions of the contract, so this
   // handles the case it doesnt exist.
-  upgrade.creatorContractImpl = creator.try_zora1155Impl().value;
   upgrade.address = event.address;
   upgrade.type = "1155Factory";
 

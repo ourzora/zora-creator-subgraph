@@ -10,6 +10,8 @@ import {
   ZoraCreateToken,
   RoyaltyConfig,
   KnownRenderer,
+  FactoryVersion,
+  ContractVersion,
 } from "../../generated/schema";
 
 import {
@@ -82,12 +84,29 @@ export function handleFactoryUpgraded(event: Upgraded): void {
 
   const txn = makeTransaction(event);
 
+  const factoryVersion = new FactoryVersion(event.params.implementation);
+  factoryVersion.version = creator.contractVersion().toString();
+  factoryVersion.type = '1155Factory';
+
+  const creatorContractImpl = creator.try_implementation().value;
+
+  if (creatorContractImpl) {
+    const contractVersion = new ContractVersion(creatorContractImpl);
+    contractVersion.version = factoryVersion.version;
+    contractVersion.name = ERC721DropContract.bind(creatorContractImpl).try_name().value;
+
+    contractVersion.save();
+
+    factoryVersion.creatorContract = contractVersion.id;
+  }
+
+  factoryVersion.save();
+
   upgrade.txn = txn;
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
-  upgrade.version = creator.contractVersion().toString();
-  upgrade.creatorContractImpl = creator.implementation();
+  upgrade.version = factoryVersion.id;
   upgrade.address = event.address;
   upgrade.type = "721Factory";
 

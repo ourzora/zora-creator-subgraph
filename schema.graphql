@@ -90,6 +90,21 @@ type TokenSale @entity {
 #   drop: ERC721Drop!
 # }
 
+type ContractVersion @entity {
+  # id is implementation address
+  id: Bytes!
+  version: String
+  name: String
+}
+
+type FactoryVersion @entity {
+  id: Bytes!
+
+  version: String!
+  type: String
+  creatorContract: ContractVersion
+}
+
 type Upgrade @entity {
   # Begin – default data block
   id: ID!
@@ -100,16 +115,8 @@ type Upgrade @entity {
   # End – default data block
 
   impl: Bytes
-  version: String!
-  creatorContractImpl: Bytes
+  version: FactoryVersion!
   type: String
-}
-
-type ContractVersion @entity {
-  # id is implementation address
-  id: Bytes!
-  version: String
-  name: String
 }
 
 type UpgradePath @entity {
