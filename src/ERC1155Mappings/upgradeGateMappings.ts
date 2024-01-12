@@ -7,12 +7,12 @@ import {
   UpgradePath,
 } from "../../generated/schema";
 import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
-import { Bytes, store } from "@graphprotocol/graph-ts";
+import { Address, Bytes, store } from "@graphprotocol/graph-ts";
 
 function getContractVersion(address: Bytes): ContractVersion {
   const contractVersion = new ContractVersion(address);
 
-  const zoraCreator1155Impl = ZoraCreator1155Impl.bind(address);
+  const zoraCreator1155Impl = ZoraCreator1155Impl.bind(address as Address);
 
   contractVersion.version = zoraCreator1155Impl.try_contractVersion().value;
   contractVersion.name = zoraCreator1155Impl.try_name().value;
