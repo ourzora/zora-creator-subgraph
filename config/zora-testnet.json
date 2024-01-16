@@ -4,7 +4,7 @@
   "factories1155": [
     {
       "address": "0x6a357139C1bcDcf0B3AB9bC447932dDdcb956703",
-      "startBlock": "1",
+      "startBlock": "110449",
       "version": "1"
     },
     {
@@ -16,7 +16,7 @@
   "factories721": [
     {
       "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
-      "startBlock": "1",
+      "startBlock": "112670",
       "version": "1"
     },
     {
