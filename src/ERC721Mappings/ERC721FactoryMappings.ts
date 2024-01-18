@@ -88,10 +88,10 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   factoryVersion.version = creator.contractVersion().toString();
   factoryVersion.type = '721Factory';
 
-  const creatorContractImpl = creator.try_implementation().value;
+  const creatorContractImpl = creator.try_implementation();
 
-  if (creatorContractImpl) {
-    const contractVersion = new ContractVersion(creatorContractImpl);
+  if (!creatorContractImpl.reverted) {
+    const contractVersion = new ContractVersion(creatorContractImpl.value);
     contractVersion.version = factoryVersion.version;
 
     contractVersion.save();
