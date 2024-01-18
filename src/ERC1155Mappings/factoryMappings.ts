@@ -111,14 +111,15 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   }
 
   const factoryVersion = new FactoryVersion(event.params.implementation);
-  factoryVersion.version = creator.contractVersion();
+  factoryVersion.version = creator.try_contractVersion().value;
   factoryVersion.type = '1155Factory';
 
-  const creatorContractImpl = creator.try_zora1155Impl().value;
+  const creatorContractImpl = creator.try_zora1155Impl();
 
-  if (creatorContractImpl) {
-    const contractVersion = new ContractVersion(creatorContractImpl);
-    contractVersion.version = factoryVersion.version;
+  if (!creatorContractImpl.reverted) {
+    const contractVersion = new ContractVersion(creatorContractImpl.value);
+    const zoraCreator1155 = ZoraCreator1155Impl.bind(creatorContractImpl.value);
+    contractVersion.version = zoraCreator1155.try_contractVersion().value;
 
     contractVersion.save();
     factoryVersion.creatorContract = contractVersion.id;

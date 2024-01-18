@@ -99,7 +99,7 @@ type ContractVersion @entity {
 type FactoryVersion @entity {
   id: Bytes!
 
-  version: String!
+  version: String
   type: String
   creatorContract: ContractVersion
 }
