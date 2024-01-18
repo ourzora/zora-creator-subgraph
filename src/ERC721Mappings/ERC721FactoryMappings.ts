@@ -93,7 +93,6 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   if (creatorContractImpl) {
     const contractVersion = new ContractVersion(creatorContractImpl);
     contractVersion.version = factoryVersion.version;
-    contractVersion.name = ERC721DropContract.bind(creatorContractImpl).try_name().value;
 
     contractVersion.save();
 
@@ -106,7 +105,7 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
-  upgrade.version = factoryVersion.id;
+  upgrade.factoryVersion = factoryVersion.id;
   upgrade.address = event.address;
   upgrade.type = "721Factory";
 

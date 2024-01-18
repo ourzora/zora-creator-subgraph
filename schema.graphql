@@ -94,7 +94,6 @@ type ContractVersion @entity {
   # id is implementation address
   id: Bytes!
   version: String
-  name: String
 }
 
 type FactoryVersion @entity {
@@ -115,7 +114,7 @@ type Upgrade @entity {
   # End – default data block
 
   impl: Bytes
-  version: FactoryVersion!
+  factoryVersion: FactoryVersion!
   type: String
 }
 

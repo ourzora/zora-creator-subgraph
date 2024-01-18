@@ -119,10 +119,8 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   if (creatorContractImpl) {
     const contractVersion = new ContractVersion(creatorContractImpl);
     contractVersion.version = factoryVersion.version;
-    contractVersion.name = ZoraCreator1155Impl.bind(creatorContractImpl).try_name().value;
 
     contractVersion.save();
-
     factoryVersion.creatorContract = contractVersion.id;
   }
 
@@ -133,7 +131,7 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
-  upgrade.version = factoryVersion.id;
+  upgrade.factoryVersion = factoryVersion.id;
   // zora1155Impl didn't exist on all versions of the contract, so this
   // handles the case it doesnt exist.
   upgrade.address = event.address;
