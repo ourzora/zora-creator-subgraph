@@ -31,5 +31,12 @@
       "startBlock": "107931668",
       "version": "2"
     }
+  ],
+  "upgradeGate1155": [
+    {
+      "address": "0xbC50029836A59A4E5e1Bb8988272F46ebA0F9900",
+      "startBlock": "110337868",
+      "version": "1"
+    }
   ]
 }
