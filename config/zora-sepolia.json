@@ -36,11 +36,18 @@
       "version": "1"
     }
   ],
-  "upgradeGate1155": [
+  "upgradeGate": [
     {
       "address": "0xbC50029836A59A4E5e1Bb8988272F46ebA0F9900",
       "startBlock": "300562",
-      "version": "1"
+      "contractType": "1155",
+      "version": "1155-1"
+    },
+    {
+      "address": "0xC8155c2517C6C826dD68E4a704ab64902b7B4929",
+      "startBlock": "307400",
+      "contractType": "721",
+      "version": "721-1"
     }
   ]
 }

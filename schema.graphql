@@ -12,7 +12,6 @@ type TransactionInfo @entity {
 # * add chainid & root parameters
 # * ensure contractVersion works
 
-
 # **ERC721**
 
 type SalesConfig @entity(immutable: true) {
@@ -74,7 +73,7 @@ type TokenSale @entity {
   mintRecipient: Bytes!
 
   # 721-specific data
-  firstPurchasedTokenId: BigInt! 
+  firstPurchasedTokenId: BigInt!
 }
 
 # type DropRole @entity {
@@ -118,9 +117,15 @@ type Upgrade @entity {
   type: String
 }
 
+type UpgradeGate @entity {
+  id: Bytes!
+  type: String!
+}
+
 type UpgradePath @entity {
   id: ID!
 
+  upgradeGate: UpgradeGate!
   from: ContractVersion!
   to: ContractVersion!
 }
@@ -154,7 +159,6 @@ type ZoraCreate1155Factory @entity {
   timestamp: BigInt!
   # End – default data block
 
-
   fixedPriceSaleStrategyAddress: Bytes!
   redeemMinterStrategyAddress: Bytes
   implementation: Bytes!
@@ -169,7 +173,6 @@ type ZoraCreateContract @entity {
   block: BigInt!
   timestamp: BigInt!
   # End – default data block
-
 
   address: Bytes!
 
@@ -229,7 +232,6 @@ type ZoraCreateToken @entity {
   block: BigInt!
   timestamp: BigInt!
   # End – default data block
-
 
   address: Bytes!
 
@@ -309,7 +311,6 @@ type SalesConfigFixedPriceSaleStrategy @entity {
   address: Bytes!
   timestamp: BigInt!
   # End – default data block
-
 
   configAddress: Bytes!
 
@@ -391,7 +392,6 @@ type SalesConfigRedeemMinterStrategy @entity {
   timestamp: BigInt!
   # End – default data block
 
-
   configAddress: Bytes!
   target: Bytes!
   # isActive tells if the redeem has been cleared or not
@@ -414,7 +414,6 @@ type SalesConfigMerkleMinterStrategy @entity {
   timestamp: BigInt!
   # End – default data block
 
-
   configAddress: Bytes!
 
   tokenId: BigInt!
@@ -434,7 +433,6 @@ type SalesStrategyConfig @entity {
   address: Bytes!
   timestamp: BigInt!
   # End – default data block
-
 
   tokenAndContract: ZoraCreateToken
   contract: ZoraCreateContract
@@ -495,7 +493,7 @@ type RewardsPerUserPerSource @entity {
   from: Bytes!
   to: Bytes!
   amount: BigInt!
-} 
+}
 
 type RewardsPerUser @entity {
   id: Bytes!
@@ -526,7 +524,6 @@ type RewardsPerUserPerType @entity {
   type: String
   amount: BigInt!
 }
-
 
 type RewardsDeposit @entity @immutable {
   # Begin – default data block
