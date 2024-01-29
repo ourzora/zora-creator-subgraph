@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { makeTransaction } from "../../common/makeTransaction";
 
 import {
@@ -53,7 +53,7 @@ import {
 
 /* sales config updated */
 
-export function handleSalesConfigChanged(event: SalesConfigChanged): void {
+export function handleSalesConfigChanged(event: ethereum.Event): void {
   const dropContract = ERC721DropContract.bind(
     Address.fromString(event.address.toHex())
   );
@@ -161,6 +161,7 @@ export function handleUpgraded(event: Upgraded): void {
       savedContract.save();
     }
   }
+  handleSalesConfigChanged(event);
 }
 
 /* role mappings */
