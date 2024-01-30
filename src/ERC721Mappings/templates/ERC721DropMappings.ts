@@ -51,8 +51,12 @@ import {
   loadMetadataInfoFromID,
 } from "../../common/metadata";
 
-/* sales config updated */
 
+const EMPTY_PRESALE_CONFIG = Bytes.fromHexString(
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+);
+
+/* sales config updated */
 export function handleSalesConfigChanged(event: ethereum.Event): void {
   const dropContract = ERC721DropContract.bind(
     Address.fromString(event.address.toHex())
@@ -60,7 +64,10 @@ export function handleSalesConfigChanged(event: ethereum.Event): void {
 
   const salesConfigObject = dropContract.salesConfig();
 
-  if (!salesConfigObject.getPresaleMerkleRoot().equals(Bytes.empty())) {
+  if (
+    salesConfigObject.getPresaleMerkleRoot().notEqual(EMPTY_PRESALE_CONFIG) &&
+    salesConfigObject.getPresaleStart().gt(BigInt.zero())
+  ) {
     const presaleConfigId = getSalesConfigOnLegacyMarket(
       // market is the same as media contract for this impl
       // token ID for 721 is 0
@@ -119,10 +126,12 @@ export function handleSalesConfigChanged(event: ethereum.Event): void {
     fixedPriceSaleStrategy.tokenId = BigInt.zero();
     fixedPriceSaleStrategy.configAddress = event.address;
     fixedPriceSaleStrategy.contract = getContractId(event.address);
-    fixedPriceSaleStrategy.maxTokensPerAddress = salesConfigObject.getMaxSalePurchasePerAddress();
+    fixedPriceSaleStrategy.maxTokensPerAddress =
+      salesConfigObject.getMaxSalePurchasePerAddress();
     fixedPriceSaleStrategy.saleStart = salesConfigObject.getPublicSaleStart();
     fixedPriceSaleStrategy.saleEnd = salesConfigObject.getPublicSaleEnd();
-    fixedPriceSaleStrategy.pricePerToken = salesConfigObject.getPublicSalePrice();
+    fixedPriceSaleStrategy.pricePerToken =
+      salesConfigObject.getPublicSalePrice();
     fixedPriceSaleStrategy.save();
 
     // make a join table
@@ -160,8 +169,8 @@ export function handleUpgraded(event: Upgraded): void {
       royalties.save();
       savedContract.save();
     }
+    handleSalesConfigChanged(event);
   }
-  handleSalesConfigChanged(event);
 }
 
 /* role mappings */
