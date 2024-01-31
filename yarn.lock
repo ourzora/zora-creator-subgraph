@@ -1799,9 +1799,9 @@ dotenv@^9.0.0:
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-9.0.2.tgz"
   integrity sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==
 
-"ds-test@git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b":
+"ds-test@https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b":
   version "1.0.0"
-  resolved "git+https://github.com/dapphub/ds-test.git#cd98eff28324bfac652e63a239a60632a761790b"
+  resolved "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -2137,9 +2137,9 @@ forever-agent@~0.6.1:
   resolved "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-"forge-std@git+https://github.com/foundry-rs/forge-std.git#705263c95892a906d7af65f0f73ce8a4a0c80b80":
+"forge-std@https://github.com/foundry-rs/forge-std#705263c95892a906d7af65f0f73ce8a4a0c80b80":
   version "1.6.0"
-  resolved "git+https://github.com/foundry-rs/forge-std.git#705263c95892a906d7af65f0f73ce8a4a0c80b80"
+  resolved "https://github.com/foundry-rs/forge-std#705263c95892a906d7af65f0f73ce8a4a0c80b80"
 
 form-data@^2.2.0:
   version "2.5.1"
@@ -2300,7 +2300,7 @@ glob@9.3.5:
     minipass "^4.2.4"
     path-scurry "^1.6.1"
 
-glob@^7.0.0:
+glob@^7.0.0, glob@^7.0.5:
   version "7.2.3"
   resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -4599,6 +4599,14 @@ yaml@1.10.2, yaml@^1.10.2, yaml@^1.7.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
+
+yamljs@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/yamljs/-/yamljs-0.3.0.tgz#dc060bf267447b39f7304e9b2bfbe8b5a7ddb03b"
+  integrity sha512-C/FsVVhht4iPQYXOInoxUM/1ELSf9EsgKH34FofQOp6hwCPrW4vG4w5++TED3xRUo8gD7l0P1J1dLlDYzODsTQ==
+  dependencies:
+    argparse "^1.0.7"
+    glob "^7.0.5"
 
 yargs-parser@^16.1.0:
   version "16.1.0"
