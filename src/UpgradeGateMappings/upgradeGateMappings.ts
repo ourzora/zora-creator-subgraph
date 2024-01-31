@@ -1,11 +1,16 @@
 import {
   UpgradeRegistered,
   UpgradeRemoved,
-} from "../../generated/UpgradePathsV1/UpgradeGate";
-import { dataSource } from "@graphprotocol/graph-ts";
+} from "../../generated/UpgradePathsV1155-1/UpgradeGate";
+import { Address, dataSource } from "@graphprotocol/graph-ts";
 
-import { UpgradePath, UpgradeGate } from "../../generated/schema";
+import {
+  UpgradePath,
+  UpgradeGate,
+  ContractVersion,
+} from "../../generated/schema";
 import { Bytes, store } from "@graphprotocol/graph-ts";
+import { ZoraCreator1155Impl } from "../../generated/templates/ZoraCreator1155Impl/ZoraCreator1155Impl";
 
 function upgradePathId(
   upgradeGateAddress: Bytes,
@@ -13,6 +18,16 @@ function upgradePathId(
   to: Bytes
 ): string {
   return `${upgradeGateAddress.toHex()}-${from.toHex()}-${to.toHex()}`;
+}
+
+function makeContractVersion(contractImplAddress: Address): ContractVersion {
+  const contractVersion = new ContractVersion(contractImplAddress);
+  const zoraCreator1155 = ZoraCreator1155Impl.bind(contractImplAddress);
+  contractVersion.version = zoraCreator1155.try_contractVersion().value;
+
+  contractVersion.save();
+
+  return contractVersion;
 }
 
 export function handleUpgradeRegistered(event: UpgradeRegistered): void {
@@ -30,8 +45,9 @@ export function handleUpgradeRegistered(event: UpgradeRegistered): void {
     )
   );
   upgradePath.upgradeGate = upgradeGate.id;
-  upgradePath.from = event.params.baseImpl;
-  upgradePath.to = event.params.upgradeImpl;
+
+  upgradePath.from = makeContractVersion(event.params.baseImpl).id;
+  upgradePath.to = makeContractVersion(event.params.upgradeImpl).id;
 
   upgradePath.save();
 }
