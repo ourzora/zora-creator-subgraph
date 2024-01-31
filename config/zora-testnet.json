@@ -4,7 +4,7 @@
   "factories1155": [
     {
       "address": "0x6a357139C1bcDcf0B3AB9bC447932dDdcb956703",
-      "startBlock": "1",
+      "startBlock": "110449",
       "version": "1"
     },
     {
@@ -16,7 +16,7 @@
   "factories721": [
     {
       "address": "0x1Fc0BAE875C2CF2262BEc25B16d96814D37025AC",
-      "startBlock": "1",
+      "startBlock": "112670",
       "version": "1"
     },
     {
@@ -41,6 +41,13 @@
     {
       "address": "0x7777773606e7e46C8Ba8B98C08f5cD218e31d340",
       "startBlock": "1278602",
+      "version": "1"
+    }
+  ],
+  "upgradeGate1155": [
+    {
+      "address": "0xbC50029836A59A4E5e1Bb8988272F46ebA0F9900",
+      "startBlock": "1278601",
       "version": "1"
     }
   ]
