@@ -86,6 +86,8 @@ export function handleFactoryUpgraded(event: Upgraded): void {
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
+  upgrade.version = creator.contractVersion().toString();
+  upgrade.creatorContractImpl = creator.implementation();
   upgrade.address = event.address;
   upgrade.type = "721Factory";
 

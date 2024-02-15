@@ -113,6 +113,10 @@ export function handle1155FactoryUpgraded(event: Upgraded): void {
   upgrade.block = event.block.number;
   upgrade.timestamp = event.block.timestamp;
   upgrade.impl = event.params.implementation;
+  upgrade.version = creator.contractVersion();
+  // zora1155Impl didn't exist on all versions of the contract, so this
+  // handles the case it doesnt exist.
+  upgrade.creatorContractImpl = creator.try_zora1155Impl().value;
   upgrade.address = event.address;
   upgrade.type = "1155Factory";
 

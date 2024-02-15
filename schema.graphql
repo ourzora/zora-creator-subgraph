@@ -100,6 +100,8 @@ type Upgrade @entity {
   # End – default data block
 
   impl: Bytes
+  version: String!
+  creatorContractImpl: Bytes
   type: String
 }
 
