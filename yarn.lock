@@ -413,14 +413,6 @@
     graphql-import-node "^0.0.5"
     js-yaml "^4.1.0"
 
-"@goldskycom/cli@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@goldskycom/cli/-/cli-7.1.0.tgz#aa5e8ea618a0c5b7e029c01185db32f116a21464"
-  integrity sha512-5ypEeQMRqDyVhMugIi0/Y2AGz9p/UPuSwEtA3ywf6eOAG6WWT5oBavrrTY/XCbntq9pLlQ9xtoQPyldQdGYpGA==
-  dependencies:
-    cuid "^2.1.8"
-    parse-duration "^1.0.3"
-    readline-sync "^1.4.10"
 
 "@graphprotocol/graph-cli@0.48.0":
   version "0.48.0"

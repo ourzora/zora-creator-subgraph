@@ -25,26 +25,18 @@ NETWORK=zora yarn run build
 NETWORK needs to be a name of a valid network configuration file in `config/`.
 
 
-After building, you can use the graph cli or goldsky cli to deploy the built subgraph for the network specified above.
+After building, you can use the graph cli to deploy the built subgraph for the network specified above.
 
 
-## Deployment shortcuts
+## Build shortcuts
 
-Only supports goldsky deploys for now:
+Builds for specific networks:
 
-Grafts subgraph from FROM_VERSION:
+./scripts/multideploy.sh NETWORKS
 
-./scripts/multideploy.sh NEW_VERSION NETWORKS FROM_VERSION
+./scripts/multideploy.sh zora-testnet,optimism-goerli,base-goerli
 
-./scripts/multideploy.sh 1.10.0 zora-testnet,optimism-goerli,base-goerli 1.8.0
+Builds for all networks:
 
-Deploys without grafting:
-
-./scripts/multideploy.sh NEW_VERSION NETWORKS
-
-./scripts/multideploy.sh 1.10.0 zora-testnet,optimism-goerli,base-goerli
-
-Deploys a new version for _all_ networks without grafting: (not typical, indexing takes a long time in many cases.)
-
-./scripts/multideploy.sh NEW_VERSION
+./scripts/multideploy.sh
 

@@ -18,7 +18,6 @@
     "@zoralabs/zora-1155-contracts": "2.6.0"
   },
   "devDependencies": {
-    "@goldskycom/cli": "^7.1.0",
     "@graphprotocol/graph-cli": "0.48.0",
     "matchstick-as": "^0.5.1",
     "yamljs": "^0.3.0",
