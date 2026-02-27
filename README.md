@@ -48,3 +48,9 @@ Deploys a new version for _all_ networks without grafting: (not typical, indexin
 
 ./scripts/multideploy.sh NEW_VERSION
 
+
+## Deprecation Notice: Goldsky
+
+The Goldsky deployment integration previously used in this repository has been deprecated. The service contract with Goldsky has been terminated and all associated subgraph endpoints and CLI tooling are no longer active.
+
+Existing Goldsky-related code, deployment scripts, and configuration remain in the repository for historical reference. For subgraph deployments, use The Graph CLI directly.
